@@ -53,4 +53,16 @@ module.exports.updateverify = (email, email_status, callback) => {
     console.log(query); 
 };
 
+module.exports.findOne = (email, callback) => {
+    var query = 'SELECT * FROM users WHERE email = "' + email + '"';
+    con.query(query, callback);
+    console.log(query);
+};
+
+module.exports.temp = (id, email, token, callback) => {
+    var query = 'INSERT INTO temp (id, email, token) VALUES ("' + id + '","' + email + '","' + token + '")';
+    con.query(query, callback);
+    console.log(query);
+};
+
 

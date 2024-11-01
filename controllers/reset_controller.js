@@ -35,7 +35,7 @@ router.post('/', function (req, res) {
                 service: 'gmail',
                 auth: {
                     user: 'cerpajeisontest@gmail.com',
-                    pass: 'dyii pyjs wcjs gvj'
+                    pass: 'vvbf jbko gnwh wgmb'
                 }
             });
             var mailOptions = {
@@ -54,7 +54,7 @@ router.post('/', function (req, res) {
 
         });
     });
-    re.send('Correo enviado, por favor verifique su cuenta');
+    res.send('Correo enviado, por favor verifique su cuenta');
 });
 
 module.exports = router;
