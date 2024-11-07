@@ -16,6 +16,7 @@ const signup = require('./controllers/signup');
 const login = require('./controllers/login');
 const verify = require('./controllers/verify');
 var reset = require('./controllers/reset_controller');
+var doctors = require('./controllers/doc_controller');
 
 const app = express();
 
@@ -35,6 +36,7 @@ app.use('/signup', signup);
 app.use('/login', login);
 app.use('/verify', verify);
 app.use('/reset', reset);
+app.use('/doctor', doctors);
 
 
 
