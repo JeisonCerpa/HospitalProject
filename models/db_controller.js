@@ -65,4 +65,7 @@ module.exports.temp = (id, email, token, callback) => {
     console.log(query);
 };
 
+module.exports.add_doctor = (first_name, last_name, email, dob, gender, address, phone, image, department, biography, callback) => {
+    var query = 'INSERT INTO doctors (first_name, last_name, email, dob, gender, address, phone, image, department, biography) VALUES ("' + first_name + '","' + last_name + '","' + email + '","' + dob + '","' + gender + '","' + address + '", "' + phone + '","' + image + '","' + department + '","' + biography + '")';
+};
 
