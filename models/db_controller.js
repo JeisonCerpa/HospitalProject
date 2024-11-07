@@ -107,3 +107,70 @@ module.exports.getalldept = (callback) => {
     con.query(query, callback);
     console.log(query);
 };
+
+module.exports.getleavebyid = (id, callback) => {
+    var query = 'SELECT * FROM leaves WHERE id = ?';
+    con.query(query, [id], callback);
+    console.log(query);
+};
+
+module.exports.getAllleave = (callback) => {
+    var query = 'SELECT * FROM leaves';
+    con.query(query, callback);
+    console.log(query);
+};
+
+module.exports.add_leave = (id, name, type, from, to, reason, callback) => {
+    var query = 'INSERT INTO leaves (emp_id, employee, leave_type, date_from, date_to, reason) VALUES (?, ?, ?, ?, ?, ?)';
+    con.query(query, [id, name, type, from, to, reason], callback);
+    console.log(query);
+};
+
+module.exports.deleteleave = (id, callback) => {
+    var query = 'DELETE FROM leaves WHERE id = ?';
+    con.query(query, [id], callback);
+    console.log(query);
+};
+
+module.exports.getAllemployee = (callback) => {
+    var query = 'SELECT * FROM employees';
+    con.query(query, callback);
+    console.log(query);
+};
+
+module.exports.add_employee = (name, email, contact, join_date, role, salary,callback) => {
+    var query = 'INSERT INTO employee (name, email, contact, join_date, role, salary) VALUES (?, ?, ?, ?, ?, ?)';
+    con.query(query, [name, email, contact, join_date, role, salary], callback);
+    console.log(query);
+};
+
+module.exports.searchEmp = (key, callback) => {
+    var query = 'SELECT * FROM employees WHERE name LIKE ?';
+    con.query(query, ['%' + key + '%'], callback);
+    console.log(query);
+};
+
+module.exports.deleteEmp = (id, callback) => {
+    var query = 'DELETE FROM employees WHERE id = ?';
+    con.query(query, [id], callback);
+    console.log(query);
+};
+
+module.exports.editEmp = (id, name, email, contact, join_date, role, salary, callback) => {
+    var query = 'UPDATE employees SET name = ?, email = ?, contact = ?, join_date = ?, role = ?, salary = ? WHERE id = ?';
+    con.query(query, [name, email, contact, join_date, role, salary, id], callback);
+    console.log(query);
+};
+
+module.exports. getEmpbyId = (id, callback) => {
+    var query = 'SELECT * FROM employees WHERE id = ?';
+    con.query(query, [id], callback);
+    console.log(query);
+};
+
+module.exports.edit_leave = (id, name, type, from, to, reason, callback) => {
+    var query = 'UPDATE leaves SET employee = ?, leave_type = ?, date_from = ?, date_to = ?, reason = ? WHERE id = ?';
+    con.query(query, [name, type, from, to, reason, id], callback);
+    console.log(query);
+};
+
