@@ -21,51 +21,55 @@ con.connect((err) => {
 module.exports.signup = (username, email, password, status, callback) => {
     con.query('SELECT email FROM users WHERE email = ?', [email], (err, result) => {
         if (result[0] == undefined) {
-            var query = 'INSERT INTO users (username, email, password, email_status) VALUES ("' + username + '","' + email + '","' + password + '","' + status + '")';
+            var query = 'INSERT INTO users (username, email, password, email_status) VALUES (?, ?, ?, ?)';
             console.log(query);
-            con.query(query, [email], callback);
+            con.query(query, [username, email, password, status], callback);
         } else {
             console.log('El correo ya existe');
         }
     });
 }
 
+
+//Ejemplo de evitar injection SQL
 module.exports.verify = (username, email, token, callback) => {
-    var query = 'INSERT INTO verify (username, email, token) VALUES ("' + username + '","' + email + '","' + token + '")';
-    con.query(query, callback);
+    var query = 'INSERT INTO verify (username, email, token) VALUES (?, ?, ?)';
+    con.query(query, [username, email, token], callback);
 };
 
 module.exports.getuserid = (email, callback) => {
-    var query = 'SELECT * FROM verify WHERE email = "' + email + '"';
-    con.query(query, callback);
+    var query = 'SELECT * FROM verify WHERE email = ?';
+    con.query(query, [email], callback);
 };
 
 module.exports.matchtoken = (id, token, callback) => {
-    var query = 'SELECT * FROM verify WHERE id = "' + id + '" AND token = "' + token + '"';
-    con.query(query, callback);
+    var query = 'SELECT * FROM verify WHERE id = ? AND token = ?';
+    con.query(query, [id, token], callback);
     console.log(query);
 };
 
 module.exports.updateverify = (email, email_status, callback) => {
-    var query = 'UPDATE users SET email_status = "' + email_status + '" WHERE email = "' + email + '"';
-    con.query(query, callback);
+    var query = 'UPDATE users SET email_status = ? WHERE email = ?';
+    con.query(query, [email_status, email], callback);
     console.log(query); 
 };
 
 module.exports.findOne = (email, callback) => {
-    var query = 'SELECT * FROM users WHERE email = "' + email + '"';
-    con.query(query, callback);
+    var query = 'SELECT * FROM users WHERE email = ?';
+    con.query(query, [email], callback);
     console.log(query);
 };
 
 module.exports.temp = (id, email, token, callback) => {
-    var query = 'INSERT INTO temp (id, email, token) VALUES ("' + id + '","' + email + '","' + token + '")';
-    con.query(query, callback);
+    var query = 'INSERT INTO temp (id, email, token) VALUES (?, ?, ?)';
+    con.query(query, [id, email, token], callback);
     console.log(query);
 };
 
 module.exports.add_doctor = (first_name, last_name, email, dob, gender, address, phone, image, department, biography, callback) => {
-    var query = 'INSERT INTO doctors (first_name, last_name, email, dob, gender, address, phone, image, department, biography) VALUES ("' + first_name + '","' + last_name + '","' + email + '","' + dob + '","' + gender + '","' + address + '", "' + phone + '","' + image + '","' + department + '","' + biography + '")';
+    var query = 'INSERT INTO doctors (first_name, last_name, email, dob, gender, address, phone, image, department, biography) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+    con.query(query, [first_name, last_name, email, dob, gender, address, phone, image, department, biography], callback);
+    console.log(query);
 };
 
 module.exports.getallDoc = (callback) => {
@@ -75,14 +79,31 @@ module.exports.getallDoc = (callback) => {
 };
 
 module.exports.getDocbyId = (id, callback) => {
-    var query = 'SELECT * FROM doctors WHERE id = "' + id +'"';
-    con.query(query, callback);
+    var query = 'SELECT * FROM doctors WHERE id = ?';
+    con.query(query, [id], callback);
     console.log(query);
 };
 
-module.exports.editDoc = (first_name, last_name, email, dob, gender, address, phone, department, biography, callback) => {
-    var query = 'UPDATE doctors SET first_name = "' + first_name + '", last_name = "' + last_name + '", email = "' + email + '", dob = "' + dob + '", gender = "' + gender + '", address = "' + address + '", phone = "' + phone + '", department = "' + department + '", biography = "' + biography + '" WHERE id = "' + id + '"';
-    con.query(query, callback);
+module.exports.editDoc = (id, first_name, last_name, email, dob, gender, address, phone, department, biography, callback) => {
+    var query = 'UPDATE doctors SET first_name = ?, last_name = ?, email = ?, dob = ?, gender = ?, address = ?, phone = ?, department = ?, biography = ? WHERE id = ?';
+    con.query(query, [first_name, last_name, email, dob, gender, address, phone, department, biography, id], callback);
+    console.log(query);
 };
 
- 
+module.exports.deleteDoc = (id, callback) => {
+    var query = 'DELETE FROM doctors WHERE id = ?';
+    con.query(query, [id], callback);
+    console.log(query);
+};
+
+module.exports.searchDoc = (key, callback) => {
+    var query = 'SELECT * FROM doctors WHERE first_name LIKE ?';
+    con.query(query, ['%' + key + '%'], callback);
+    console.log(query);
+};
+
+module.exports.getalldept = (callback) => {
+    var query = 'SELECT * FROM departments';
+    con.query(query, callback);
+    console.log(query);
+};
