@@ -1,10 +1,9 @@
-const myslq = require('mysql');
+const mysql = require('mysql');
 const express = require('express');
 const router = express.Router();
 const bodyParser = require('body-parser');
 
-
-const con = myslq.createConnection({
+const con = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     password: '',
@@ -69,3 +68,21 @@ module.exports.add_doctor = (first_name, last_name, email, dob, gender, address,
     var query = 'INSERT INTO doctors (first_name, last_name, email, dob, gender, address, phone, image, department, biography) VALUES ("' + first_name + '","' + last_name + '","' + email + '","' + dob + '","' + gender + '","' + address + '", "' + phone + '","' + image + '","' + department + '","' + biography + '")';
 };
 
+module.exports.getallDoc = (callback) => {
+    var query = 'SELECT * FROM doctors';
+    con.query(query, callback);
+    console.log(query);
+};
+
+module.exports.getDocbyId = (id, callback) => {
+    var query = 'SELECT * FROM doctors WHERE id = "' + id +'"';
+    con.query(query, callback);
+    console.log(query);
+};
+
+module.exports.editDoc = (first_name, last_name, email, dob, gender, address, phone, department, biography, callback) => {
+    var query = 'UPDATE doctors SET first_name = "' + first_name + '", last_name = "' + last_name + '", email = "' + email + '", dob = "' + dob + '", gender = "' + gender + '", address = "' + address + '", phone = "' + phone + '", department = "' + department + '", biography = "' + biography + '" WHERE id = "' + id + '"';
+    con.query(query, callback);
+};
+
+ 
