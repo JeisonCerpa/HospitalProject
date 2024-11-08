@@ -174,3 +174,26 @@ module.exports.edit_leave = (id, name, type, from, to, reason, callback) => {
     console.log(query);
 };
 
+module.exports.add_appointment = (p_name, department, d_name, date, time, email, phone, callback) => {
+    var query = 'INSERT INTO appointment (patient_name, department, doctor_name, date, time, email, phone) VALUES (?, ?, ?, ?, ?, ?, ?)';
+    con.query(query, [p_name, department, d_name, date, time, email, phone], callback);
+    console.log(query);
+};
+
+module.exports.getallappointment = (callback) => {
+    var query = 'SELECT * FROM appointment';
+    con.query(query, callback);
+    console.log(query);
+};
+
+module.exports.editappointment = (id, p_name, department, d_name, date, time, email, phone, callback) => {
+    var query = 'UPDATE appointment SET patient_name = ?, department = ?, doctor_name = ?, date = ?, time = ?, email = ?, phone = ? WHERE id = ?';
+    con.query(query, [p_name, department, d_name, date, time, email, phone, id], callback);
+    console.log(query);
+};
+
+module.exports.deleteappointment = (id, callback) => {
+    var query = 'DELETE FROM appointment WHERE id = ?';
+    con.query(query, [id], callback);
+    console.log(query);
+};
