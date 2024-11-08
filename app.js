@@ -26,6 +26,7 @@ var complain = require('./controllers/complain');
 const app = express();
 
 app.set('view engine', 'ejs');
+
 const server = http.createServer(app);
 
 app.use(express.static('./public'));
