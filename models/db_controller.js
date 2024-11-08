@@ -233,3 +233,15 @@ module.exports.searchmed = (key, callback) => {
     con.query(query, ['%' + key + '%'], callback);
     console.log(query);
 };
+
+module.exports.postcomplain = (message, name, email, subject, callback) => {
+    var query = 'INSERT INTO complain (message, name, email, subject) VALUES (?, ?, ?, ?)';
+    con.query(query, [message, name, email, subject], callback);
+    console.log(query);
+};
+
+module.exports.getcomplain = (callback) => {
+    var query = 'SELECT * FROM complain';
+    con.query(query, callback);
+    console.log(query);
+};
