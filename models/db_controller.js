@@ -197,3 +197,39 @@ module.exports.deleteappointment = (id, callback) => {
     con.query(query, [id], callback);
     console.log(query);
 };
+
+module.exports.getallmed = (callback) => {
+    var query = 'SELECT * FROM store order by id desc';
+    con.query(query, callback);
+    console.log(query);
+};
+
+module.exports.addMed = (name, p_date, expire, e_date, price, quantity, callback) => {
+    var query = 'INSERT INTO store (name, p_date, expire, expire_end, price, quantity) VALUES (?, ?, ?, ?, ?, ?)';
+    con.query(query, [name, p_date, expire, e_date, price, quantity], callback);
+    console.log(query);
+};
+
+module.exports.getMedbyId = (id, callback) => {
+    var query = 'SELECT * FROM store WHERE id = ?';
+    con.query(query, [id], callback);
+    console.log(query);
+};
+
+module.exports.editmed = (id, name, p_date, expire, e_date, price, quantity, callback) => {
+    var query = 'UPDATE store SET name = ?, p_date = ?, expire = ?, expire_end = ?, price = ?, quantity = ? WHERE id = ?';
+    con.query(query, [name, p_date, expire, e_date, price, quantity, id], callback);
+    console.log(query);
+};
+
+module.exports.deletemed = (id, callback) => {
+    var query = 'DELETE FROM store WHERE id = ?';
+    con.query(query, [id], callback);
+    console.log(query);
+};
+
+module.exports.searchmed = (key, callback) => {
+    var query = 'SELECT * FROM store WHERE name LIKE ?';
+    con.query(query, ['%' + key + '%'], callback);
+    console.log(query);
+};

@@ -19,6 +19,7 @@ var reset = require('./controllers/reset_controller');
 var doctors = require('./controllers/doc_controller');
 var employee = require('./controllers/employee');
 var appointment = require('./controllers/appointment');
+var store = require('./controllers/store');
 
 const app = express();
 
@@ -41,5 +42,4 @@ app.use('/reset', reset);
 app.use('/doctor', doctors);
 app.use('/employee', employee);
 app.use('/appointment', appointment);
-
-
+app.use('/store', store);
