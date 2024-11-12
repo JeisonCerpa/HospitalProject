@@ -10,6 +10,10 @@ const { check, validationResult } = require('express-validator');
     router.use(bodyParser.urlencoded({ extended: true }));
     router.use(bodyParser.json());
 
+router.get('/', (req, res) => {
+    res.render('signup');
+});
+
 router.post('/', [check('username').notEmpty().withMessage('El nombre de usuario es requerido'), check('password').notEmpty().withMessage('La contraseña es requerida'), check('email').isEmail().withMessage('El correo electrónico no es válido')], (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

@@ -7,7 +7,7 @@ const { validationResult } = require('express-validator');
 
 module.exports = router;
 
-router.get('*', (req, res) => {
+router.get('*', (req, res, next) => {
     if (req.cookies['username'] == null) {
         res.redirect('/login');
     } else {

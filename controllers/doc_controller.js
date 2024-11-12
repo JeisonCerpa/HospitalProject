@@ -6,7 +6,7 @@ var multer = require('multer');
 var fs = require('fs');
 var path = require('path');
 
-router.get('*', (req, res) => {
+router.get('*', (req, res, next) => {
     if (req.cookies['username'] == null) {
         res.redirect('/login');
     } else {
@@ -28,42 +28,53 @@ var storage = multer.diskStorage({
 var upload = multer({ storage: storage });
 
 router.get('/', (req, res) => {
-    if (err)
-        throw err;
-    res.render('doctors.ejs', {list:result});
+    db.getAllDoc((err, result) => {
+        if (err) throw err;
+        res.render('doctors.ejs', { list: result });
+    });
 });
 
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
 
-router.get('/add', (req, res) => {
+
+router.get('/add_doctor', (req, res) => {
     db.getalldept((err, result) => {
         res.render('add_doctor.ejs', {list: result});
     });
 });
 
-router.post('/add', upload.single('image'), (req, res) => {
-    db.add_doctor(req.body.first_name, req.body.last_name, req.body.email, req.body.dob, req.body.gender, req.body.address, req.body.phone, req.body.filename, req.body.department, req.body.biography);
-
-    if(db.add_doctor){
-        console.log('Doctor agregado');
+router.post('/add_doctor', upload.single('image'), (req, res) => {
+    if (!req.file) {
+        console.log('No file uploaded');
+        return res.status(400).send('Image is required');
     }
-    res.render('add_doctor'); 
+
+    var image = req.file.filename;
+
+    db.add_doctor(req.body.first_name, req.body.last_name, req.body.email, req.body.dob, req.body.gender, req.body.address, req.body.phone, image, req.body.department, req.body.biography, (err) => {
+        if (err) throw err;
+        console.log('1 doctor inserted');
+        db.getalldept((err, result) => {
+            if (err) throw err;
+            res.redirect('/doctors');
+        });
+    });
 });
 
-router.get('/edit/:id', (req, res) => {
+router.get('/edit_doctor/:id', (req, res) => {
     var id = req.params.id;
     db.getDocbyId(id, (err, result) => {
         res.render('edit_doctor.ejs', {list: result});
     });
 });
 
-router.post('/edit/:id', (req, res) => {
+router.post('/edit_doctor/:id', (req, res) => {
     var id = req.params.id;
-    db.editDoc(req.body.first_name, req.body.last_name, req.body.email, req.body.dob, req.body.gender, req.body.address, req.body.phone, req.body.department, req.body.biography, (err, result) => {
+    db.editDoc(id, req.body.first_name, req.body.last_name, req.body.email, req.body.dob, req.body.gender, req.body.address, req.body.phone, req.body.department, req.body.biography, (err, result) => {
         if(err)
             throw err;
-        res.redirect('back');
+        res.redirect('/doctors');
     });
 });
 
@@ -76,13 +87,13 @@ router.get('/delete_doctor/:id', (req, res) => {
 
 router.post('/delete_doctor/:id', (req, res) => {
     var id = req.params.id;
-    db.getDocbyId(id, (err, result) => {
-        res.redirect('doctor');
+    db.deleteDoc(id, (err, result) => {
+        res.redirect('/doctors');
     });
 });
 
 router.get('/', (req, res) => {
-    db.getallDoc((err, result) => {
+    db.getAllDoc((err, result) => {
         if(err)
             throw err;
         res.render('doctors.ejs', {list: result});

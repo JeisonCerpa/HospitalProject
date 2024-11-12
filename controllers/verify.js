@@ -7,9 +7,10 @@ router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
 
 module.exports = router;
-/* router.get('/', (req, res) => {
+
+router.get('/', (req, res) => {
     res.render('verify.ejs');
-}); */
+});
 
 router.post('/', (req, res) => {
     var id = req.body.id;
@@ -21,6 +22,7 @@ router.post('/', (req, res) => {
             var email_status = "Verificado";
             db.updateverify(email, email_status, (err, result) => {
                 res.send('Cuenta verificada');
+                res.redirect('/login');
             });
         } else {
             res.send('Token inválido');

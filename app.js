@@ -22,6 +22,7 @@ var appointment = require('./controllers/appointment');
 var store = require('./controllers/store');
 var receipt = require('./controllers/receipt');
 var complain = require('./controllers/complain');
+var home = require('./controllers/home');
 
 const app = express();
 
@@ -33,6 +34,7 @@ app.use(express.static('./public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookie());
+
 const port = process.env.PORT || 3000;
 server.listen(port, () => {
   console.log(`El servidor está corriendo en el puerto: ${port}`);
@@ -40,9 +42,10 @@ server.listen(port, () => {
 
 app.use('/signup', signup);
 app.use('/login', login);
+app.use('/home', home);
 app.use('/verify', verify);
 app.use('/reset', reset);
-app.use('/doctor', doctors);
+app.use('/doctors', doctors);
 app.use('/employee', employee);
 app.use('/appointment', appointment);
 app.use('/store', store);
