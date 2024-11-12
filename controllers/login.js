@@ -7,12 +7,15 @@ var session = require('express-session');
 var sweetalert = require('sweetalert2');
 const { check, validationResult } = require('express-validator');
 
+router.get('/', (req, res) => {
+    res.render('login.ejs');
+});
 
 const con = myslq.createConnection({
     host: 'localhost',
     user: 'root',
     password: '',
-    database: 'hospitalmanagement'
+    database: 'h1'
 });
 
 router.use(session({
@@ -33,7 +36,12 @@ router.post('/', [check('username').notEmpty().withMessage('El nombre de usuario
     var password = req.body.password;
 
     if (username && password) {
-        con.query('SELECT * FROM users WHERE username = ? AND password = ?', [username, password], (err, result, fields) => {
+        con.query('SELECT * FROM users WHERE username = ? AND password = ?', [username, password], (err, result) => {
+            if (err) {
+                console.error(err);
+                res.status(500).send('Error en el servidor');
+                return;
+            }
             if (result.length > 0) {
                 req.session.loggedin = true;
                 req.session.username = username;

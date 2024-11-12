@@ -7,7 +7,7 @@ const con = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     password: '',
-    database: 'hospitalmanagement'
+    database: 'h1'
 });
 
 con.connect((err) => {
@@ -67,37 +67,37 @@ module.exports.temp = (id, email, token, callback) => {
 };
 
 module.exports.add_doctor = (first_name, last_name, email, dob, gender, address, phone, image, department, biography, callback) => {
-    var query = 'INSERT INTO doctors (first_name, last_name, email, dob, gender, address, phone, image, department, biography) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+    var query = 'INSERT INTO doctor (first_name, last_name, email, dob, gender, address, phone, image, department, biography) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
     con.query(query, [first_name, last_name, email, dob, gender, address, phone, image, department, biography], callback);
     console.log(query);
 };
 
-module.exports.getallDoc = (callback) => {
-    var query = 'SELECT * FROM doctors';
+module.exports.getAllDoc = (callback) => {
+    var query = 'SELECT * FROM doctor';
     con.query(query, callback);
     console.log(query);
 };
 
 module.exports.getDocbyId = (id, callback) => {
-    var query = 'SELECT * FROM doctors WHERE id = ?';
+    var query = 'SELECT * FROM doctor WHERE id = ?';
     con.query(query, [id], callback);
     console.log(query);
 };
 
 module.exports.editDoc = (id, first_name, last_name, email, dob, gender, address, phone, department, biography, callback) => {
-    var query = 'UPDATE doctors SET first_name = ?, last_name = ?, email = ?, dob = ?, gender = ?, address = ?, phone = ?, department = ?, biography = ? WHERE id = ?';
+    var query = 'UPDATE doctor SET first_name = ?, last_name = ?, email = ?, dob = ?, gender = ?, address = ?, phone = ?, department = ?, biography = ? WHERE id = ?';
     con.query(query, [first_name, last_name, email, dob, gender, address, phone, department, biography, id], callback);
     console.log(query);
 };
 
 module.exports.deleteDoc = (id, callback) => {
-    var query = 'DELETE FROM doctors WHERE id = ?';
+    var query = 'DELETE FROM doctor WHERE id = ?';
     con.query(query, [id], callback);
     console.log(query);
 };
 
 module.exports.searchDoc = (key, callback) => {
-    var query = 'SELECT * FROM doctors WHERE first_name LIKE ?';
+    var query = 'SELECT * FROM doctor WHERE first_name LIKE ?';
     con.query(query, ['%' + key + '%'], callback);
     console.log(query);
 };

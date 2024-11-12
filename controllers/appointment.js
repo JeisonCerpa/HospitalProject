@@ -3,7 +3,7 @@ var router = express.Router();
 var bodyParser = require('body-parser');
 var db = require.main.require('./models/db_controller'); 
 
-router.get('*', (req, res) => {
+router.get('*', (req, res, next) => {
     if (req.cookies['username'] == null) {
         res.redirect('/login');
     } else {
