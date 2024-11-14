@@ -23,6 +23,7 @@ var store = require('./controllers/store');
 var receipt = require('./controllers/receipt');
 var complain = require('./controllers/complain');
 var home = require('./controllers/home');
+var patients = require('./controllers/patients');
 
 const app = express();
 
@@ -51,3 +52,4 @@ app.use('/appointment', appointment);
 app.use('/store', store);
 app.use('/receipt', receipt);
 app.use('/complain', complain);
+app.use('/patients', patients);

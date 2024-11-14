@@ -186,6 +186,12 @@ module.exports.getallappointment = (callback) => {
     console.log(query);
 };
 
+module.exports.getallappointmentbyid = (id, callback) => {
+    var query = 'SELECT * FROM appointment WHERE id = ?';
+    con.query(query, [id], callback);
+    console.log(query);
+};
+
 module.exports.editappointment = (id, p_name, department, d_name, date, time, email, phone, callback) => {
     var query = 'UPDATE appointment SET patient_name = ?, department = ?, doctor_name = ?, date = ?, time = ?, email = ?, phone = ? WHERE id = ?';
     con.query(query, [p_name, department, d_name, date, time, email, phone, id], callback);
@@ -245,3 +251,34 @@ module.exports.getcomplain = (callback) => {
     con.query(query, callback);
     console.log(query);
 };
+
+module.exports.getAllPatients = (callback) => {
+    var query = 'SELECT * FROM patients';
+    con.query(query, callback);
+    console.log(query);
+}
+
+module.exports.add_patient = (document, name, email, phone, gender, address, callback) => {
+    var query = 'INSERT INTO patients (document, name, email, phone, gender, address) VALUES (?, ?, ?, ?, ?, ?)';
+    con.query(query, [document, name, email, phone, gender, address], callback);
+    console.log(query);
+}
+
+module.exports.getPatientById = (id, callback) => {
+    var query = 'SELECT * FROM patients WHERE id = ?';
+    con.query(query, [id], callback);
+    console.log(query);
+}
+
+module.exports.deletePatient = (id, callback) => {
+    var query = 'DELETE FROM patients WHERE id = ?';
+    con.query(query, [id], callback);
+    console.log(query);
+}
+
+module.exports.searchPatient = (key, callback) => {
+    var query = 'SELECT * FROM patients WHERE name LIKE ?';
+    con.query(query, ['%' + key + '%'], callback);
+    console.log(query);
+}
+
