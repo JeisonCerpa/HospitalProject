@@ -264,15 +264,21 @@ module.exports.add_patient = (document, name, email, phone, gender, address, cal
     console.log(query);
 }
 
-module.exports.getPatientById = (id, callback) => {
-    var query = 'SELECT * FROM patients WHERE id = ?';
-    con.query(query, [id], callback);
+module.exports.getPatientByDoc = (document, callback) => {
+    var query = 'SELECT * FROM patients WHERE document = ?';
+    con.query(query, [document], callback);
     console.log(query);
 }
 
-module.exports.deletePatient = (id, callback) => {
-    var query = 'DELETE FROM patients WHERE id = ?';
-    con.query(query, [id], callback);
+module.exports.editPatient = (document, name, email, phone, gender, address, callback) => {
+    var query = 'UPDATE patients SET name = ?, email = ?, phone = ?, gender = ?, address = ? WHERE document = ?';
+    con.query(query, [name, email, phone, gender, address, document], callback);
+    console.log(query);
+}
+
+module.exports.deletePatient = (document, callback) => {
+    var query = 'DELETE FROM patients WHERE document = ?';
+    con.query(query, [document], callback);
     console.log(query);
 }
 

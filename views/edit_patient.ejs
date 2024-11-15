@@ -1,8 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
-
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
@@ -17,10 +14,7 @@
 		<script src="/assets/js/respond.min.js"></script>
 	<![endif]-->
 </head>
-
 <body>
-
-  
     <div class="main-wrapper">
         <div class="header">
 			<div class="header-left">
@@ -183,6 +177,15 @@
 						<li>
 							<a href="/store"><i class="fa fa-cube"></i> <span>Medicine Store</span></a>
 						</li>
+						
+					
+                       
+                        
+                       
+                        
+                      
+                     
+                       
                     </ul>
                 </div>
             </div>
@@ -191,7 +194,7 @@
             <div class="content">
                 <div class="row">
                     <div class="col-lg-8 offset-lg-2">
-                        <h4 class="page-title">Edit Doctor</h4>
+                        <h4 class="page-title">Editar Paciente</h4>
                     </div>
                 </div>
                 <div class="row">
@@ -202,14 +205,14 @@
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <% for (var i = 0; i < list.length; i++){ %>
-                                        <label>First Name <span class="text-danger">*</span></label>
-                                        <input class="form-control" type="text" name="first_name" value="<%= list[i].first_name %>">
+                                        <label>Documento <span class="text-danger">*</span></label>
+                                        <input class="form-control" type="text" name="document" value="<%= list[i].document %>" readonly>
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
-                                        <label>Last Name</label>
-                                        <input class="form-control" type="text" name="last_name" value="<%= list[i].last_name %>">
+                                        <label>Nombre</label>
+                                        <input class="form-control" type="text" name="name" value="<%= list[i].name %>">
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
@@ -225,9 +228,9 @@
                                 
 								<div class="col-sm-6">
                                     <div class="form-group">
-                                        <label>Date of Birth</label>
-                                        <div class="cal-icon">
-                                            <input type="text" class="form-control datetimepicker" name="dob" value="<%= list[i].dob %>">
+                                        <label>Teléfono</label>
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" name="phone" value="<%= list[i].phone %>">
                                         </div>
                                     </div>
                                 </div>
@@ -254,54 +257,13 @@
 												<input type="text" class="form-control " name="address" value="<%= list[i].address %>">
 											</div>
 										</div>
-										
-										
-										
-										
 									</div>
 								</div>
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label>Phone </label>
-                                        <input class="form-control" type="text" name="phone" value="<%= list[i].phone %>">
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-									<div class="form-group">
-										<label>Avatar</label>
-										<div class="profile-upload">
-											<div class="upload-img">
-												<img alt="" src="/assets/img/user.jpg">
-											</div>
-											<div class="upload-input">
-												<input type="file" class="form-control" name="image" value="<%= list[i].image %>">
-											</div>
-										</div>
-									</div>
-                                </div>
-
-                                <div class="col-sm-6 col-md-6 col-lg-3">
-                                    <div class="form-group">
-                                        <label>Department</label>
-                                        <select class="form-control select" name="department" value="<%= list[i].department %>">
-                                            <option value="Neurology">Neurology</option>
-                                            <option value="Opthalmology">Opthalmology</option>
-                                            <option value="Orthopedics">Orthopedics</option>
-                                            <option value="Cancer Department" >Cancer Department</option>
-                                            <option value="ENT Department " >ENT Department</option>
-                                        </select>
-                                    </div>
                                 </div>
                             </div>
-							<div class="form-group">
-                                <label>Short Biography</label>
-                                <textarea class="form-control" rows="3" cols="30" name="biography" value="<%= list[i].biography %>"></textarea>
-                            </div>
-
                             <% } %>
-                   
                             <div class="m-t-20 text-center">
-                                <button class="btn btn-primary submit-btn">Edit Doctor</button>
+                                <button class="btn btn-primary submit-btn">Editar Paciente</button>
                             </div>
                         </form>
                     </div>

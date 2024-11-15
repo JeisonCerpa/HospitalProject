@@ -25,33 +25,32 @@ router.get('/add_patient', (req, res) => {
 
 router.post('/add_patient', (req, res) => {
     console.log(req.body);
-    db.addPatient(req.body.document, req.body.name, req.body.email, req.body.phone, req.body.gender, req.body.address, (err) => {
+    db.add_patient(req.body.document, req.body.name, req.body.email, req.body.phone, req.body.gender, req.body.address, (err) => {
         if (err) throw err;
         console.log('1 patient inserted');
         res.redirect('/patients');
     });
 });
 
-router.get('/edit_patient/:id', (req, res) => {
-    var id = req.params.id;
-    db.getPatientById(id, (err, result) => {
-        console.log(result);
+router.get('/edit_patient/:document', (req, res) => {
+    var document = req.params.document;
+    db.getPatientByDoc(document, (err, result) => {
         res.render('edit_patient.ejs', { list: result });
     });
 });
 
-router.post('/edit_patient/:id', (req, res) => {
-    var id = req.params.id;
-    db.editPatient(req.body.document, req.body.name, req.body.email, req.body.phone, req.body.gender, req.body.address, (err) => {
+router.post('/edit_patient/:document', (req, res) => {
+    var document = req.params.document;
+    db.editPatient(document, req.body.name, req.body.email, req.body.phone, req.body.gender, req.body.address, (err) => {
         if (err) throw err;
         console.log('1 patient updated');
         res.redirect('/patients');
     });
 });
 
-router.get('/delete_patient/:id', (req, res) => {
-    var id = req.params.id;
-    db.getPatientById(id, (err, result) => {
+router.get('/delete_patient/:document', (req, res) => {
+    var id = req.params.document;
+    db.getPatientById(document, (err, result) => {
         console.log(result);
         res.render('delete_patient.ejs', { list: result });
     });
