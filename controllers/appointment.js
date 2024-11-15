@@ -25,10 +25,10 @@ router.get('/add_appointment', (req, res) => {
 
 router.post('/add_appointment', (req, res) => {
     console.log(req.body);
-/*     db.add_appointment(req.body.p_name, req.body.department, req.body.d_name, req.body.date, req.body.time, req.body.email, req.body.phone, (err, result) => {
+    db.add_appointment(req.body.p_name, req.body.department, req.body.d_name, req.body.date, req.body.time, req.body.email, req.body.phone, (err, result) => {
         console.log('Cita agregada');
         res.redirect('/appointment');
-    }); */
+    });
 });
 
 router.get('/edit_appointment/:id', (req, res) => {

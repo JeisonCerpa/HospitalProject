@@ -25,7 +25,11 @@ router.get('/add_patient', (req, res) => {
 
 router.post('/add_patient', (req, res) => {
     console.log(req.body);
-    // res.redirect('/patients/add_patient');
+    db.addPatient(req.body.document, req.body.name, req.body.email, req.body.phone, req.body.gender, req.body.address, (err) => {
+        if (err) throw err;
+        console.log('1 patient inserted');
+        res.redirect('/patients');
+    });
 });
 
 router.get('/edit_patient/:id', (req, res) => {
