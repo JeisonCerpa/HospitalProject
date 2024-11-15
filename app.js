@@ -9,7 +9,6 @@ const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const expressValidator = require('express-validator');
 const sweetalert = require('sweetalert2');
-const bodyParser = require('body-parser');
 const http = require('http');
 const db = require('./models/db_controller');
 const signup = require('./controllers/signup');
@@ -32,8 +31,8 @@ app.set('view engine', 'ejs');
 const server = http.createServer(app);
 
 app.use(express.static('./public'));
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+app.use(express.json()); // Used to parse JSON bodies
+app.use(express.urlencoded({ extended: true })) // for form data
 app.use(cookie());
 
 const port = process.env.PORT || 3000;

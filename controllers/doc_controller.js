@@ -45,6 +45,7 @@ router.get('/add_doctor', (req, res) => {
 });
 
 router.post('/add_doctor', upload.single('image'), (req, res) => {
+    console.log(req.body);
     if (!req.file) {
         console.log('No file uploaded');
         return res.status(400).send('Image is required');

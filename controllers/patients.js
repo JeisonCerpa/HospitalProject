@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var bodyParser = require('body-parser');
+var multer = require('multer');
 var db = require.main.require('./models/db_controller'); 
 
 router.get('*', (req, res, next) => {
@@ -25,7 +25,7 @@ router.get('/add_patient', (req, res) => {
 
 router.post('/add_patient', (req, res) => {
     console.log(req.body);
-    res.redirect('/patients/add_patient');
+    // res.redirect('/patients/add_patient');
 });
 
 router.get('/edit_patient/:id', (req, res) => {
