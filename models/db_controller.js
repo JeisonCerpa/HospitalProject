@@ -97,8 +97,8 @@ module.exports.deleteDoc = (id, callback) => {
 };
 
 module.exports.searchDoc = (key, callback) => {
-    var query = 'SELECT * FROM doctor WHERE first_name LIKE ?';
-    con.query(query, ['%' + key + '%'], callback);
+    var query = 'SELECT * FROM doctor WHERE first_name LIKE ? or last_name LIKE ? or id LIKE ?';
+    con.query(query, ['%' + key + '%', '%' + key + '%', '%' + key + '%'], callback);
     console.log(query);
 };
 
@@ -283,8 +283,8 @@ module.exports.deletePatient = (document, callback) => {
 }
 
 module.exports.searchPatient = (key, callback) => {
-    var query = 'SELECT * FROM patients WHERE name LIKE ?';
-    con.query(query, ['%' + key + '%'], callback);
+    var query = 'SELECT * FROM patients WHERE name LIKE ? or document LIKE ? or email LIKE ? or phone LIKE ?';
+    con.query(query, ['%' + key + '%', '%' + key + '%', '%' + key + '%', '%' + key + '%'], callback);
     console.log(query);
 }
 

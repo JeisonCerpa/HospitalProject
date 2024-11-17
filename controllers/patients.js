@@ -49,26 +49,27 @@ router.post('/edit_patient/:document', (req, res) => {
 });
 
 router.get('/delete_patient/:document', (req, res) => {
-    var id = req.params.document;
-    db.getPatientById(document, (err, result) => {
+    var document = req.params.document;
+    db.getPatientByDoc(document, (err, result) => {
         console.log(result);
         res.render('delete_patient.ejs', { list: result });
     });
 });
 
-router.post('/delete_patient/:id', (req, res) => {
-    var id = req.params.id;
-    db.deletePatient(id, (err) => {
+router.post('/delete_patient/:document', (req, res) => {
+    var document = req.params.document;
+    db.deletePatient(document, (err, result) => {
         if (err) throw err;
         console.log('1 patient deleted');
         res.redirect('/patients');
     });
 });
 
-router.get('/search', (req, res) => {
-    var key = req.query.search;
+router.post('/search', (req, res) => {
+    var key = req.body.search;
+    console.log(key);
     db.searchPatient(key, (err, result) => {
-        console.log(result);
+        if (err) throw err;
         res.render('patients.ejs', { list: result });
     });
 });
