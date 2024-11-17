@@ -133,7 +133,7 @@ module.exports.deleteleave = (id, callback) => {
 };
 
 module.exports.getAllemployee = (callback) => {
-    var query = 'SELECT * FROM employees';
+    var query = 'SELECT * FROM employee';
     con.query(query, callback);
     console.log(query);
 };
@@ -151,19 +151,19 @@ module.exports.searchEmp = (key, callback) => {
 };
 
 module.exports.deleteEmp = (id, callback) => {
-    var query = 'DELETE FROM employees WHERE id = ?';
+    var query = 'DELETE FROM employee WHERE id = ?';
     con.query(query, [id], callback);
     console.log(query);
 };
 
 module.exports.editEmp = (id, name, email, contact, join_date, role, salary, callback) => {
-    var query = 'UPDATE employees SET name = ?, email = ?, contact = ?, join_date = ?, role = ?, salary = ? WHERE id = ?';
-    con.query(query, [name, email, contact, join_date, role, salary, id], callback);
+    var query = 'UPDATE employee SET name = ?, email = ?, contact = ?, join_date = ?, role = ? WHERE id = ?';
+    con.query(query, [name, email, contact, join_date, role, id], callback);
     console.log(query);
 };
 
-module.exports. getEmpbyId = (id, callback) => {
-    var query = 'SELECT * FROM employees WHERE id = ?';
+module.exports.getEmpbyId = (id, callback) => {
+    var query = 'SELECT * FROM employee WHERE id = ?';
     con.query(query, [id], callback);
     console.log(query);
 };
@@ -288,3 +288,20 @@ module.exports.searchPatient = (key, callback) => {
     console.log(query);
 }
 
+module.exports.getdeptbyId = (id, callback) => {
+    var query = 'SELECT * FROM departments WHERE id = ?';
+    con.query(query, [id], callback);
+    console.log(query);
+};
+
+module.exports.edit_dept = (id, department_name, department_desc, callback) => {
+    var query = 'UPDATE departments SET department_name = ?, department_desc = ? WHERE id = ?';
+    con.query(query, [department_name, department_desc, id], callback);
+    console.log(query);
+};
+
+module.exports.delete_department = (id, callback) => {
+    var query = 'DELETE FROM departments WHERE id = ?';
+    con.query(query, [id], callback);
+    console.log(query);
+};

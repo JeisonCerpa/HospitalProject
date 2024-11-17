@@ -19,6 +19,7 @@ router.get('*', (req, res, next) => {
 
 router.get('/', (req, res) => {
     db.getAllemployee((err, result) => {
+        if (err) throw err;
         res.render('employee.ejs', {employee: result});
     });
 });
@@ -35,7 +36,7 @@ router.post('/add', (req, res) => {
     var role = req.body.role;
     var salary = req.body.salary;
 
-    db.add_employee(name, email, contact, join_date, role, (err, result) => {
+    db.add_employee(name, email, contact, join_date, role, salary, (err, result) => {
         console.log('Empleado agregado');
         res.redirect('/employee');
     });
@@ -81,7 +82,7 @@ router.post('/delete_leave/:id', (req, res) => {
 
 router.get('/edit_employee/:id', (req, res) => {
     var id = req.params.id;
-    db.getEmpbyid(id, (err, result) => {
+    db.getEmpbyId(id, (err, result) => {
         res.render('edit_employee.ejs', {list: result});
     });
 });
@@ -102,7 +103,7 @@ router.post('/edit_employee/:id', (req, res) => {
 
 router.get('/delete_employee/:id', (req, res) => {
     var id = req.params.id;
-    db.getEmpbyid(id, (err, result) => {
+    db.getEmpbyId(id, (err, result) => {
         res.render('delete_employee.ejs', {list: result});
     });
 });
