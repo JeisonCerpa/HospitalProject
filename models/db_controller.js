@@ -208,7 +208,7 @@ module.exports.getallmed = (callback) => {
     var query = 'SELECT * FROM store order by id desc';
     con.query(query, callback);
     console.log(query);
-};
+};  
 
 module.exports.addMed = (name, p_date, expire, e_date, price, quantity, callback) => {
     var query = 'INSERT INTO store (name, p_date, expire, expire_end, price, quantity) VALUES (?, ?, ?, ?, ?, ?)';

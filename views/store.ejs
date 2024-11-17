@@ -17,10 +17,7 @@
 		<script src="/assets/js/respond.min.js"></script>
 	<![endif]-->
 </head>
-
 <body>
-
-  
     <div class="main-wrapper">
         <div class="header">
 			<div class="header-left">
@@ -182,16 +179,7 @@
                        
 						<li class="active">
 							<a href="/store"><i class="fa fa-cube"></i> <span>Medicine Store</span></a>
-						</li>
-						
-					
-                       
-                        
-                       
-                        
-                      
-                     
-                       
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -241,19 +229,19 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <% for (var i = list.length; i>0 ; i--){ %>
+                                    <% for (var i = list.length - 1; i>=0 ; i--){ %>
                                     <tr>
                                         
                                         <td>
-                                            <strong> <%= list[0].id %> </strong>
+                                            <strong> <%= list[i].id %> </strong>
                                         </td>
-                                        <td><%= list[0].name %></td>
-                                        <td><%= list[0].p_date %></td>
-                                        <td><%= list[0].expire %> years</td>
-                                        <td><%= list[0].expire_end %></td>
-                                        <td><%= list[0].price %></td>
+                                        <td><%= list[i].name %></td>
+                                        <td><%= list[i].p_date %></td>
+                                        <td><%= list[i].expire %> years</td>
+                                        <td><%= list[i].expire_end %></td>
+                                        <td><%= list[i].price %></td>
                                         <td class="text-center">
-                                            <%= list[0].quantity %>
+                                            <%= list[i].quantity %>
                                         </td>
                                         <td class="text-right">
                                             <div class="dropdown dropdown-action">
