@@ -23,6 +23,7 @@ var receipt = require('./controllers/receipt');
 var complain = require('./controllers/complain');
 var home = require('./controllers/home');
 var patients = require('./controllers/patients');
+var logout = requite('./controllers/logout')
 
 const app = express();
 
@@ -52,3 +53,4 @@ app.use('/store', store);
 app.use('/receipt', receipt);
 app.use('/complain', complain);
 app.use('/patients', patients);
+app.puse('/logout', logout);
