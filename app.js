@@ -23,7 +23,7 @@ var receipt = require('./controllers/receipt');
 var complain = require('./controllers/complain');
 var home = require('./controllers/home');
 var patients = require('./controllers/patients');
-var logout = requite('./controllers/logout')
+var logout = require('./controllers/logout')
 
 const app = express();
 
@@ -41,6 +41,12 @@ server.listen(port, () => {
   console.log(`El servidor está corriendo en el puerto: ${port}`);
 });
 
+app.use(session({
+  secret: 'secret',
+  resave: true,
+  saveUninitialized: true,
+  cookie: { secure: true }
+}));
 app.use('/signup', signup);
 app.use('/login', login);
 app.use('/home', home);
@@ -53,4 +59,4 @@ app.use('/store', store);
 app.use('/receipt', receipt);
 app.use('/complain', complain);
 app.use('/patients', patients);
-app.puse('/logout', logout);
+app.use('/logout', logout);
