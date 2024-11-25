@@ -12,6 +12,7 @@
     <link rel="stylesheet" type="text/css" href="/assets/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!--[if lt IE 9]>
 		<script src="/assets/js/html5shiv.min.js"></script>
 		<script src="/assets/js/respond.min.js"></script>
@@ -241,7 +242,7 @@
                                         <td><%= list[i].document %></td>
                                         <td><%= list[i].name %></td>
                                         <td><%= list[i].email %></td>
-                                        <td><%= list[i].dob %></td>
+                                        <td><%= new Date(list[i].date_of_birth).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' }) %></td>
                                         <td><%= list[i].gender %></td>
                                         <td><%= list[i].address %></td>
                                         <td><%= list[i].phone %></td>
@@ -250,8 +251,8 @@
                                             <div class="dropdown dropdown-action">
                                                 <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                                                 <div class="dropdown-menu dropdown-menu-right">
-                                                    <a class="dropdown-item" href="http://localhost:3000/doctors/edit_doctor/<%= list[i].id %>"><i class="fa fa-pencil m-r-5"></i> Editar</a>
-                                                    <a class="dropdown-item" href="http://localhost:3000/doctors/delete_doctor/<%= list[i].id %>" ><i class="fa fa-trash-o m-r-5"></i> Eliminar</a>
+                                                    <a class="dropdown-item" href="http://localhost:3000/doctors/edit_doctor/<%= list[i].document %>"><i class="fa fa-pencil m-r-5"></i> Editar</a>
+                                                    <a class="dropdown-item" href="http://localhost:3000/doctors/delete_doctor/<%= list[i].document %>" ><i class="fa fa-trash-o m-r-5"></i> Eliminar</a>
                                                 </div>
                                             </div>
                                         </td>
@@ -481,7 +482,9 @@
             </div>
         </div>
         
-	
+	<script>
+ 
+    </script>
        
     </div>
     <div class="sidebar-overlay" data-reff=""></div>

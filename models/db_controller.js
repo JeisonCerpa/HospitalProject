@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const bodyParser = require('body-parser');
 
+
 const con = mysql.createConnection({
     host: 'localhost',
     user: 'root',
@@ -15,7 +16,6 @@ con.connect((err) => {
         console.log('Error de conexión a la base de datos');
         return;
     }
-    console.log('Conexión a la base de datos exitosa');
 });
 
 module.exports.signup = (username, email, password, status, callback) => {
@@ -51,7 +51,7 @@ module.exports.matchtoken = (id, token, callback) => {
 module.exports.updateverify = (email, email_status, callback) => {
     var query = 'UPDATE users SET email_status = ? WHERE email = ?';
     con.query(query, [email_status, email], callback);
-    console.log(query); 
+    console.log(query);
 };
 
 module.exports.findOne = (email, callback) => {
@@ -66,39 +66,79 @@ module.exports.temp = (id, email, token, callback) => {
     console.log(query);
 };
 
-module.exports.add_doctor = (first_name, last_name, email, dob, gender, address, phone, image, department, biography, callback) => {
-    var query = 'INSERT INTO doctor (first_name, last_name, email, dob, gender, address, phone, image, department, biography) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-    con.query(query, [first_name, last_name, email, dob, gender, address, phone, image, department, biography], callback);
-    console.log(query);
+module.exports.add_doctor = (document, name, email, date_of_birth, gender, address, phone, image, department, biography, callback) => {
+    var role = 'doctor';
+    var password = 'doctor123';
+    var email_status = 'not_verified';
+
+    // Convertir la fecha de nacimiento al formato correcto (YYYY-MM-DD)
+    var formattedDateOfBirth = new Date(date_of_birth).toISOString().split('T')[0];
+
+    // Insertar en la tabla users
+    var userQuery = 'INSERT INTO users (id, username, email, password, email_status, role) VALUES (?, ?, ?, ?, ?, ?)';
+    con.query(userQuery, [document, name, email, password, email_status, role], (err) => {
+        if (err) return callback(err);
+
+        // Insertar en la tabla doctors
+        var doctorQuery = 'INSERT INTO doctors (document, name, email, date_of_birth, gender, address, phone, image, department, biography, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+        con.query(doctorQuery, [document, name, email, formattedDateOfBirth, gender, address, phone, image, department, biography, document], callback);
+        console.log(doctorQuery);
+    });
 };
 
 module.exports.getAllDoc = (callback) => {
-    var query = 'SELECT * FROM doctor';
-    con.query(query, callback);
+    var query = 'SELECT * FROM doctors';
+    con.query(query, (err, result) => {
+        if (err) {
+            console.error('Error executing query:', err);
+            return callback(err, null);
+        }
+        callback(null, result);
+    });
     console.log(query);
 };
 
-module.exports.getDocbyId = (id, callback) => {
-    var query = 'SELECT * FROM doctor WHERE id = ?';
-    con.query(query, [id], callback);
+module.exports.getDocByDocument = (document, callback) => {
+    var query = 'SELECT * FROM doctors WHERE document = ?';
+    con.query(query, [document], (err, result) => {
+        if (err) {
+            console.error('Error executing query:', err);
+            return callback(err, null);
+        }
+        callback(null, result);
+    });
+    console.log(query);
+}
+
+
+module.exports.editDoc = (document, name, email, date_of_birth, gender, address, phone, department, biography, callback) => {
+    var formattedDateOfBirth = new Date(date_of_birth).toISOString().split('T')[0];
+    var query = 'UPDATE doctors SET name = ?, email = ?, date_of_birth = ?, gender = ?, address = ?, phone = ?, department = ?, biography = ? WHERE document = ?';
+    con.query(query, [name, email, formattedDateOfBirth, gender, address, phone, department, biography, document], (err, result) => {
+        if (err) {
+            console.error('Error executing query:', err);
+            return callback(err, null);
+        }
+        callback(null, result);
+    });
     console.log(query);
 };
 
-module.exports.editDoc = (id, first_name, last_name, email, dob, gender, address, phone, department, biography, callback) => {
-    var query = 'UPDATE doctor SET first_name = ?, last_name = ?, email = ?, dob = ?, gender = ?, address = ?, phone = ?, department = ?, biography = ? WHERE id = ?';
-    con.query(query, [first_name, last_name, email, dob, gender, address, phone, department, biography, id], callback);
-    console.log(query);
-};
-
-module.exports.deleteDoc = (id, callback) => {
-    var query = 'DELETE FROM doctor WHERE id = ?';
-    con.query(query, [id], callback);
+module.exports.deleteDoc = (document, callback) => {
+    var query = 'DELETE FROM doctors WHERE document = ?';
+    con.query(query, [document], (err, result) => {
+        if (err) {
+            console.error('Error executing query:', err);
+            return callback(err, null);
+        }
+        callback(null, result);
+    });
     console.log(query);
 };
 
 module.exports.searchDoc = (key, callback) => {
-    var query = 'SELECT * FROM doctor WHERE first_name LIKE ? or last_name LIKE ? or id LIKE ?';
-    con.query(query, ['%' + key + '%', '%' + key + '%', '%' + key + '%'], callback);
+    var query = 'SELECT * FROM doctors WHERE name LIKE ? or document LIKE ?';
+    con.query(query, ['%' + key + '%', '%' + key + '%'], callback);
     console.log(query);
 };
 
@@ -138,7 +178,7 @@ module.exports.getAllemployee = (callback) => {
     console.log(query);
 };
 
-module.exports.add_employee = (name, email, contact, join_date, role, salary,callback) => {
+module.exports.add_employee = (name, email, contact, join_date, role, salary, callback) => {
     var query = 'INSERT INTO employee (name, email, contact, join_date, role, salary) VALUES (?, ?, ?, ?, ?, ?)';
     con.query(query, [name, email, contact, join_date, role, salary], callback);
     console.log(query);
@@ -208,7 +248,7 @@ module.exports.getallmed = (callback) => {
     var query = 'SELECT * FROM store order by id desc';
     con.query(query, callback);
     console.log(query);
-};  
+};
 
 module.exports.addMed = (name, p_date, expire, e_date, price, quantity, callback) => {
     var query = 'INSERT INTO store (name, p_date, expire, expire_end, price, quantity) VALUES (?, ?, ?, ?, ?, ?)';
@@ -261,6 +301,7 @@ module.exports.getAllPatients = (callback) => {
 module.exports.add_patient = (document, name, email, phone, gender, address, callback) => {
     var query = 'INSERT INTO patients (document, name, email, phone, gender, address) VALUES (?, ?, ?, ?, ?, ?)';
     con.query(query, [document, name, email, phone, gender, address], callback);
+    con.query(query, [document, name, email, phone, gender, address], callback);
     console.log(query);
 }
 
@@ -304,4 +345,18 @@ module.exports.delete_department = (id, callback) => {
     var query = 'DELETE FROM departments WHERE id = ?';
     con.query(query, [id], callback);
     console.log(query);
+};
+
+module.exports.add_dept = (department_name, department_desc, callback) => {
+    var query = 'INSERT INTO departments (department_name, department_desc) VALUES (?, ?)';
+    con.query(query, [department_name, department_desc], callback);
+    console.log(query);
+};
+
+module.exports.deleteUser = (userId, callback) => {
+    var sql = 'DELETE FROM users WHERE id = ?';
+    con.query(sql, [userId], (err, result) => {
+        if (err) throw err;
+        callback(null, result);
+    });
 };

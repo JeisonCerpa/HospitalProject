@@ -16,10 +16,12 @@ router.get('*', function(req, res, next){
 router.get('/',function(_,res){
     db.getAllDoc(function(err, result){
         if (err || !result) {
+            console.error('Error retrieving doctors:', err);
             return res.status(500).send('Error retrieving doctors');
         }
         db.getallappointment(function(err1, result1){
             if (err1 || !result1) {
+                console.error('Error retrieving appointments:', err1);
                 return res.status(500).send('Error retrieving appointments');
             }
             var total_doc = result.length;
@@ -105,7 +107,6 @@ router.post('/profile',function(req,res){
                 }
                 if(!result1){ res.send("old password did not match");}
                    
-                
 
             });
         }

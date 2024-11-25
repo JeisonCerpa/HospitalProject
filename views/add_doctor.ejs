@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 
 
@@ -12,6 +12,7 @@
     <link rel="stylesheet" type="text/css" href="/assets/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!--[if lt IE 9]>
 		<script src="/assets/js/html5shiv.min.js"></script>
 		<script src="/assets/js/respond.min.js"></script>
@@ -135,10 +136,10 @@
                         <span>Admin</span>
                     </a>
                     <div class="dropdown-menu">
-                        <a class="dropdown-item" href="/home/profile">My Profile</a>
-                        <a class="dropdown-item" href="/home/edit-profile">Edit Profile</a>
+                        <a class="dropdown-item" href="/home/profile">Mi Perfil</a>
+                        <a class="dropdown-item" href="/home/edit-profile">Editar Perfil</a>
 
-                        <a class="dropdown-item" href="/logout">Logout</a>
+                        <a class="dropdown-item" href="/logout">Cerrar Sesión</a>
                     </div>
                 </li>
             </ul>
@@ -146,10 +147,10 @@
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i
                         class="fa fa-ellipsis-v"></i></a>
                 <div class="dropdown-menu dropdown-menu-right">
-                    <a class="dropdown-item" href="/home/profile">My Profile</a>
-                    <a class="dropdown-item" href="/home/edit-profile">Edit Profile</a>
+                    <a class="dropdown-item" href="/home/profile">Mi Perfil</a>
+                    <a class="dropdown-item" href="/home/edit-profile">Editar Perfil</a>
 
-                    <a class="dropdown-item" href="/logout">Logout</a>
+                    <a class="dropdown-item" href="/logout">Cerrar Sesión</a>
                 </div>
             </div>
         </div>
@@ -157,65 +158,56 @@
             <div class="sidebar-inner slimscroll">
                 <div id="sidebar-menu" class="sidebar-menu">
                     <ul>
-                        <li class="menu-title">Main</li>
+                        <li class="menu-title">Principal</li>
                         <li>
-                            <a href="/home"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a>
+                            <a href="/home"><i class="fa fa-dashboard"></i> <span>Tablero</span></a>
                         </li>
                         <li class="active">
-                            <a href="/doctors"><i class="fa fa-user-md"></i> <span>Doctors</span></a>
+                            <a href="/doctors"><i class="fa fa-user-md"></i> <span>Doctores</span></a>
                         </li>
                         <li>
-                            <a href="/patients"><i class="fa fa-wheelchair"></i> <span>Patients</span></a>
+                            <a href="/patients"><i class="fa fa-wheelchair"></i> <span>Pacientes</span></a>
                         </li>
                         <li>
-                            <a href="/appointment"><i class="fa fa-calendar"></i> <span>Appointments</span></a>
+                            <a href="/appointment"><i class="fa fa-calendar"></i> <span>Citas</span></a>
                         </li>
 
                         <li>
-                            <a href="/home/departments"><i class="fa fa-hospital-o"></i> <span>Departments</span></a>
+                            <a href="/home/departments"><i class="fa fa-hospital-o"></i> <span>Departamentos</span></a>
                         </li>
                         <li class="submenu">
-                            <a href="#"><i class="fa fa-user"></i> <span> Employees </span> <span
+                            <a href="#"><i class="fa fa-user"></i> <span> Empleados </span> <span
                                     class="menu-arrow"></span></a>
                             <ul style="display: none;">
-                                <li><a href="/employee">Employees List</a></li>
-                                <li><a href="/employee/leave">Leaves</a></li>
+                                <li><a href="/employee">Lista de Empleados</a></li>
+                                <li><a href="/employee/leave">Permisos</a></li>
 
                             </ul>
                         </li>
 
                         <li class="submenu">
-                            <a href="#"><i class="fa fa-book"></i> <span> Payroll </span> <span
+                            <a href="#"><i class="fa fa-book"></i> <span> Nómina </span> <span
                                     class="menu-arrow"></span></a>
                             <ul style="display: none;">
-                                <li><a href="/receipt"> Employee Salary </a></li>
+                                <li><a href="/receipt"> Salario de Empleados </a></li>
 
                             </ul>
                         </li>
 
 
                         <li class="submenu">
-                            <a href="#"><i class="fa fa-envelope"></i> <span> Email</span> <span
+                            <a href="#"><i class="fa fa-envelope"></i> <span> Correo</span> <span
                                     class="menu-arrow"></span></a>
                             <ul style="display: none;">
-                                <li><a href="/compose">Compose Mail</a></li>
-                                <li><a href="/inbox">Inbox</a></li>
+                                <li><a href="/compose">Redactar Correo</a></li>
+                                <li><a href="/inbox">Bandeja de Entrada</a></li>
 
                             </ul>
                         </li>
 
                         <li>
-                            <a href="/store"><i class="fa fa-cube"></i> <span>Medicine Store</span></a>
+                            <a href="/store"><i class="fa fa-cube"></i> <span>Almacén de Medicinas</span></a>
                         </li>
-
-
-
-
-
-
-
-
-
                     </ul>
                 </div>
             </div>
@@ -224,7 +216,7 @@
             <div class="content">
                 <div class="row">
                     <div class="col-lg-8 offset-lg-2">
-                        <h4 class="page-title">Add Doctor</h4>
+                        <h4 class="page-title">Agregar Doctor</h4>
                     </div>
                 </div>
                 <div class="row">
@@ -233,69 +225,54 @@
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="form-group">
-                                        <label>First Name <span class="text-danger">*</span></label>
-                                        <input class="form-control" type="text" name="first_name">
+                                        <label>Documento <span class="text-danger">*</span></label>
+                                        <input class="form-control" type="text" name="document" required>
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
-                                        <label>Last Name</label>
-                                        <input class="form-control" type="text" name="last_name">
+                                        <label>Nombre <span class="text-danger">*</span></label>
+                                        <input class="form-control" type="text" name="name" required>
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
-
-                                </div>
-                                <div class="col-sm-6">
                                     <div class="form-group">
-                                        <label>Email <span class="text-danger">*</span></label>
-                                        <input class="form-control" type="email" name="email">
+                                        <label>Correo Electrónico <span class="text-danger">*</span></label>
+                                        <input class="form-control" type="email" name="email" required>
                                     </div>
                                 </div>
-
-
                                 <div class="col-sm-6">
                                     <div class="form-group">
-                                        <label>Date of Birth</label>
+                                        <label>Fecha de Nacimiento</label>
                                         <div class="cal-icon">
-                                            <input type="text" class="form-control datetimepicker" name="dob">
+                                            <input type="date" class="form-control" name="date_of_birth" required>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group gender-select">
-                                        <label class="gen-label">Gender:</label>
+                                        <label class="gen-label">Género:</label>
                                         <div class="form-check-inline">
                                             <label class="form-check-label">
-                                                <input type="radio" name="gender" class="form-check-input"
-                                                    value="male" required>Male
+                                                <input type="radio" name="gender" class="form-check-input" value="male" checked required>Masculino
                                             </label>
                                         </div>
                                         <div class="form-check-inline">
                                             <label class="form-check-label">
-                                                <input type="radio" name="gender" class="form-check-input"
-                                                    value="female" required>Female
+                                                <input type="radio" name="gender" class="form-check-input" value="female" required>Femenino
                                             </label>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-12">
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            <div class="form-group">
-                                                <label>Address</label>
-                                                <input type="text" class="form-control " name="address">
-                                            </div>
-                                        </div>
-
-
-
-
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
-                                        <label>Phone </label>
+                                        <label>Dirección</label>
+                                        <input type="text" class="form-control" name="address">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>Teléfono</label>
                                         <input class="form-control" type="text" name="phone">
                                     </div>
                                 </div>
@@ -303,43 +280,35 @@
                                     <div class="form-group">
                                         <label>Avatar</label>
                                         <div class="profile-upload">
-                                            <div class="upload-img">
-                                                <img alt="" src="/assets/img/user.jpg">
-                                            </div>
                                             <div class="upload-input">
                                                 <input type="file" class="form-control" name="image">
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-
                                 <div class="col-sm-6 col-md-6 col-lg-3">
                                     <div class="form-group">
-                                        <label>Department</label>
-
+                                        <label>Departamento</label>
                                         <select class="form-control" name="department">
-                                            <% if (list && list.length> 0) { %>
-                                                <% for (var i=0; i < list.length; i++) { %>
+                                            <% if (list && list.length > 0) { %>
+                                                <% for (var i = 0; i < list.length; i++) { %>
                                                     <option value="<%= list[i].department_name %>">
                                                         <%= list[i].department_name %>
                                                     </option>
-                                                    <% } %>
-                                                        <% } else { %>
-                                                            <option value="">No departments available</option>
-                                                            <% } %>
+                                                <% } %>
+                                            <% } else { %>
+                                                <option value="">No hay departamentos disponibles</option>
+                                            <% } %>
                                         </select>
-
-
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label>Short Biography</label>
+                                <label>Biografía Corta</label>
                                 <textarea class="form-control" rows="3" cols="30" name="biography"></textarea>
                             </div>
-
                             <div class="m-t-20 text-center">
-                                <button class="btn btn-primary submit-btn">Create Doctor</button>
+                                <button class="btn btn-primary submit-btn">Crear Doctor</button>
                             </div>
                         </form>
                     </div>
@@ -348,7 +317,7 @@
             <div class="notification-box">
                 <div class="msg-sidebar notifications msg-noti">
                     <div class="topnav-dropdown-header">
-                        <span>Messages</span>
+                        <span>Mensajes</span>
                     </div>
                     <div class="drop-scroll msg-list-scroll" id="msg_list">
                         <ul class="list-box">
@@ -368,13 +337,6 @@
                                     </div>
                                 </a>
                             </li>
-
-
-
-
-
-
-
                         </ul>
                     </div>
 
@@ -397,7 +359,26 @@
                 format: 'YYYY-MM-DD'
             });
         });
-    </script>    
+    </script> 
+    <script>
+        document.querySelector('form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "¿Deseas agregar este doctor?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, agregar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    this.submit();
+                }
+            });
+        });
+    </script>
 </body>
 
 

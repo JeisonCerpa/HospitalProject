@@ -26,6 +26,33 @@ USE `h1`;
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `users`
+--
+
+CREATE TABLE IF NOT EXISTS `users` (
+  `id` varchar(255) NOT NULL, -- Cambiado a varchar para almacenar la cédula
+  `username` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL DEFAULT 'doctor123', -- Contraseña predeterminada
+  `email_status` varchar(20) NOT NULL,
+  `role` ENUM('admin', 'doctor', 'receptionist', 'pharmacist', 'patient', 'nurse') NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Volcado de datos para la tabla `users`
+--
+
+INSERT INTO `users` (`id`, `username`, `email`, `password`, `email_status`, `role`) VALUES
+(1, 'zihad', 'zihad.1d@yopmail.com', '123', 'verified', 'admin'),
+(2, 'test', 'test555@yopmail.com', '123', 'verified', 'doctor'),
+(3, 'abc', 'gmhs13@yopmail.com', '12345', 'not_verified', 'receptionist'),
+(4, 'alamin', 'te555@yopmail.com', 'abc', 'verified', 'pharmacist'),
+(5, 'jei', 'cerpajeison8@gmail.com', '123', 'Verificado', 'patient');
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `appointment`
 --
 
@@ -105,19 +132,19 @@ INSERT INTO `departments` (`id`, `department_name`, `department_desc`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `doctors` (
-  `document` varchar(255) NOT NULL, -- Cambiado de `id` a `document`
-  `name` varchar(255) NOT NULL, -- Agregado `name`
+  `document` varchar(255) NOT NULL,
+  `name` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
-  `date_of_birth` date NOT NULL, -- Cambiado de `dob` a `date_of_birth` y tipo a `DATE`
+  `date_of_birth` date NOT NULL,
   `gender` varchar(10) NOT NULL,
   `address` varchar(255) NOT NULL,
   `phone` varchar(20) NOT NULL,
   `image` text NOT NULL,
   `department` varchar(50) NOT NULL,
   `biography` varchar(255) NOT NULL,
-  `user_id` int NOT NULL, -- Agregado campo `user_id`
-  PRIMARY KEY (`document`), -- Cambiado de `id` a `document`
-  FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) -- Llave foránea
+  `user_id` int NOT NULL,
+  PRIMARY KEY (`document`),
+  FOREIGN KEY (`user_id`) REFERENCES `users`(`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
@@ -140,11 +167,11 @@ CREATE TABLE IF NOT EXISTS `employee` (
   `name` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `contact` varchar(255) NOT NULL,
-  `date_of_birth` date NOT NULL, -- Cambiado de `join_date` a `date_of_birth` y tipo a `DATE`
+  `date_of_birth` date NOT NULL,
   `role` varchar(255) NOT NULL,
-  `user_id` int NOT NULL, -- Agregado campo `user_id`
+  `user_id` int NOT NULL,
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) -- Llave foránea
+  FOREIGN KEY (`user_id`) REFERENCES `users`(`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
@@ -276,33 +303,6 @@ INSERT INTO `temp` (`id`, `email`, `token`) VALUES
 (23, 'cerpajeison9@gmail.com', 'mwwtkjzp'),
 (23, 'cerpajeison9@gmail.com', '1u6dyeas'),
 (23, 'cerpajeison9@gmail.com', '2eqhaxg6');
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `users`
---
-
-CREATE TABLE IF NOT EXISTS `users` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `username` varchar(255) NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL, -- Cambiado de varchar(20) a varchar(255)
-  `email_status` varchar(20) NOT NULL,
-  `role` ENUM('admin', 'doctor', 'receptionist', 'pharmacist', 'patient', 'nurse') NOT NULL, -- Agregado campo `role`
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Volcado de datos para la tabla `users`
---
-
-INSERT INTO `users` (`id`, `username`, `email`, `password`, `email_status`, `role`) VALUES
-(1, 'zihad', 'zihad.1d@yopmail.com', '123', 'verified', 'admin'),
-(2, 'test', 'test555@yopmail.com', '123', 'verified', 'doctor'),
-(3, 'abc', 'gmhs13@yopmail.com', '12345', 'not_verified', 'receptionist'),
-(4, 'alamin', 'te555@yopmail.com', 'abc', 'verified', 'pharmacist'),
-(5, 'jei', 'cerpajeison8@gmail.com', '123', 'Verificado', 'patient');
 
 -- --------------------------------------------------------
 

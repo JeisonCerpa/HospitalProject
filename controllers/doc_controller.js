@@ -40,7 +40,7 @@ router.use(bodyParser.json());
 
 router.get('/add_doctor', (req, res) => {
     db.getalldept((err, result) => {
-        res.render('add_doctor.ejs', {list: result});
+        res.render('add_doctor.ejs', { list: result });
     });
 });
 
@@ -53,60 +53,88 @@ router.post('/add_doctor', upload.single('image'), (req, res) => {
 
     var image = req.file.filename;
 
-    db.add_doctor(req.body.first_name, req.body.last_name, req.body.email, req.body.dob, req.body.gender, req.body.address, req.body.phone, image, req.body.department, req.body.biography, (err) => {
+    db.getDocByDocument(req.body.document, (err, result) => {
         if (err) throw err;
-        console.log('1 doctor inserted');
-        db.getalldept((err, result) => {
-            if (err) throw err;
-            res.redirect('/doctors');
-        });
+        if (result.length > 0) {
+            db.getalldept((err, departments) => {
+                if (err) throw err;
+                res.render('add_doctor.ejs', { list: departments, alert: { type: 'error', message: 'El médico ya existe' } });
+            });
+        } else {
+            db.add_doctor(req.body.document, req.body.name, req.body.email, req.body.date_of_birth, req.body.gender, req.body.address, req.body.phone, image, req.body.department, req.body.biography, (err) => {
+                if (err) throw err;
+                console.log('1 doctor inserted');
+                res.redirect('/doctors');
+            });
+        }
     });
 });
 
-router.get('/edit_doctor/:id', (req, res) => {
-    var id = req.params.id;
-    db.getDocbyId(id, (err, result) => {
-        res.render('edit_doctor.ejs', {list: result});
+router.get('/edit_doctor/:document', (req, res) => {
+    var document = req.params.document;
+    db.getDocByDocument(document, (err, result) => {
+        if (err) throw err;
+        if (result.length > 0) {
+            res.render('edit_doctor.ejs', { list: result });
+        } else {
+            res.status(404).send('Doctor not found');
+        }
     });
 });
 
-router.post('/edit_doctor/:id', (req, res) => {
-    var id = req.params.id;
-    db.editDoc(id, req.body.first_name, req.body.last_name, req.body.email, req.body.dob, req.body.gender, req.body.address, req.body.phone, req.body.department, req.body.biography, (err, result) => {
-        if(err)
-            throw err;
+router.post('/edit_doctor/:document', (req, res) => {
+    var document = req.params.document;
+    db.editDoc(document, req.body.name, req.body.email, req.body.date_of_birth, req.body.gender, req.body.address, req.body.phone, req.body.department, req.body.biography, (err, result) => {
+        if (err) throw err;
         res.redirect('/doctors');
     });
 });
 
-router.get('/delete_doctor/:id', (req, res) => {
-    var id = req.params.id;
-    db.getDocbyId(id, (err, result) => {
-        res.render('delete_doctor.ejs', {list: result});
+router.get('/delete_doctor/:document', (req, res) => {
+    var document = req.params.document;
+    db.getDocByDocument(document, (err, result) => {
+        if (err) throw err;
+        if (result.length > 0) {
+            res.render('delete_doctor.ejs', { list: result });
+        } else {
+            res.status(404).send('Doctor not found');
+        }
     });
 });
 
-router.post('/delete_doctor/:id', (req, res) => {
-    var id = req.params.id;
-    db.deleteDoc(id, (err, result) => {
-        res.redirect('/doctors');
+router.post('/delete_doctor/:document', (req, res) => {
+    var document = req.params.document;
+    db.getDocByDocument(document, (err, result) => {
+        if (err) throw err;
+        if (result.length > 0) {
+            var userId = result[0].user_id;
+            db.deleteDoc(document, (err, result) => {
+                if (err) throw err;
+                db.deleteUser(userId, (err, result) => {
+                    if (err) throw err;
+                    res.redirect('/doctors');
+                });
+            });
+        } else {
+            res.status(404).send('Doctor not found');
+        }
     });
 });
 
 router.get('/', (req, res) => {
     db.getAllDoc((err, result) => {
-        if(err)
+        if (err)
             throw err;
-        res.render('doctors.ejs', {list: result});
+        res.render('doctors.ejs', { list: result });
     });
 });
 
 router.post('/search', (req, res) => {
     var key = req.body.search;
     db.searchDoc(key, (err, result) => {
-        if(err)
+        if (err)
             throw err;
-        res.render('doctors.ejs', {list: result});
+        res.render('doctors.ejs', { list: result });
     });
 });
 
