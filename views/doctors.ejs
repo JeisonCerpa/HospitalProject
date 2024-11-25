@@ -220,10 +220,8 @@
                                 <thead>
                                     <tr>
                                         <th style="min-width:100px;">Imagen</th>
-                                        <th>ID</th>
-                                        <th>Primer Nombre</th>
-                                        <th>Segundo Nombre</th>
-
+                                        <th>Documento</th>
+                                        <th>Nombre</th>
                                         <th>Email</th>
                                         <th>Dia de Nacimiento</th>
                                         <th>Genero</th>
@@ -240,9 +238,8 @@
                                         <td>
 											<img width="50" height="50" src="/assets/images/upload_images/<%= list[i].image %>" class="rounded-circle" alt=""> <h2></h2>
 										</td>
-                                        <td><%= list[i].id %></td>
-                                        <td><%= list[i].first_name %></td>
-                                        <td><%= list[i].last_name %></td>
+                                        <td><%= list[i].document %></td>
+                                        <td><%= list[i].name %></td>
                                         <td><%= list[i].email %></td>
                                         <td><%= list[i].dob %></td>
                                         <td><%= list[i].gender %></td>
