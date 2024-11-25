@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 25-11-2024 a las 14:36:42
+-- Tiempo de generación: 25-11-2024 a las 18:18:00
 -- Versión del servidor: 8.0.30
 -- Versión de PHP: 8.1.10
 
@@ -20,35 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `h1`
 --
-CREATE DATABASE IF NOT EXISTS `h1` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
-USE `h1`;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `users`
---
-
-CREATE TABLE IF NOT EXISTS `users` (
-  `id` varchar(255) NOT NULL, -- Cambiado a varchar para almacenar la cédula
-  `username` varchar(255) NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL DEFAULT 'doctor123', -- Contraseña predeterminada
-  `email_status` varchar(20) NOT NULL,
-  `role` ENUM('admin', 'doctor', 'receptionist', 'pharmacist', 'patient', 'nurse') NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Volcado de datos para la tabla `users`
---
-
-INSERT INTO `users` (`id`, `username`, `email`, `password`, `email_status`, `role`) VALUES
-(1, 'zihad', 'zihad.1d@yopmail.com', '123', 'verified', 'admin'),
-(2, 'test', 'test555@yopmail.com', '123', 'verified', 'doctor'),
-(3, 'abc', 'gmhs13@yopmail.com', '12345', 'not_verified', 'receptionist'),
-(4, 'alamin', 'te555@yopmail.com', 'abc', 'verified', 'pharmacist'),
-(5, 'jei', 'cerpajeison8@gmail.com', '123', 'Verificado', 'patient');
 
 -- --------------------------------------------------------
 
@@ -56,17 +27,16 @@ INSERT INTO `users` (`id`, `username`, `email`, `password`, `email_status`, `rol
 -- Estructura de tabla para la tabla `appointment`
 --
 
-CREATE TABLE IF NOT EXISTS `appointment` (
-  `id` int NOT NULL AUTO_INCREMENT,
+CREATE TABLE `appointment` (
+  `id` int NOT NULL,
   `patient_name` varchar(255) NOT NULL,
   `department` varchar(255) NOT NULL,
   `doctor_name` varchar(255) NOT NULL,
   `date` varchar(255) NOT NULL,
   `time` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
-  `phone` varchar(20) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `phone` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Volcado de datos para la tabla `appointment`
@@ -82,14 +52,13 @@ INSERT INTO `appointment` (`id`, `patient_name`, `department`, `doctor_name`, `d
 -- Estructura de tabla para la tabla `complain`
 --
 
-CREATE TABLE IF NOT EXISTS `complain` (
-  `id` int NOT NULL AUTO_INCREMENT,
+CREATE TABLE `complain` (
+  `id` int NOT NULL,
   `message` varchar(500) NOT NULL,
   `name` varchar(50) NOT NULL,
-  `email` varchar(255) NOT NULL, -- Cambiado de varchar(20) a varchar(255)
-  `subject` varchar(50) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `email` varchar(255) NOT NULL,
+  `subject` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Volcado de datos para la tabla `complain`
@@ -107,12 +76,11 @@ INSERT INTO `complain` (`id`, `message`, `name`, `email`, `subject`) VALUES
 -- Estructura de tabla para la tabla `departments`
 --
 
-CREATE TABLE IF NOT EXISTS `departments` (
-  `id` int NOT NULL AUTO_INCREMENT,
+CREATE TABLE `departments` (
+  `id` int NOT NULL,
   `department_name` varchar(255) NOT NULL,
-  `department_desc` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `department_desc` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Volcado de datos para la tabla `departments`
@@ -128,10 +96,10 @@ INSERT INTO `departments` (`id`, `department_name`, `department_desc`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `doctor`
+-- Estructura de tabla para la tabla `doctors`
 --
 
-CREATE TABLE IF NOT EXISTS `doctors` (
+CREATE TABLE `doctors` (
   `document` varchar(255) NOT NULL,
   `name` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
@@ -142,19 +110,15 @@ CREATE TABLE IF NOT EXISTS `doctors` (
   `image` text NOT NULL,
   `department` varchar(50) NOT NULL,
   `biography` varchar(255) NOT NULL,
-  `user_id` int NOT NULL,
-  PRIMARY KEY (`document`),
-  FOREIGN KEY (`user_id`) REFERENCES `users`(`id`)
+  `user_id` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Volcado de datos para la tabla `doctor`
+-- Volcado de datos para la tabla `doctors`
 --
 
 INSERT INTO `doctors` (`document`, `name`, `email`, `date_of_birth`, `gender`, `address`, `phone`, `image`, `department`, `biography`, `user_id`) VALUES
-('1', 'Jeison Cerpa Osorio', 'cerpajeison8@gmail.com', '2024-10-05', 'male', 'calle 23#23-56', '3005921351', 'OIP.jfif', 'Neurology', '', 2),
-('2', 'Jhon Cerpa', 'test@test.com', '2024-11-28', 'male', 'calle 23#23-56', '3005921351', 'OIP.jfif', 'Intensive Care Unit (ICU)', 'Hola', 2),
-('3', 'Isabella Lerma', 'test@test.com', '2024-11-13', 'female', 'calle 23#23-56', '3005921351', 'OIP.jfif', 'Neurology', 'Hola', 2);
+('123123', 'Jei Test', 'test@test.com', '1998-09-08', 'male', 'Calle Test # Test', '300000000', 'OIP.jpg', 'Intensive Care Unit (ICU)', 'Hola1', 123123);
 
 -- --------------------------------------------------------
 
@@ -162,25 +126,23 @@ INSERT INTO `doctors` (`document`, `name`, `email`, `date_of_birth`, `gender`, `
 -- Estructura de tabla para la tabla `employee`
 --
 
-CREATE TABLE IF NOT EXISTS `employee` (
-  `id` int NOT NULL AUTO_INCREMENT,
+CREATE TABLE `employee` (
+  `id` int NOT NULL,
   `name` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `contact` varchar(255) NOT NULL,
   `date_of_birth` date NOT NULL,
   `role` varchar(255) NOT NULL,
-  `user_id` int NOT NULL,
-  PRIMARY KEY (`id`),
-  FOREIGN KEY (`user_id`) REFERENCES `users`(`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `user_id` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Volcado de datos para la tabla `employee`
 --
 
 INSERT INTO `employee` (`id`, `name`, `email`, `contact`, `date_of_birth`, `role`, `user_id`) VALUES
-(1, 'Abc', 'gmhs13@yopmail.com', '0159653', '1990-01-01', 'Pharmacist', 4), -- Cambiado `join_date` a `date_of_birth` y eliminado `salary`
-(2, 'Jeison Cerpa', 'test@test.com', '300111222333', '1990-01-01', 'Receptionist', 3); -- Cambiado `join_date` a `date_of_birth` y eliminado `salary`
+(1, 'Abc', 'gmhs13@yopmail.com', '0159653', '1990-01-01', 'Pharmacist', 4),
+(2, 'Jeison Cerpa', 'test@test.com', '300111222333', '1990-01-01', 'Receptionist', 3);
 
 -- --------------------------------------------------------
 
@@ -188,16 +150,15 @@ INSERT INTO `employee` (`id`, `name`, `email`, `contact`, `date_of_birth`, `role
 -- Estructura de tabla para la tabla `leaves`
 --
 
-CREATE TABLE IF NOT EXISTS `leaves` (
-  `id` int NOT NULL AUTO_INCREMENT,
+CREATE TABLE `leaves` (
+  `id` int NOT NULL,
   `employee` varchar(255) NOT NULL,
   `emp_id` int NOT NULL,
   `leave_type` varchar(255) NOT NULL,
   `date_from` varchar(255) NOT NULL,
   `date_to` varchar(255) NOT NULL,
-  `reason` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `reason` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Volcado de datos para la tabla `leaves`
@@ -212,13 +173,12 @@ INSERT INTO `leaves` (`id`, `employee`, `emp_id`, `leave_type`, `date_from`, `da
 -- Estructura de tabla para la tabla `login`
 --
 
-CREATE TABLE IF NOT EXISTS `login` (
-  `id` int NOT NULL AUTO_INCREMENT,
+CREATE TABLE `login` (
+  `id` int NOT NULL,
   `username` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `email` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `email` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Volcado de datos para la tabla `login`
@@ -233,17 +193,15 @@ INSERT INTO `login` (`id`, `username`, `password`, `email`) VALUES
 -- Estructura de tabla para la tabla `patients`
 --
 
-CREATE TABLE IF NOT EXISTS `patients` (
+CREATE TABLE `patients` (
   `document` varchar(255) NOT NULL,
   `name` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `phone` varchar(255) NOT NULL,
   `gender` varchar(255) NOT NULL,
   `address` varchar(255) NOT NULL,
-  `user_id` int NOT NULL, -- Agregado campo `user_id`
-  `date_of_birth` date NOT NULL, -- Agregado campo `date_of_birth`
-  PRIMARY KEY (`document`),
-  FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) -- Llave foránea
+  `user_id` int NOT NULL,
+  `date_of_birth` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
@@ -259,16 +217,15 @@ INSERT INTO `patients` (`document`, `name`, `email`, `phone`, `gender`, `address
 -- Estructura de tabla para la tabla `store`
 --
 
-CREATE TABLE IF NOT EXISTS `store` (
-  `id` int NOT NULL AUTO_INCREMENT,
+CREATE TABLE `store` (
+  `id` int NOT NULL,
   `name` varchar(255) NOT NULL,
   `p_date` varchar(255) NOT NULL,
   `expire` varchar(255) NOT NULL,
   `expire_end` varchar(255) NOT NULL,
   `price` varchar(255) NOT NULL,
-  `quantity` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `quantity` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Volcado de datos para la tabla `store`
@@ -286,7 +243,7 @@ INSERT INTO `store` (`id`, `name`, `p_date`, `expire`, `expire_end`, `price`, `q
 -- Estructura de tabla para la tabla `temp`
 --
 
-CREATE TABLE IF NOT EXISTS `temp` (
+CREATE TABLE `temp` (
   `id` int NOT NULL,
   `email` varchar(255) NOT NULL,
   `token` varchar(255) NOT NULL
@@ -307,16 +264,42 @@ INSERT INTO `temp` (`id`, `email`, `token`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `users`
+--
+
+CREATE TABLE `users` (
+  `id` int NOT NULL,
+  `username` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `email_status` varchar(20) NOT NULL,
+  `role` enum('admin','doctor','receptionist','pharmacist','patient','nurse') NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Volcado de datos para la tabla `users`
+--
+
+INSERT INTO `users` (`id`, `username`, `email`, `password`, `email_status`, `role`) VALUES
+(1, 'zihad', 'zihad.1d@yopmail.com', '123', 'verified', 'admin'),
+(2, 'test', 'test555@yopmail.com', '123', 'verified', 'doctor'),
+(3, 'abc', 'gmhs13@yopmail.com', '12345', 'not_verified', 'receptionist'),
+(4, 'alamin', 'te555@yopmail.com', 'abc', 'verified', 'pharmacist'),
+(5, 'jei', 'cerpajeison8@gmail.com', '123', 'Verificado', 'admin'),
+(123123, 'Jei Test', 'test@test.com', 'doctor123', 'not_verified', 'doctor');
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `verify`
 --
 
-CREATE TABLE IF NOT EXISTS `verify` (
-  `id` int NOT NULL AUTO_INCREMENT,
+CREATE TABLE `verify` (
+  `id` int NOT NULL,
   `username` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
-  `token` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `token` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Volcado de datos para la tabla `verify`
@@ -330,6 +313,159 @@ INSERT INTO `verify` (`id`, `username`, `email`, `token`) VALUES
 (5, 'Jei', 'cerpajeison9@gmail.com', '89c3x22e'),
 (6, 'Prueba', 'cerpajeison8@gmail.com', 'uxpvlw0c'),
 (7, 'jei', 'cerpajeison8@gmail.com', '980cayf9');
+
+--
+-- Índices para tablas volcadas
+--
+
+--
+-- Indices de la tabla `appointment`
+--
+ALTER TABLE `appointment`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `complain`
+--
+ALTER TABLE `complain`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `departments`
+--
+ALTER TABLE `departments`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `doctors`
+--
+ALTER TABLE `doctors`
+  ADD PRIMARY KEY (`document`),
+  ADD KEY `user_id` (`user_id`);
+
+--
+-- Indices de la tabla `employee`
+--
+ALTER TABLE `employee`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
+-- Indices de la tabla `leaves`
+--
+ALTER TABLE `leaves`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `login`
+--
+ALTER TABLE `login`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `patients`
+--
+ALTER TABLE `patients`
+  ADD PRIMARY KEY (`document`),
+  ADD KEY `user_id` (`user_id`);
+
+--
+-- Indices de la tabla `store`
+--
+ALTER TABLE `store`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `verify`
+--
+ALTER TABLE `verify`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- AUTO_INCREMENT de las tablas volcadas
+--
+
+--
+-- AUTO_INCREMENT de la tabla `appointment`
+--
+ALTER TABLE `appointment`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT de la tabla `complain`
+--
+ALTER TABLE `complain`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT de la tabla `departments`
+--
+ALTER TABLE `departments`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT de la tabla `employee`
+--
+ALTER TABLE `employee`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT de la tabla `leaves`
+--
+ALTER TABLE `leaves`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT de la tabla `login`
+--
+ALTER TABLE `login`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT de la tabla `store`
+--
+ALTER TABLE `store`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT de la tabla `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=123124;
+
+--
+-- AUTO_INCREMENT de la tabla `verify`
+--
+ALTER TABLE `verify`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- Restricciones para tablas volcadas
+--
+
+--
+-- Filtros para la tabla `doctors`
+--
+ALTER TABLE `doctors`
+  ADD CONSTRAINT `doctors_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+
+--
+-- Filtros para la tabla `employee`
+--
+ALTER TABLE `employee`
+  ADD CONSTRAINT `employee_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+
+--
+-- Filtros para la tabla `patients`
+--
+ALTER TABLE `patients`
+  ADD CONSTRAINT `patients_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
