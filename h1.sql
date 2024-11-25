@@ -39,15 +39,15 @@ CREATE TABLE IF NOT EXISTS `appointment` (
   `email` varchar(255) NOT NULL,
   `phone` varchar(20) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Volcado de datos para la tabla `appointment`
 --
 
 INSERT INTO `appointment` (`id`, `patient_name`, `department`, `doctor_name`, `date`, `time`, `email`, `phone`) VALUES
-(10, 'Test123', 'Dentists', 'doc test', '18/03/2020', '1:41 AM', 'gmhs13@yopmail.com', '7865641399'),
-(11, 'Isabella Lerma', 'Neurology', 'Isabella Lerma', '13/11/2024', '9:00 AM', 'test@test.com', '3123123123');
+(1, 'Test123', 'Dentists', 'doc test', '18/03/2020', '1:41 AM', 'gmhs13@yopmail.com', '7865641399'),
+(2, 'Isabella Lerma', 'Neurology', 'Isabella Lerma', '13/11/2024', '9:00 AM', 'test@test.com', '3123123123');
 
 -- --------------------------------------------------------
 
@@ -59,10 +59,10 @@ CREATE TABLE IF NOT EXISTS `complain` (
   `id` int NOT NULL AUTO_INCREMENT,
   `message` varchar(500) NOT NULL,
   `name` varchar(50) NOT NULL,
-  `email` varchar(20) NOT NULL,
+  `email` varchar(255) NOT NULL, -- Cambiado de varchar(20) a varchar(255)
   `subject` varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Volcado de datos para la tabla `complain`
@@ -85,18 +85,18 @@ CREATE TABLE IF NOT EXISTS `departments` (
   `department_name` varchar(255) NOT NULL,
   `department_desc` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Volcado de datos para la tabla `departments`
 --
 
 INSERT INTO `departments` (`id`, `department_name`, `department_desc`) VALUES
-(11, 'Intensive Care Unit (ICU)', 'What is an intensive care unit (ICU)? Intensive care refers to the specialised treatment given to patients who are acutely unwell and require critical medical care. An intensive care unit (ICU) provides the critical care and life support for acutely ill a'),
-(16, 'Neurology', 'Neurology is a branch of medicine dealing with disorders of the nervous system. Neurology deals with the diagnosis and treatment of all categories of conditions and disease involving the central and peripheral nervous systems, including their coverings'),
-(17, 'Opthalmology', 'Ojos'),
-(18, 'Orthopedics', 'dfyuyuo'),
-(19, 'Cancer Department', 'asyckuauhcioa');
+(1, 'Intensive Care Unit (ICU)', 'What is an intensive care unit (ICU)? Intensive care refers to the specialised treatment given to patients who are acutely unwell and require critical medical care. An intensive care unit (ICU) provides the critical care and life support for acutely ill a'),
+(2, 'Neurology', 'Neurology is a branch of medicine dealing with disorders of the nervous system. Neurology deals with the diagnosis and treatment of all categories of conditions and disease involving the central and peripheral nervous systems, including their coverings'),
+(3, 'Opthalmology', 'Ojos'),
+(4, 'Orthopedics', 'dfyuyuo'),
+(5, 'Cancer Department', 'asyckuauhcioa');
 
 -- --------------------------------------------------------
 
@@ -104,29 +104,30 @@ INSERT INTO `departments` (`id`, `department_name`, `department_desc`) VALUES
 -- Estructura de tabla para la tabla `doctor`
 --
 
-CREATE TABLE IF NOT EXISTS `doctor` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `first_name` varchar(255) NOT NULL,
-  `last_name` varchar(255) NOT NULL,
+CREATE TABLE IF NOT EXISTS `doctors` (
+  `document` varchar(255) NOT NULL, -- Cambiado de `id` a `document`
+  `name` varchar(255) NOT NULL, -- Agregado `name`
   `email` varchar(255) NOT NULL,
-  `dob` varchar(20) NOT NULL,
+  `date_of_birth` date NOT NULL, -- Cambiado de `dob` a `date_of_birth` y tipo a `DATE`
   `gender` varchar(10) NOT NULL,
   `address` varchar(255) NOT NULL,
   `phone` varchar(20) NOT NULL,
   `image` text NOT NULL,
   `department` varchar(50) NOT NULL,
   `biography` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `user_id` int NOT NULL, -- Agregado campo `user_id`
+  PRIMARY KEY (`document`), -- Cambiado de `id` a `document`
+  FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) -- Llave foránea
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Volcado de datos para la tabla `doctor`
 --
 
-INSERT INTO `doctor` (`id`, `first_name`, `last_name`, `email`, `dob`, `gender`, `address`, `phone`, `image`, `department`, `biography`) VALUES
-(42, 'Jeison', 'Cerpa Osorio', 'cerpajeison8@gmail.com', '05/10/2024', 'male', 'calle 23#23-56', '3005921351', 'OIP.jfif', 'Neurology', ''),
-(43, 'Jhon', 'Cerpa', 'test@test.com', '28/11/2024', 'male', 'calle 23#23-56', '3005921351', 'OIP.jfif', 'Intensive Care Unit (ICU)', 'Hola'),
-(44, 'Isabella', 'Lerma', 'test@test.com', '13/11/2024', 'female', 'calle 23#23-56', '3005921351', 'OIP.jfif', 'Neurology', 'Hola');
+INSERT INTO `doctors` (`document`, `name`, `email`, `date_of_birth`, `gender`, `address`, `phone`, `image`, `department`, `biography`, `user_id`) VALUES
+('1', 'Jeison Cerpa Osorio', 'cerpajeison8@gmail.com', '2024-10-05', 'male', 'calle 23#23-56', '3005921351', 'OIP.jfif', 'Neurology', '', 2),
+('2', 'Jhon Cerpa', 'test@test.com', '2024-11-28', 'male', 'calle 23#23-56', '3005921351', 'OIP.jfif', 'Intensive Care Unit (ICU)', 'Hola', 2),
+('3', 'Isabella Lerma', 'test@test.com', '2024-11-13', 'female', 'calle 23#23-56', '3005921351', 'OIP.jfif', 'Neurology', 'Hola', 2);
 
 -- --------------------------------------------------------
 
@@ -139,19 +140,20 @@ CREATE TABLE IF NOT EXISTS `employee` (
   `name` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `contact` varchar(255) NOT NULL,
-  `join_date` varchar(255) NOT NULL,
+  `date_of_birth` date NOT NULL, -- Cambiado de `join_date` a `date_of_birth` y tipo a `DATE`
   `role` varchar(255) NOT NULL,
-  `salary` varchar(10) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `user_id` int NOT NULL, -- Agregado campo `user_id`
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) -- Llave foránea
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Volcado de datos para la tabla `employee`
 --
 
-INSERT INTO `employee` (`id`, `name`, `email`, `contact`, `join_date`, `role`, `salary`) VALUES
-(20, 'Abc', 'gmhs13@yopmail.com', '0159653', '26/03/2020', 'Pharmacist', '1000'),
-(21, 'Jeison Cerpa', 'test@test.com', '300111222333', '21/11/2024', 'Receptionist', '1000');
+INSERT INTO `employee` (`id`, `name`, `email`, `contact`, `date_of_birth`, `role`, `user_id`) VALUES
+(1, 'Abc', 'gmhs13@yopmail.com', '0159653', '1990-01-01', 'Pharmacist', 4), -- Cambiado `join_date` a `date_of_birth` y eliminado `salary`
+(2, 'Jeison Cerpa', 'test@test.com', '300111222333', '1990-01-01', 'Receptionist', 3); -- Cambiado `join_date` a `date_of_birth` y eliminado `salary`
 
 -- --------------------------------------------------------
 
@@ -168,14 +170,14 @@ CREATE TABLE IF NOT EXISTS `leaves` (
   `date_to` varchar(255) NOT NULL,
   `reason` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Volcado de datos para la tabla `leaves`
 --
 
 INSERT INTO `leaves` (`id`, `employee`, `emp_id`, `leave_type`, `date_from`, `date_to`, `reason`) VALUES
-(7, 'Isaiah L. Smith', 4, 'Medical Leave', '26/03/2020', '31/03/2020', 'acdsvfbgnh');
+(1, 'Isaiah L. Smith', 4, 'Medical Leave', '26/03/2020', '31/03/2020', 'acdsvfbgnh');
 
 -- --------------------------------------------------------
 
@@ -189,7 +191,7 @@ CREATE TABLE IF NOT EXISTS `login` (
   `password` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Volcado de datos para la tabla `login`
@@ -211,15 +213,18 @@ CREATE TABLE IF NOT EXISTS `patients` (
   `phone` varchar(255) NOT NULL,
   `gender` varchar(255) NOT NULL,
   `address` varchar(255) NOT NULL,
-  PRIMARY KEY (`document`)
+  `user_id` int NOT NULL, -- Agregado campo `user_id`
+  `date_of_birth` date NOT NULL, -- Agregado campo `date_of_birth`
+  PRIMARY KEY (`document`),
+  FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) -- Llave foránea
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Volcado de datos para la tabla `patients`
 --
 
-INSERT INTO `patients` (`document`, `name`, `email`, `phone`, `gender`, `address`) VALUES
-('111', 'Isabella', 'test@test.com', '3001112233', 'female', 'calle 23#23-53');
+INSERT INTO `patients` (`document`, `name`, `email`, `phone`, `gender`, `address`, `user_id`, `date_of_birth`) VALUES
+('111', 'Isabella', 'test@test.com', '3001112233', 'female', 'calle 23#23-53', 5, '1990-01-01');
 
 -- --------------------------------------------------------
 
@@ -236,17 +241,17 @@ CREATE TABLE IF NOT EXISTS `store` (
   `price` varchar(255) NOT NULL,
   `quantity` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Volcado de datos para la tabla `store`
 --
 
 INSERT INTO `store` (`id`, `name`, `p_date`, `expire`, `expire_end`, `price`, `quantity`) VALUES
-(4, 'Napa', '20/03/2020', '2', '19/03/2020', '8', '100'),
-(8, 'Seclo', '24/03/2020', '2', '24/03/2020', '5', '200'),
-(9, 'Napa', '24/03/2020', '1 ', '19/03/2020', '10', '20'),
-(10, 'max', '11/03/2020', '1 ', '12/03/2020', '10', '100');
+(1, 'Napa', '20/03/2020', '2', '19/03/2020', '8', '100'),
+(2, 'Seclo', '24/03/2020', '2', '24/03/2020', '5', '200'),
+(3, 'Napa', '24/03/2020', '1 ', '19/03/2020', '10', '20'),
+(4, 'max', '11/03/2020', '1 ', '12/03/2020', '10', '100');
 
 -- --------------------------------------------------------
 
@@ -282,21 +287,22 @@ CREATE TABLE IF NOT EXISTS `users` (
   `id` int NOT NULL AUTO_INCREMENT,
   `username` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
-  `password` varchar(20) NOT NULL,
+  `password` varchar(255) NOT NULL, -- Cambiado de varchar(20) a varchar(255)
   `email_status` varchar(20) NOT NULL,
+  `role` ENUM('admin', 'doctor', 'receptionist', 'pharmacist', 'patient', 'nurse') NOT NULL, -- Agregado campo `role`
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Volcado de datos para la tabla `users`
 --
 
-INSERT INTO `users` (`id`, `username`, `email`, `password`, `email_status`) VALUES
-(9, 'zihad', 'zihad.1d@yopmail.com', '123', 'verified'),
-(19, 'test', 'test555@yopmail.com', '123', 'verified'),
-(20, 'abc', 'gmhs13@yopmail.com', '12345', 'not_verified'),
-(21, 'alamin', 'te555@yopmail.com', 'abc', 'verified'),
-(25, 'jei', 'cerpajeison8@gmail.com', '123', 'Verificado');
+INSERT INTO `users` (`id`, `username`, `email`, `password`, `email_status`, `role`) VALUES
+(1, 'zihad', 'zihad.1d@yopmail.com', '123', 'verified', 'admin'),
+(2, 'test', 'test555@yopmail.com', '123', 'verified', 'doctor'),
+(3, 'abc', 'gmhs13@yopmail.com', '12345', 'not_verified', 'receptionist'),
+(4, 'alamin', 'te555@yopmail.com', 'abc', 'verified', 'pharmacist'),
+(5, 'jei', 'cerpajeison8@gmail.com', '123', 'Verificado', 'patient');
 
 -- --------------------------------------------------------
 
@@ -310,20 +316,20 @@ CREATE TABLE IF NOT EXISTS `verify` (
   `email` varchar(255) NOT NULL,
   `token` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Volcado de datos para la tabla `verify`
 --
 
 INSERT INTO `verify` (`id`, `username`, `email`, `token`) VALUES
-(4, 'zihad', 'zihad.1d@yopmail.com', 'lp5ux5ik'),
-(14, 'test', 'test555@yopmail.com', '3udlo9v6'),
-(15, 'abc', 'gmhs13@yopmail.com', 'w2px024k'),
-(16, 'alamin', 'te555@yopmail.com', 'ix8enxdh'),
-(26, 'Jei', 'cerpajeison9@gmail.com', '89c3x22e'),
-(28, 'Prueba', 'cerpajeison8@gmail.com', 'uxpvlw0c'),
-(29, 'jei', 'cerpajeison8@gmail.com', '980cayf9');
+(1, 'zihad', 'zihad.1d@yopmail.com', 'lp5ux5ik'),
+(2, 'test', 'test555@yopmail.com', '3udlo9v6'),
+(3, 'abc', 'gmhs13@yopmail.com', 'w2px024k'),
+(4, 'alamin', 'te555@yopmail.com', 'ix8enxdh'),
+(5, 'Jei', 'cerpajeison9@gmail.com', '89c3x22e'),
+(6, 'Prueba', 'cerpajeison8@gmail.com', 'uxpvlw0c'),
+(7, 'jei', 'cerpajeison8@gmail.com', '980cayf9');
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

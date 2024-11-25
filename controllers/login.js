@@ -45,7 +45,9 @@ router.post('/', [check('username').notEmpty().withMessage('El nombre de usuario
             if (result.length > 0) {
                 req.session.loggedin = true;
                 req.session.username = username;
+                var role = result[0].role; // Obtener el rol del usuario
                 res.cookie('username', username);
+                res.cookie('role', role); // Agregar el rol a las cookies
                 var status = result[0].email_status;
                 if (status == "No verificado") {
                     res.send('Por favor verifique su cuenta');
