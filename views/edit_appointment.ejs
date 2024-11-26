@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 
 
@@ -200,7 +200,7 @@
             <div class="content">
                 <div class="row">
                     <div class="col-lg-8 offset-lg-2">
-                        <h4 class="page-title">Edit Appointment</h4>
+                        <h4 class="page-title">Editar Cita</h4>
                     </div>
                 </div>
                 <div class="row">
@@ -210,31 +210,37 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <% for (var i = 0; i < list.length; i++){ %>
-										<label>Patient Name </label>
-										<input class="form-control" type="text" name="p_name" value="<%= list[i].patient_name %>">
-									</div>
+                                        <label>Nombre del Paciente</label>
+                                        <input type="text" class="form-control" list="patients" name="p_name" value="<%= list[i].patient_name %>">
+                                        <datalist id="patients">
+                                            <% for (var j = 0; j < patients.length; j++) { %>
+                                                <option value="<%= patients[j].document %>"><%= patients[j].name %> - <%= patients[j].document %></option>
+                                            <% } %>
+                                        </datalist>
+                                    </div>
                                 </div>
-                               
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Department</label>
-                                        <select class="select" name="department" value="<%= list[i].department %>">
-                                            <option value="">Select</option>
-                                            <option value="Dentists">Dentists</option>
-                                            <option value="Neurology">Neurology</option>
-                                            <option value="Opthalmology">Opthalmology</option>
-                                            <option value="Orthopedics">Orthopedics</option>
-                                            <option value="Cancer Departmen">Cancer Department</option>
-                                            <option value="ENT Departmen">ENT Department</option>
-                                        </select>
+                                        <label>Departamento</label>
+                                        <input type="text" class="form-control" list="departments" name="department" value="<%= list[i].department %>">
+                                        <datalist id="departments">
+                                            <% for (var j = 0; j < departments.length; j++) { %>
+                                                <option value="<%= departments[j].department_name %>">
+                                            <% } %>
+                                        </datalist>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Doctor Name</label>
-                                        <input type="text" name="d_name" id="" value="<%= list[i].doctor_name %>">
+                                        <label>Nombre del Doctor</label>
+                                        <input type="text" class="form-control" list="doctors" name="d_name" value="<%= list[i].doctor_name %>">
+                                        <datalist id="doctors">
+                                            <% for (var j = 0; j < doctors.length; j++) { %>
+                                                <option value="<%= doctors[j].name %>">
+                                            <% } %>
+                                        </datalist>
                                     </div>
                                 </div>
                             </div>
@@ -273,7 +279,7 @@
                             <% } %>
                             
                             <div class="m-t-20 text-center">
-                                <button class="btn btn-primary submit-btn">Update Appointment</button>
+                                <button class="btn btn-primary submit-btn">Actualizar Cita</button>
                             </div>
                         </form>
                     </div>

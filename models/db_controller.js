@@ -298,11 +298,39 @@ module.exports.getAllPatients = (callback) => {
     console.log(query);
 }
 
-module.exports.add_patient = (document, name, email, phone, gender, address, callback) => {
-    var query = 'INSERT INTO patients (document, name, email, phone, gender, address) VALUES (?, ?, ?, ?, ?, ?)';
-    con.query(query, [document, name, email, phone, gender, address], callback);
-    con.query(query, [document, name, email, phone, gender, address], callback);
-    console.log(query);
+module.exports.add_patient = (document, name, email, date_of_birth, phone, gender, address, callback) => {
+    var role = 'patient';
+    var password = 'patient123';
+    var email_status = 'not_verified';
+
+    // Verificar si date_of_birth es una fecha válida
+    var formattedDateOfBirth = new Date(date_of_birth);
+    if (isNaN(formattedDateOfBirth.getTime())) {
+        if (typeof callback === 'function') {
+            return callback(new Error('Invalid date_of_birth value'));
+        }
+        return;
+    }
+    formattedDateOfBirth = formattedDateOfBirth.toISOString().split('T')[0];
+
+    // Insertar en la tabla users
+    var userQuery = 'INSERT INTO users (id, username, email, password, email_status, role) VALUES (?, ?, ?, ?, ?, ?)';
+    con.query(userQuery, [document, name, email, password, email_status, role], (err) => {
+        if (err) {
+            if (typeof callback === 'function') {
+                return callback(err);
+            }
+            return;
+        }
+
+        // Insertar en la tabla patients
+        var patientQuery = 'INSERT INTO patients (document, name, email, date_of_birth, phone, gender, address, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+        con.query(patientQuery, [document, name, email, formattedDateOfBirth, phone, gender, address, document], (err, result) => {
+            if (typeof callback === 'function') {
+                return callback(err, result);
+            }
+        });
+    });
 }
 
 module.exports.getPatientByDoc = (document, callback) => {
@@ -318,9 +346,37 @@ module.exports.editPatient = (document, name, email, phone, gender, address, cal
 }
 
 module.exports.deletePatient = (document, callback) => {
-    var query = 'DELETE FROM patients WHERE document = ?';
-    con.query(query, [document], callback);
-    console.log(query);
+    // Primero obtenemos el user_id del paciente
+    var getUserIdQuery = 'SELECT user_id FROM patients WHERE document = ?';
+    con.query(getUserIdQuery, [document], (err, result) => {
+        if (err) {
+            console.error('Error executing query:', err);
+            return callback(err, null);
+        }
+        if (result.length > 0) {
+            var userId = result[0].user_id;
+            // Eliminamos el paciente
+            var deletePatientQuery = 'DELETE FROM patients WHERE document = ?';
+            con.query(deletePatientQuery, [document], (err, result) => {
+                if (err) {
+                    console.error('Error executing query:', err);
+                    return callback(err, null);
+                }
+                // Eliminamos el usuario correspondiente
+                var deleteUserQuery = 'DELETE FROM users WHERE id = ?';
+                con.query(deleteUserQuery, [userId], (err, result) => {
+                    if (err) {
+                        console.error('Error executing query:', err);
+                        return callback(err, null);
+                    }
+                    callback(null, result);
+                });
+            });
+        } else {
+            callback(new Error('Patient not found'), null);
+        }
+    });
+    console.log(getUserIdQuery);
 }
 
 module.exports.searchPatient = (key, callback) => {
@@ -359,4 +415,10 @@ module.exports.deleteUser = (userId, callback) => {
         if (err) throw err;
         callback(null, result);
     });
+};
+
+module.exports.getAppointmentsByDepartment = (department, callback) => {
+    var query = 'SELECT * FROM appointment WHERE department = ?';
+    con.query(query, [department], callback);
+    console.log(query);
 };

@@ -9,7 +9,6 @@ router.get('*', (req, res, next) => {
     } else {
         next()
     }
-
 });
 
 router.get('/', (req, res) => {
@@ -20,7 +19,28 @@ router.get('/', (req, res) => {
 });
 
 router.get('/add_appointment', (req, res) => {
-    res.render('add_appointment.ejs');
+    db.getAllPatients((err, patients) => {
+        if (err) {
+            console.error('Error fetching patients:', err);
+            res.status(500).send('Internal Server Error');
+        } else {
+            db.getalldept((err, departments) => {
+                if (err) {
+                    console.error('Error fetching departments:', err);
+                    res.status(500).send('Internal Server Error');
+                } else {
+                    db.getAllDoc((err, doctors) => {
+                        if (err) {
+                            console.error('Error fetching doctors:', err);
+                            res.status(500).send('Internal Server Error');
+                        } else {
+                            res.render('add_appointment.ejs', { patients: patients, departments: departments, doctors: doctors });
+                        }
+                    });
+                }
+            });
+        }
+    });
 });
 
 router.post('/add_appointment', (req, res) => {
@@ -51,7 +71,7 @@ router.get('/delete_appointment/:id', (req, res) => {
     var id = req.params.id;
     db.getallappointmentbyid(id, (err, result) => {
         console.log(result);
-        res.redirect('/delete_appointment.ejs', {list: result});    
+        res.render('delete_appointment.ejs', {list: result});    
     });
 });
 
@@ -60,6 +80,18 @@ router.post('/delete_appointment/:id', (req, res) => {
     db.deleteappointment(id, (err, result) => {
         console.log(result);
         res.redirect('/appointment');
+    });
+});
+
+router.get('/department', (req, res) => {
+    var department = req.query.department;
+    db.getAppointmentsByDepartment(department, (err, result) => {
+        if (err) {
+            console.error('Error fetching appointments by department:', err);
+            res.status(500).send('Internal Server Error');
+        } else {
+            res.render('appointment.ejs', { list: result });
+        }
     });
 });
 

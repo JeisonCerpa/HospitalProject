@@ -25,10 +25,17 @@ router.get('/add_patient', (req, res) => {
 
 router.post('/add_patient', (req, res) => {
     console.log(req.body);
-    db.add_patient(req.body.document, req.body.name, req.body.email, req.body.phone, req.body.gender, req.body.address, (err) => {
+    db.getPatientByDoc(req.body.document, (err, result) => {
         if (err) throw err;
-        console.log('1 patient inserted');
-        res.redirect('/patients');
+        if (result.length > 0) {
+            res.redirect('/patients/add_patient');
+        } else {
+            db.add_patient(req.body.document, req.body.name, req.body.email, req.body.date_of_birth, req.body.phone, req.body.gender, req.body.address, (err) => {
+                if (err) throw err;
+                console.log('1 patient inserted');
+                res.redirect('/patients');
+            });
+        }
     });
 });
 
@@ -60,7 +67,7 @@ router.post('/delete_patient/:document', (req, res) => {
     var document = req.params.document;
     db.deletePatient(document, (err, result) => {
         if (err) throw err;
-        console.log('1 patient deleted');
+        console.log('1 patient and corresponding user deleted');
         res.redirect('/patients');
     });
 });
@@ -71,6 +78,14 @@ router.post('/search', (req, res) => {
     db.searchPatient(key, (err, result) => {
         if (err) throw err;
         res.render('patients.ejs', { list: result });
+    });
+});
+
+router.get('/check_duplicate/:document', (req, res) => {
+    var document = req.params.document;
+    db.getPatientByDoc(document, (err, result) => {
+        if (err) throw err;
+        res.json({ exists: result.length > 0 });
     });
 });
 
