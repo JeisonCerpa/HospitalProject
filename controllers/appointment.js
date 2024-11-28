@@ -45,7 +45,8 @@ router.get('/add_appointment', (req, res) => {
 
 router.post('/add_appointment', (req, res) => {
     console.log(req.body);
-    db.add_appointment(req.body.p_name, req.body.department, req.body.d_name, req.body.date, req.body.time, req.body.email, req.body.phone, (err, result) => {
+    var date = new Date(req.body.date).toISOString().split('T')[0]; // Formatear la fecha correctamente
+    db.add_appointment(req.body.patient_document, req.body.department, req.body.doctor_document, date, req.body.time, (err, result) => {
         console.log('Cita agregada');
         res.redirect('/appointment');
     });
@@ -61,7 +62,8 @@ router.get('/edit_appointment/:id', (req, res) => {
 
 router.post('/edit_appointment/:id', (req, res) => {
     var id = req.params.id;
-    db.editappointment(id, req.body.p_name, req.body.department, req.body.d_name, req.body.date, req.body.time, req.body.email, req.body.phone, (err, result) => {
+    var date = new Date(req.body.date).toISOString().split('T')[0]; // Formatear la fecha correctamente
+    db.editappointment(id, req.body.patient_document, req.body.department, req.body.doctor_document, date, req.body.time, (err, result) => {
         console.log('Cita actualizada');
         res.redirect('/appointment');
     });
@@ -91,6 +93,21 @@ router.get('/department', (req, res) => {
             res.status(500).send('Internal Server Error');
         } else {
             res.render('appointment.ejs', { list: result });
+        }
+    });
+});
+
+router.post('/check_availability', (req, res) => {
+    var doctorDocument = req.body.doctor_document;
+    var date = req.body.date;
+    var time = req.body.time;
+
+    db.checkDoctorAvailability(doctorDocument, date, time, (err, result) => {
+        if (err) {
+            console.error('Error checking doctor availability:', err);
+            res.status(500).send('Internal Server Error');
+        } else {
+            res.json({ available: result.length === 0 });
         }
     });
 });

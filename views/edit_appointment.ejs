@@ -210,8 +210,8 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <% for (var i = 0; i < list.length; i++){ %>
-                                        <label>Nombre del Paciente</label>
-                                        <input type="text" class="form-control" list="patients" name="p_name" value="<%= list[i].patient_name %>">
+                                        <label>Documento del Paciente</label>
+                                        <input type="text" class="form-control" list="patients" name="p_document" value="<%= list[i].patient_document %>">
                                         <datalist id="patients">
                                             <% for (var j = 0; j < patients.length; j++) { %>
                                                 <option value="<%= patients[j].document %>"><%= patients[j].name %> - <%= patients[j].document %></option>
@@ -224,7 +224,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Departamento</label>
-                                        <input type="text" class="form-control" list="departments" name="department" value="<%= list[i].department %>">
+                                        <input type="text" class="form-control" list="departments" name="department" id="department" value="<%= list[i].department %>">
                                         <datalist id="departments">
                                             <% for (var j = 0; j < departments.length; j++) { %>
                                                 <option value="<%= departments[j].department_name %>">
@@ -235,10 +235,10 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Nombre del Doctor</label>
-                                        <input type="text" class="form-control" list="doctors" name="d_name" value="<%= list[i].doctor_name %>">
+                                        <input type="text" class="form-control" list="doctors" name="d_document" id="doctor" value="<%= list[i].doctor_document %>">
                                         <datalist id="doctors">
                                             <% for (var j = 0; j < doctors.length; j++) { %>
-                                                <option value="<%= doctors[j].name %>">
+                                                <option value="<%= doctors[j].document %>"><%= doctors[j].name %> - <%= doctors[j].document %></option>
                                             <% } %>
                                         </datalist>
                                     </div>
@@ -509,7 +509,44 @@
 	<script>
             $(function () {
                 $('#datetimepicker3').datetimepicker({
-                    format: 'LT'
+                    format: 'hh:mm A',
+                    stepping: 30,
+                    minDate: moment().set({ hour: 7, minute: 0 }),
+                    maxDate: moment().set({ hour: 19, minute: 0 })
+                });
+
+                $('#department').on('input', function() {
+                    var department = $(this).val();
+                    var doctors = <%- JSON.stringify(doctors) %>;
+                    var filteredDoctors = doctors.filter(function(doctor) {
+                        return doctor.department === department;
+                    });
+
+                    var datalist = $('#doctors');
+                    datalist.empty();
+                    filteredDoctors.forEach(function(doctor) {
+                        datalist.append('<option value="' + doctor.document + '">' + doctor.name + ' - ' + doctor.document + '</option>');
+                    });
+                });
+
+                $('form').on('submit', function(event) {
+                    event.preventDefault();
+                    var doctorDocument = $('#doctor').val();
+                    var date = $('input[name="date"]').val();
+                    var time = $('input[name="time"]').val();
+
+                    $.ajax({
+                        url: '/appointment/check_availability',
+                        method: 'POST',
+                        data: { doctor_document: doctorDocument, date: date, time: time },
+                        success: function(response) {
+                            if (response.available) {
+                                $('form')[0].submit();
+                            } else {
+                                alert('El doctor ya tiene una cita a esta hora. Por favor, seleccione otra hora.');
+                            }
+                        }
+                    });
                 });
             });
      </script>

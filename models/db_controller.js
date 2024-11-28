@@ -214,9 +214,9 @@ module.exports.edit_leave = (id, name, type, from, to, reason, callback) => {
     console.log(query);
 };
 
-module.exports.add_appointment = (p_name, department, d_name, date, time, email, phone, callback) => {
-    var query = 'INSERT INTO appointment (patient_name, department, doctor_name, date, time, email, phone) VALUES (?, ?, ?, ?, ?, ?, ?)';
-    con.query(query, [p_name, department, d_name, date, time, email, phone], callback);
+module.exports.add_appointment = (patient_document, department, doctor_document, date, time, callback) => {
+    var query = 'INSERT INTO appointment (patient_document, department, doctor_document, date, time) VALUES (?, ?, ?, ?, ?)';
+    con.query(query, [patient_document, department, doctor_document, date, time], callback);
     console.log(query);
 };
 
@@ -232,9 +232,9 @@ module.exports.getallappointmentbyid = (id, callback) => {
     console.log(query);
 };
 
-module.exports.editappointment = (id, p_name, department, d_name, date, time, email, phone, callback) => {
-    var query = 'UPDATE appointment SET patient_name = ?, department = ?, doctor_name = ?, date = ?, time = ?, email = ?, phone = ? WHERE id = ?';
-    con.query(query, [p_name, department, d_name, date, time, email, phone, id], callback);
+module.exports.editappointment = (id, patient_document, department, doctor_document, date, time, callback) => {
+    var query = 'UPDATE appointment SET patient_document = ?, department = ?, doctor_document = ?, date = ?, time = ? WHERE id = ?';
+    con.query(query, [patient_document, department, doctor_document, date, time, id], callback);
     console.log(query);
 };
 
@@ -420,5 +420,11 @@ module.exports.deleteUser = (userId, callback) => {
 module.exports.getAppointmentsByDepartment = (department, callback) => {
     var query = 'SELECT * FROM appointment WHERE department = ?';
     con.query(query, [department], callback);
+    console.log(query);
+};
+
+module.exports.checkDoctorAvailability = (doctorDocument, date, time, callback) => {
+    var query = 'SELECT * FROM appointment WHERE doctor_document = ? AND date = ? AND time = ?';
+    con.query(query, [doctorDocument, date, time], callback);
     console.log(query);
 };
