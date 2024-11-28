@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 26-11-2024 a las 14:28:46
+-- Tiempo de generación: 28-11-2024 a las 15:58:14
 -- Versión del servidor: 8.0.30
 -- Versión de PHP: 8.1.10
 
@@ -25,54 +25,10 @@ USE `h1`;
 
 -- --------------------------------------------------------
 
--- Crear la tabla `users` primero
-DROP TABLE IF EXISTS `users`;
-CREATE TABLE IF NOT EXISTS `users` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `username` varchar(255) NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `email_status` varchar(20) NOT NULL,
-  `role` enum('admin','doctor','receptionist','pharmacist','patient','nurse') NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=123124 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+--
+-- Estructura de tabla para la tabla `appointment`
+--
 
--- Crear la tabla `patients` después de `users`
-DROP TABLE IF EXISTS `patients`;
-CREATE TABLE IF NOT EXISTS `patients` (
-  `document` varchar(255) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `phone` varchar(255) NOT NULL,
-  `gender` varchar(255) NOT NULL,
-  `address` varchar(255) NOT NULL,
-  `user_id` int NOT NULL,
-  `date_of_birth` date NOT NULL,
-  PRIMARY KEY (`document`),
-  KEY `user_id` (`user_id`),
-  FOREIGN KEY (`user_id`) REFERENCES `users`(`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- Crear la tabla `doctors` después de `users`
-DROP TABLE IF EXISTS `doctors`;
-CREATE TABLE IF NOT EXISTS `doctors` (
-  `document` varchar(255) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `date_of_birth` date NOT NULL,
-  `gender` varchar(10) NOT NULL,
-  `address` varchar(255) NOT NULL,
-  `phone` varchar(20) NOT NULL,
-  `image` text NOT NULL,
-  `department` varchar(50) NOT NULL,
-  `biography` varchar(255) NOT NULL,
-  `user_id` int NOT NULL,
-  PRIMARY KEY (`document`),
-  KEY `user_id` (`user_id`),
-  FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- Crear la tabla `appointment` después de `patients` y `doctors`
 DROP TABLE IF EXISTS `appointment`;
 CREATE TABLE IF NOT EXISTS `appointment` (
   `id` int NOT NULL AUTO_INCREMENT,
@@ -82,33 +38,16 @@ CREATE TABLE IF NOT EXISTS `appointment` (
   `date` date NOT NULL,
   `time` time NOT NULL,
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`patient_document`) REFERENCES `patients`(`document`),
-  FOREIGN KEY (`doctor_document`) REFERENCES `doctors`(`document`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  KEY `patient_document` (`patient_document`),
+  KEY `doctor_document` (`doctor_document`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Volcado de datos para las tablas
+-- Volcado de datos para la tabla `appointment`
 --
-INSERT INTO `users` (`id`, `username`, `email`, `password`, `email_status`, `role`) VALUES
-(1, 'zihad', 'zihad.1d@yopmail.com', '123', 'verified', 'admin'),
-(2, 'test', 'test555@yopmail.com', '123', 'verified', 'doctor'),
-(3, 'abc', 'gmhs13@yopmail.com', '12345', 'not_verified', 'receptionist'),
-(4, 'alamin', 'te555@yopmail.com', 'abc', 'verified', 'pharmacist'),
-(5, 'jei', 'cerpajeison8@gmail.com', '123', 'Verificado', 'admin'),
-(23, 'Pedro', 'test@test.com', 'patient123', 'not_verified', 'patient'),
-(112233, 'Pedro', 'test@test.com', 'patient123', 'not_verified', 'patient'),
-(123123, 'Jei Test', 'test@test.com', 'doctor123', 'not_verified', 'doctor');
-
-INSERT INTO `patients` (`document`, `name`, `email`, `phone`, `gender`, `address`, `user_id`, `date_of_birth`) VALUES
-('111', 'Isabella', 'test@test.com', '3001112233', 'female', 'calle 23#23-53', 5, '1990-01-01'),
-('112233', 'Pedro', 'test@test.com', '30000000', 'male', 'calle 23#23-56', 112233, '2004-02-11');
-
-INSERT INTO `doctors` (`document`, `name`, `email`, `date_of_birth`, `gender`, `address`, `phone`, `image`, `department`, `biography`, `user_id`) VALUES
-('123123', 'Jei Test', 'test@test.com', '1998-09-08', 'male', 'Calle Test # Test', '300000000', 'OIP.jpg', 'Intensive Care Unit (ICU)', 'Hola1', 123123);
 
 INSERT INTO `appointment` (`id`, `patient_document`, `department`, `doctor_document`, `date`, `time`) VALUES
-(1, '111', 'Dentists', '123123', '2020-03-18', '01:41:00'),
-(2, '112233', 'Neurology', '123123', '2024-11-13', '09:00:00');
+(1, '112233', 'Opthalmology', '25262441', '2002-12-24', '11:00:00');
 
 -- --------------------------------------------------------
 
@@ -160,6 +99,37 @@ INSERT INTO `departments` (`id`, `department_name`, `department_desc`) VALUES
 (3, 'Opthalmology', 'Ojos'),
 (4, 'Orthopedics', 'dfyuyuo'),
 (5, 'Cancer Department', 'asyckuauhcioa');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `doctors`
+--
+
+DROP TABLE IF EXISTS `doctors`;
+CREATE TABLE IF NOT EXISTS `doctors` (
+  `document` varchar(255) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `date_of_birth` date NOT NULL,
+  `gender` varchar(10) NOT NULL,
+  `address` varchar(255) NOT NULL,
+  `phone` varchar(20) NOT NULL,
+  `image` text NOT NULL,
+  `department` varchar(50) NOT NULL,
+  `biography` varchar(255) NOT NULL,
+  `user_id` int NOT NULL,
+  PRIMARY KEY (`document`),
+  KEY `user_id` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Volcado de datos para la tabla `doctors`
+--
+
+INSERT INTO `doctors` (`document`, `name`, `email`, `date_of_birth`, `gender`, `address`, `phone`, `image`, `department`, `biography`, `user_id`) VALUES
+('123123', 'Jei Test', 'test@test.com', '1998-09-08', 'male', 'Calle Test # Test', '300000000', 'OIP.jpg', 'Intensive Care Unit (ICU)', 'Hola1', 123123),
+('25262441', 'Isabella Lerma', 'test@test.com', '2012-11-11', 'male', 'calle 23#23-56', '3001112233', 'OIP (1).jfif', 'Opthalmology', '123', 25262441);
 
 -- --------------------------------------------------------
 
@@ -238,6 +208,34 @@ INSERT INTO `login` (`id`, `username`, `password`, `email`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `patients`
+--
+
+DROP TABLE IF EXISTS `patients`;
+CREATE TABLE IF NOT EXISTS `patients` (
+  `document` varchar(255) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `phone` varchar(255) NOT NULL,
+  `gender` varchar(255) NOT NULL,
+  `address` varchar(255) NOT NULL,
+  `user_id` int NOT NULL,
+  `date_of_birth` date NOT NULL,
+  PRIMARY KEY (`document`),
+  KEY `user_id` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Volcado de datos para la tabla `patients`
+--
+
+INSERT INTO `patients` (`document`, `name`, `email`, `phone`, `gender`, `address`, `user_id`, `date_of_birth`) VALUES
+('111', 'Isabella', 'test@test.com', '3001112233', 'female', 'calle 23#23-53', 5, '1990-01-01'),
+('112233', 'Pedro', 'test@test.com', '30000000', 'male', 'calle 23#23-56', 112233, '2004-02-11');
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `store`
 --
 
@@ -291,6 +289,38 @@ INSERT INTO `temp` (`id`, `email`, `token`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `users`
+--
+
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE IF NOT EXISTS `users` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `username` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `email_status` varchar(20) NOT NULL,
+  `role` enum('admin','doctor','receptionist','pharmacist','patient','nurse') NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=25262442 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Volcado de datos para la tabla `users`
+--
+
+INSERT INTO `users` (`id`, `username`, `email`, `password`, `email_status`, `role`) VALUES
+(1, 'zihad', 'zihad.1d@yopmail.com', '123', 'verified', 'admin'),
+(2, 'test', 'test555@yopmail.com', '123', 'verified', 'doctor'),
+(3, 'abc', 'gmhs13@yopmail.com', '12345', 'not_verified', 'receptionist'),
+(4, 'alamin', 'te555@yopmail.com', 'abc', 'verified', 'pharmacist'),
+(5, 'jei', 'cerpajeison8@gmail.com', '123', 'Verificado', 'admin'),
+(23, 'Pedro', 'test@test.com', 'patient123', 'not_verified', 'patient'),
+(112233, 'Pedro', 'test@test.com', 'patient123', 'not_verified', 'patient'),
+(123123, 'Jei Test', 'test@test.com', 'doctor123', 'not_verified', 'doctor'),
+(25262441, 'Isabella Lerma', 'test@test.com', 'doctor123', 'not_verified', 'doctor');
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `verify`
 --
 
@@ -321,9 +351,17 @@ INSERT INTO `verify` (`id`, `username`, `email`, `token`) VALUES
 --
 
 --
+-- Filtros para la tabla `appointment`
+--
+ALTER TABLE `appointment`
+  ADD CONSTRAINT `appointment_ibfk_1` FOREIGN KEY (`patient_document`) REFERENCES `patients` (`document`),
+  ADD CONSTRAINT `appointment_ibfk_2` FOREIGN KEY (`doctor_document`) REFERENCES `doctors` (`document`);
+
+--
 -- Filtros para la tabla `doctors`
 --
 ALTER TABLE `doctors`
+  ADD CONSTRAINT `doctors_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `fk_doctors_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 --
@@ -336,7 +374,8 @@ ALTER TABLE `employee`
 -- Filtros para la tabla `patients`
 --
 ALTER TABLE `patients`
-  ADD CONSTRAINT `fk_patients_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+  ADD CONSTRAINT `fk_patients_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+  ADD CONSTRAINT `patients_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

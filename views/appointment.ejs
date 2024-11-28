@@ -137,62 +137,45 @@
             <div class="sidebar-inner slimscroll">
                 <div id="sidebar-menu" class="sidebar-menu">
                     <ul>
-                        <li class="menu-title">Main</li>
-                        <li >
-                            <a href="/home"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a>
-                        </li>
-						<li>
-                            <a href="/doctors"><i class="fa fa-user-md"></i> <span>Doctors</span></a>
+                        <li class="menu-title">Principal</li>
+                        <li>
+                            <a href="/home"><i class="fa fa-dashboard"></i> <span>Tablero</span></a>
                         </li>
                         <li>
-                            <a href="/patients"><i class="fa fa-wheelchair"></i> <span>Patients</span></a>
+                            <a href="/doctors"><i class="fa fa-user-md"></i> <span>Doctores</span></a>
+                        </li>
+                        <li>
+                            <a href="/patients"><i class="fa fa-wheelchair"></i> <span>Pacientes</span></a>
                         </li>
                         <li class="active">
-                            <a href="/appointment"><i class="fa fa-calendar"></i> <span>Appointments</span></a>
+                            <a href="/appointment"><i class="fa fa-calendar"></i> <span>Citas</span></a>
                         </li>
-                       
                         <li>
-                            <a href="/home/departments"><i class="fa fa-hospital-o"></i> <span>Departments</span></a>
+                            <a href="/home/departments"><i class="fa fa-hospital-o"></i> <span>Departamentos</span></a>
                         </li>
-						<li class="submenu">
-							<a href="#"><i class="fa fa-user"></i> <span> Employees </span> <span class="menu-arrow"></span></a>
-							<ul style="display: none;">
-								<li><a href="/employee">Employees List</a></li>
-								<li><a href="/employee/leave">Leaves</a></li>
-								
-							</ul>
-						</li>
-						
-						<li class="submenu">
-							<a href="#"><i class="fa fa-book"></i> <span> Payroll </span> <span class="menu-arrow"></span></a>
-							<ul style="display: none;">
-								<li><a href="/receipt"> Employee Salary </a></li>
-								
-							</ul>
-						</li>
-                       
-                        
                         <li class="submenu">
-                            <a href="#"><i class="fa fa-envelope"></i> <span> Email</span> <span class="menu-arrow"></span></a>
+                            <a href="#"><i class="fa fa-user"></i> <span> Empleados </span> <span class="menu-arrow"></span></a>
                             <ul style="display: none;">
-                                <li><a href="/compose">Compose Mail</a></li>
-                                <li><a href="/inbox">Inbox</a></li>
-                                
+                                <li><a href="/employee">Lista de Empleados</a></li>
+                                <li><a href="/employee/leave">Permisos</a></li>
                             </ul>
                         </li>
-                       
-						<li>
-							<a href="/store"><i class="fa fa-cube"></i> <span>Medicine Store</span></a>
-						</li>
-						
-					
-                       
-                        
-                       
-                        
-                      
-                     
-                       
+                        <li class="submenu">
+                            <a href="#"><i class="fa fa-book"></i> <span> Nómina </span> <span class="menu-arrow"></span></a>
+                            <ul style="display: none;">
+                                <li><a href="/receipt"> Salario de Empleados </a></li>
+                            </ul>
+                        </li>
+                        <li class="submenu">
+                            <a href="#"><i class="fa fa-envelope"></i> <span> Correo</span> <span class="menu-arrow"></span></a>
+                            <ul style="display: none;">
+                                <li><a href="/compose">Redactar Correo</a></li>
+                                <li><a href="/inbox">Bandeja de Entrada</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="/store"><i class="fa fa-cube"></i> <span>Almacén de Medicinas</span></a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -214,12 +197,11 @@
                                 <label for="department">Filtrar por Departamento:</label>
                                 <select name="department" id="department" class="form-control">
                                     <option value="">Seleccionar</option>
-                                    <option value="Dentists">Dentists</option>
-                                    <option value="Neurology">Neurology</option>
-                                    <option value="Opthalmology">Opthalmology</option>
-                                    <option value="Orthopedics">Orthopedics</option>
-                                    <option value="Cancer Department">Cancer Department</option>
-                                    <option value="ENT Department">ENT Department</option>
+                                    <% if (typeof departments !== 'undefined') { %>
+                                        <% for (var i = 0; i < departments.length; i++) { %>
+                                            <option value="<%= departments[i].department_name %>"><%= departments[i].department_name %></option>
+                                        <% } %>
+                                    <% } %>
                                 </select>
                             </div>
                             <button type="submit" class="btn btn-primary">Filtrar</button>
@@ -238,7 +220,6 @@
 										<th>Nombre del Paciente</th>
 										<th>Departamento</th>
 										<th>Nombre del Doctor</th>
-										
 										<th>Fecha de la Cita</th>
 										<th>Hora de la Cita</th>
                                         <th>Email del Paciente</th>
@@ -254,16 +235,17 @@
 										<td><%= list[i].patient_name %></td>
 										<td><%= list[i].department %></td>
 										<td><%= list[i].doctor_name %></td>
-										<td><%= moment(list[i].date).format('dddd, DD_MM_YYYY') %></td>
+										<td><%= moment(list[i].date).format('dddd, DD [de] MMMM [de] YYYY') %></td>
                                         <td><%= list[i].time %></td>
-                                        <td><%= list[i].email %></td>
-                                        <td><%= list[i].phone %></td>
+                                        <td><%= list[i].patient_email %></td>
+                                        <td><%= list[i].patient_phone %></td>
 										
 										<td class="text-right">
 											<div class="dropdown dropdown-action">
+												<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
 												<div class="dropdown-menu dropdown-menu-right">
-													<a class="dropdown-item" href="/appointment/edit_appointment/<%= list[i].id %>"><i class="fa fa-pencil m-r-5"></i> Edit</a>
-													<a class="dropdown-item" href="/appointment/delete_appointment/<%= list[i].id %>"><i class="fa fa-trash-o m-r-5"></i> Delete</a>
+													<a class="dropdown-item" href="/appointment/edit_appointment/<%= list[i].id %>"><i class="fa fa-pencil m-r-5"></i> Editar</a>
+													<a class="dropdown-item" href="/appointment/delete_appointment/<%= list[i].id %>"><i class="fa fa-trash-o m-r-5"></i> Eliminar</a>
 												</div>
 											</div>
                                         </td>
@@ -278,7 +260,7 @@
             <div class="notification-box">
                 <div class="msg-sidebar notifications msg-noti">
                     <div class="topnav-dropdown-header">
-                        <span>Messages</span>
+                        <span>Mensajes</span>
                     </div>
                     <div class="drop-scroll msg-list-scroll" id="msg_list">
                         <ul class="list-box">
@@ -480,7 +462,7 @@
                         </ul>
                     </div>
                     <div class="topnav-dropdown-footer">
-                        <a href="chat.html">See all messages</a>
+                        <a href="chat.html">Ver todos los mensajes</a>
                     </div>
                 </div>
             </div>
@@ -492,9 +474,9 @@
 					<div class="modal-content">
 						<div class="modal-body text-center">
 							<img src="assets/img/sent.png" alt="" width="50" height="46">
-							<h3>Are you sure want to delete this Appointment?</h3>
-							<div class="m-t-20"> <a href="#" class="btn btn-white" data-dismiss="modal">Close</a>
-								<button type="submit" class="btn btn-danger">Delete</button>
+							<h3>¿Estás seguro de que deseas eliminar esta cita?</h3>
+							<div class="m-t-20"> <a href="#" class="btn btn-white" data-dismiss="modal">Cerrar</a>
+								<button type="submit" class="btn btn-danger">Eliminar</button>
 							</div>
 						</div>
 					</div>
@@ -504,12 +486,13 @@
 		</div>
     </div>
     <div class="sidebar-overlay" data-reff=""></div>
-    <script src="assets/js/jquery-3.2.1.min.js"></script>
-	<script src="assets/js/popper.min.js"></script>
-    <script src="assets/js/bootstrap.min.js"></script>
-    <script src="assets/js/jquery.slimscroll.js"></script>
-    <script src="assets/js/select2.min.js"></script>
-    <script src="assets/js/app.js"></script>
+    <script src="/assets/js/jquery-3.2.1.min.js"></script>
+	<script src="/assets/js/popper.min.js"></script>
+    <script src="/assets/js/bootstrap.min.js"></script>
+    <script src="/assets/js/jquery.slimscroll.js"></script>
+    <script src="/assets/js/select2.min.js"></script>
+    <script src="/assets/js/moment.min.js"></script>
+    <script src="/assets/js/app.js"></script>
 	<script>
             $(function () {
                 $('#datetimepicker3').datetimepicker({

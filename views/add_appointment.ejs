@@ -205,12 +205,12 @@
                 </div>
                 <div class="row">
                     <div class="col-lg-8 offset-lg-2">
-                        <form method="POST">
+                        <form method="POST" onsubmit="return false;">
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Documento del Paciente</label>
-                                        <input type="text" class="form-control" list="patients" name="patient_document">
+                                        <input type="text" class="form-control" list="patients" name="patient_document" autocomplete="off">
                                         <datalist id="patients">
                                             <% for (var i = 0; i < patients.length; i++) { %>
                                                 <option value="<%= patients[i].document %>"><%= patients[i].name %> - <%= patients[i].document %></option>
@@ -223,10 +223,10 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Departamento</label>
-                                        <input type="text" class="form-control" list="departments" name="department" id="department">
+                                        <input type="text" class="form-control" list="departments" name="department" id="department" autocomplete="off">
                                         <datalist id="departments">
                                             <% for (var i = 0; i < departments.length; i++) { %>
-                                                <option value="<%= departments[i].department_name %>">
+                                                <option value="<%= departments[i].department_name %>"><%= departments[i].department_name %></option>
                                             <% } %>
                                         </datalist>
                                     </div>
@@ -234,7 +234,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Nombre del Doctor</label>
-                                        <input type="text" class="form-control" list="doctors" name="doctor_document" id="doctor">
+                                        <input type="text" class="form-control" list="doctors" name="doctor_document" id="doctor" autocomplete="off">
                                         <datalist id="doctors">
                                             <% for (var i = 0; i < doctors.length; i++) { %>
                                                 <option value="<%= doctors[i].document %>"><%= doctors[i].name %> - <%= doctors[i].document %></option>
@@ -246,17 +246,17 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Date</label>
+                                        <label>Fecha</label>
                                         <div class="cal-icon">
-                                            <input type="text" class="form-control datetimepicker" name="date" data-date-format="YYYY-MM-DD">
+                                            <input type="text" class="form-control datetimepicker" name="date" data-date-format="YYYY-MM-DD" autocomplete="off">
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Time</label>
+                                        <label>Hora</label>
                                         <div class="time-icon">
-                                            <input type="text" class="form-control" id="datetimepicker3" name="time" data-date-format="HH:mm:ss">
+                                            <input type="text" class="form-control" id="datetimepicker3" name="time" data-date-format="HH:mm:ss" autocomplete="off">
                                         </div>
                                     </div>
                                 </div>
@@ -264,7 +264,7 @@
                             
                             
                             <div class="m-t-20 text-center">
-                                <button class="btn btn-primary submit-btn">Crear Cita</button>
+                                <button class="btn btn-primary submit-btn" onclick="submitForm()">Crear Cita</button>
                             </div>
                         </form>
                     </div>
@@ -540,6 +540,10 @@
                     });
                 });
             });
+
+            function submitForm() {
+                $('form').submit();
+            }
      </script>
 </body>
 

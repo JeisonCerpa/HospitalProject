@@ -12,6 +12,7 @@
     <link rel="stylesheet" type="text/css" href="/assets/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/style.css">
+    <script src="/assets/js/moment.min.js"></script>
     <!--[if lt IE 9]>
 		<script src="/assets/js/html5shiv.min.js"></script>
 		<script src="/assets/js/respond.min.js"></script>
@@ -136,62 +137,45 @@
             <div class="sidebar-inner slimscroll">
                 <div id="sidebar-menu" class="sidebar-menu">
                     <ul>
-                        <li class="menu-title">Main</li>
-                        <li >
-                            <a href="/home"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a>
-                        </li>
-						<li>
-                            <a href="/doctors"><i class="fa fa-user-md"></i> <span>Doctors</span></a>
+                        <li class="menu-title">Principal</li>
+                        <li>
+                            <a href="/home"><i class="fa fa-dashboard"></i> <span>Tablero</span></a>
                         </li>
                         <li>
-                            <a href="/patients"><i class="fa fa-wheelchair"></i> <span>Patients</span></a>
+                            <a href="/doctors"><i class="fa fa-user-md"></i> <span>Doctores</span></a>
+                        </li>
+                        <li>
+                            <a href="/patients"><i class="fa fa-wheelchair"></i> <span>Pacientes</span></a>
                         </li>
                         <li class="active">
-                            <a href="/appointment"><i class="fa fa-calendar"></i> <span>Appointments</span></a>
+                            <a href="/appointment"><i class="fa fa-calendar"></i> <span>Citas</span></a>
                         </li>
-                       
                         <li>
-                            <a href="/home/departments"><i class="fa fa-hospital-o"></i> <span>Departments</span></a>
+                            <a href="/home/departments"><i class="fa fa-hospital-o"></i> <span>Departamentos</span></a>
                         </li>
-						<li class="submenu">
-							<a href="#"><i class="fa fa-user"></i> <span> Employees </span> <span class="menu-arrow"></span></a>
-							<ul style="display: none;">
-								<li><a href="/employee">Employees List</a></li>
-								<li><a href="/employee/leave">Leaves</a></li>
-								
-							</ul>
-						</li>
-						
-						<li class="submenu">
-							<a href="#"><i class="fa fa-book"></i> <span> Payroll </span> <span class="menu-arrow"></span></a>
-							<ul style="display: none;">
-								<li><a href="/receipt"> Employee Salary </a></li>
-								
-							</ul>
-						</li>
-                       
-                        
                         <li class="submenu">
-                            <a href="#"><i class="fa fa-envelope"></i> <span> Email</span> <span class="menu-arrow"></span></a>
+                            <a href="#"><i class="fa fa-user"></i> <span> Empleados </span> <span class="menu-arrow"></span></a>
                             <ul style="display: none;">
-                                <li><a href="/compose">Compose Mail</a></li>
-                                <li><a href="/inbox">Inbox</a></li>
-                                
+                                <li><a href="/employee">Lista de Empleados</a></li>
+                                <li><a href="/employee/leave">Permisos</a></li>
                             </ul>
                         </li>
-                       
-						<li>
-							<a href="/store"><i class="fa fa-cube"></i> <span>Medicine Store</span></a>
-						</li>
-						
-					
-                       
-                        
-                       
-                        
-                      
-                     
-                       
+                        <li class="submenu">
+                            <a href="#"><i class="fa fa-book"></i> <span> Nómina </span> <span class="menu-arrow"></span></a>
+                            <ul style="display: none;">
+                                <li><a href="/receipt"> Salario de Empleados </a></li>
+                            </ul>
+                        </li>
+                        <li class="submenu">
+                            <a href="#"><i class="fa fa-envelope"></i> <span> Correo</span> <span class="menu-arrow"></span></a>
+                            <ul style="display: none;">
+                                <li><a href="/compose">Redactar Correo</a></li>
+                                <li><a href="/inbox">Bandeja de Entrada</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="/store"><i class="fa fa-cube"></i> <span>Almacén de Medicinas</span></a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -205,16 +189,15 @@
                 </div>
                 <div class="row">
                     <div class="col-lg-8 offset-lg-2">
-                        <form method="POST">
+                        <form method="POST" action="/appointment/edit_appointment/<%= appointment.id %>" onsubmit="return false;">
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <% for (var i = 0; i < list.length; i++){ %>
                                         <label>Documento del Paciente</label>
-                                        <input type="text" class="form-control" list="patients" name="p_document" value="<%= list[i].patient_document %>">
+                                        <input type="text" class="form-control" list="patients" name="patient_document" value="<%= appointment.patient_document %>">
                                         <datalist id="patients">
-                                            <% for (var j = 0; j < patients.length; j++) { %>
-                                                <option value="<%= patients[j].document %>"><%= patients[j].name %> - <%= patients[j].document %></option>
+                                            <% for (var i = 0; i < patients.length; i++) { %>
+                                                <option value="<%= patients[i].document %>"><%= patients[i].name %> - <%= patients[i].document %></option>
                                             <% } %>
                                         </datalist>
                                     </div>
@@ -224,10 +207,10 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Departamento</label>
-                                        <input type="text" class="form-control" list="departments" name="department" id="department" value="<%= list[i].department %>">
+                                        <input type="text" class="form-control" list="departments" name="department" id="department" value="<%= appointment.department %>">
                                         <datalist id="departments">
-                                            <% for (var j = 0; j < departments.length; j++) { %>
-                                                <option value="<%= departments[j].department_name %>">
+                                            <% for (var i = 0; i < departments.length; i++) { %>
+                                                <option value="<%= departments[i].department_name %>">
                                             <% } %>
                                         </datalist>
                                     </div>
@@ -235,10 +218,10 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Nombre del Doctor</label>
-                                        <input type="text" class="form-control" list="doctors" name="d_document" id="doctor" value="<%= list[i].doctor_document %>">
+                                        <input type="text" class="form-control" list="doctors" name="doctor_document" id="doctor" value="<%= appointment.doctor_document %>">
                                         <datalist id="doctors">
-                                            <% for (var j = 0; j < doctors.length; j++) { %>
-                                                <option value="<%= doctors[j].document %>"><%= doctors[j].name %> - <%= doctors[j].document %></option>
+                                            <% for (var i = 0; i < doctors.length; i++) { %>
+                                                <option value="<%= doctors[i].document %>"><%= doctors[i].name %> - <%= doctors[i].document %></option>
                                             <% } %>
                                         </datalist>
                                     </div>
@@ -247,39 +230,23 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Date</label>
+                                        <label>Fecha</label>
                                         <div class="cal-icon">
-                                            <input type="text" class="form-control datetimepicker" name="date" value="<%= list[i].date %>">
+                                            <input type="text" class="form-control datetimepicker" name="date" value="<%= moment(appointment.date).format('DD/MM/YYYY') %>">
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Time</label>
+                                        <label>Hora</label>
                                         <div class="time-icon">
-                                            <input type="text" class="form-control" id="datetimepicker3" name="time" value="<%= list[i].time %>">
+                                            <input type="text" class="form-control" id="datetimepicker3" name="time" value="<%= appointment.time %>">
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>Patient Email</label>
-                                        <input class="form-control" type="email" name="email" value="<%= list[i].email %>">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>Patient Phone Number</label>
-                                        <input class="form-control" type="text" name="phone" value="<%= list[i].phone %>">
-                                    </div>
-                                </div>
-                            </div>
-                            <% } %>
-                            
                             <div class="m-t-20 text-center">
-                                <button class="btn btn-primary submit-btn">Actualizar Cita</button>
+                                <button class="btn btn-primary submit-btn" onclick="submitForm()">Actualizar Cita</button>
                             </div>
                         </form>
                     </div>
@@ -551,6 +518,10 @@
                     });
                 });
             });
+
+            function submitForm() {
+                $('form').submit();
+            }
      </script>
 </body>
 

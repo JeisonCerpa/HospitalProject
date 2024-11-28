@@ -2,6 +2,7 @@ const mysql = require('mysql');
 const express = require('express');
 const router = express.Router();
 const bodyParser = require('body-parser');
+const moment = require('moment'); // Añadir esta línea
 
 const con = mysql.createConnection({
     host: 'localhost',
@@ -224,7 +225,12 @@ module.exports.add_appointment = (patient_document, department, doctor_document,
 };
 
 module.exports.getallappointment = (callback) => {
-    var query = 'SELECT * FROM appointment';
+    var query = `
+        SELECT appointment.*, patients.name as patient_name, patients.email as patient_email, patients.phone as patient_phone, doctors.name as doctor_name 
+        FROM appointment 
+        JOIN patients ON appointment.patient_document = patients.document
+        JOIN doctors ON appointment.doctor_document = doctors.document
+    `;
     con.query(query, (err, result) => {
         if (err) {
             console.error('Error executing query:', err);

@@ -1,7 +1,9 @@
 var express = require('express');
 var router = express.Router();
 var bodyParser = require('body-parser');
-var db = require.main.require('./models/db_controller'); 
+var db = require.main.require('./models/db_controller');
+var moment = require('moment');
+require('moment/locale/es'); // Añadir esta línea para configurar moment en español
 
 router.get('*', (req, res, next) => {
     if (req.cookies['username'] == null) {
@@ -14,7 +16,7 @@ router.get('*', (req, res, next) => {
 router.get('/', (req, res) => {
     db.getallappointment((err, result) => {
         console.log(result);
-        res.render('appointment.ejs', {list: result});
+        res.render('appointment.ejs', {list: result, moment: moment}); // Pasar moment a la plantilla
     });
 });
 
@@ -45,7 +47,7 @@ router.get('/add_appointment', (req, res) => {
 
 router.post('/add_appointment', (req, res) => {
     console.log(req.body);
-    var date = new Date(req.body.date).toISOString().split('T')[0]; // Formatear la fecha correctamente
+    var date = moment(req.body.date, 'DD/MM/YYYY').format('YYYY-MM-DD'); // Formatear la fecha correctamente
     var time = req.body.time; // Asegurarse de que el tiempo esté en formato HH:mm:ss
     db.add_appointment(req.body.patient_document, req.body.department, req.body.doctor_document, date, time, (err, result) => {
         if (err) {
@@ -60,19 +62,40 @@ router.post('/add_appointment', (req, res) => {
 
 router.get('/edit_appointment/:id', (req, res) => {
     var id = req.params.id;
-    db.getallappointmentbyid(id, (err, result) => {
+    db.getallappointmentbyid(id, (err, appointment) => {
         if (err) {
             console.error('Error fetching appointment:', err);
             res.status(500).send('Internal Server Error');
         } else {
-            res.render('edit_appointment.ejs', {list: result});
+            db.getAllPatients((err, patients) => {
+                if (err) {
+                    console.error('Error fetching patients:', err);
+                    res.status(500).send('Internal Server Error');
+                } else {
+                    db.getalldept((err, departments) => {
+                        if (err) {
+                            console.error('Error fetching departments:', err);
+                            res.status(500).send('Internal Server Error');
+                        } else {
+                            db.getAllDoc((err, doctors) => {
+                                if (err) {
+                                    console.error('Error fetching doctors:', err);
+                                    res.status(500).send('Internal Server Error');
+                                } else {
+                                    res.render('edit_appointment.ejs', { appointment: appointment[0], patients: patients, departments: departments, doctors: doctors, moment: moment });
+                                }
+                            });
+                        }
+                    });
+                }
+            });
         }
     });
 });
 
 router.post('/edit_appointment/:id', (req, res) => {
     var id = req.params.id;
-    var date = new Date(req.body.date).toISOString().split('T')[0]; // Formatear la fecha correctamente
+    var date = moment(req.body.date, 'DD/MM/YYYY').format('YYYY-MM-DD'); // Formatear la fecha correctamente
     var time = req.body.time; // Asegurarse de que el tiempo esté en formato HH:mm:ss
     db.editappointment(id, req.body.patient_document, req.body.department, req.body.doctor_document, date, time, (err, result) => {
         if (err) {
@@ -124,7 +147,7 @@ router.get('/department', (req, res) => {
 
 router.post('/check_availability', (req, res) => {
     var doctorDocument = req.body.doctor_document;
-    var date = req.body.date;
+    var date = moment(req.body.date, 'DD/MM/YYYY').format('YYYY-MM-DD'); // Formatear la fecha correctamente
     var time = req.body.time; // Asegurarse de que el tiempo esté en formato HH:mm:ss
 
     db.checkDoctorAvailability(doctorDocument, date, time, (err, result) => {
