@@ -256,7 +256,7 @@
                                     <div class="form-group">
                                         <label>Time</label>
                                         <div class="time-icon">
-                                            <input type="text" class="form-control" id="datetimepicker3" name="time">
+                                            <input type="text" class="form-control" id="datetimepicker3" name="time" data-date-format="HH:mm:ss">
                                         </div>
                                     </div>
                                 </div>
@@ -523,13 +523,15 @@
                     var doctorDocument = $('#doctor').val();
                     var date = $('input[name="date"]').val();
                     var time = $('input[name="time"]').val();
+                    var formattedTime = moment(time, 'hh:mm A').format('HHmmss');
 
                     $.ajax({
                         url: '/appointment/check_availability',
                         method: 'POST',
-                        data: { doctor_document: doctorDocument, date: date, time: time },
+                        data: { doctor_document: doctorDocument, date: date, time: formattedTime },
                         success: function(response) {
                             if (response.available) {
+                                $('input[name="time"]').val(formattedTime);
                                 $('form')[0].submit();
                             } else {
                                 alert('El doctor ya tiene una cita a esta hora. Por favor, seleccione otra hora.');

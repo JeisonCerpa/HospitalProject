@@ -3,7 +3,6 @@ const express = require('express');
 const router = express.Router();
 const bodyParser = require('body-parser');
 
-
 const con = mysql.createConnection({
     host: 'localhost',
     user: 'root',
@@ -29,7 +28,6 @@ module.exports.signup = (username, email, password, status, callback) => {
         }
     });
 }
-
 
 //Ejemplo de evitar injection SQL
 module.exports.verify = (username, email, token, callback) => {
@@ -109,7 +107,6 @@ module.exports.getDocByDocument = (document, callback) => {
     });
     console.log(query);
 }
-
 
 module.exports.editDoc = (document, name, email, date_of_birth, gender, address, phone, department, biography, callback) => {
     var formattedDateOfBirth = new Date(date_of_birth).toISOString().split('T')[0];
@@ -216,31 +213,61 @@ module.exports.edit_leave = (id, name, type, from, to, reason, callback) => {
 
 module.exports.add_appointment = (patient_document, department, doctor_document, date, time, callback) => {
     var query = 'INSERT INTO appointment (patient_document, department, doctor_document, date, time) VALUES (?, ?, ?, ?, ?)';
-    con.query(query, [patient_document, department, doctor_document, date, time], callback);
+    con.query(query, [patient_document, department, doctor_document, date, time], (err, result) => {
+        if (err) {
+            console.error('Error executing query:', err);
+            return callback(err, null);
+        }
+        callback(null, result);
+    });
     console.log(query);
 };
 
 module.exports.getallappointment = (callback) => {
     var query = 'SELECT * FROM appointment';
-    con.query(query, callback);
+    con.query(query, (err, result) => {
+        if (err) {
+            console.error('Error executing query:', err);
+            return callback(err, null);
+        }
+        callback(null, result);
+    });
     console.log(query);
 };
 
 module.exports.getallappointmentbyid = (id, callback) => {
     var query = 'SELECT * FROM appointment WHERE id = ?';
-    con.query(query, [id], callback);
+    con.query(query, [id], (err, result) => {
+        if (err) {
+            console.error('Error executing query:', err);
+            return callback(err, null);
+        }
+        callback(null, result);
+    });
     console.log(query);
 };
 
 module.exports.editappointment = (id, patient_document, department, doctor_document, date, time, callback) => {
     var query = 'UPDATE appointment SET patient_document = ?, department = ?, doctor_document = ?, date = ?, time = ? WHERE id = ?';
-    con.query(query, [patient_document, department, doctor_document, date, time, id], callback);
+    con.query(query, [patient_document, department, doctor_document, date, time, id], (err, result) => {
+        if (err) {
+            console.error('Error executing query:', err);
+            return callback(err, null);
+        }
+        callback(null, result);
+    });
     console.log(query);
 };
 
 module.exports.deleteappointment = (id, callback) => {
     var query = 'DELETE FROM appointment WHERE id = ?';
-    con.query(query, [id], callback);
+    con.query(query, [id], (err, result) => {
+        if (err) {
+            console.error('Error executing query:', err);
+            return callback(err, null);
+        }
+        callback(null, result);
+    });
     console.log(query);
 };
 
@@ -419,12 +446,24 @@ module.exports.deleteUser = (userId, callback) => {
 
 module.exports.getAppointmentsByDepartment = (department, callback) => {
     var query = 'SELECT * FROM appointment WHERE department = ?';
-    con.query(query, [department], callback);
+    con.query(query, [department], (err, result) => {
+        if (err) {
+            console.error('Error executing query:', err);
+            return callback(err, null);
+        }
+        callback(null, result);
+    });
     console.log(query);
 };
 
 module.exports.checkDoctorAvailability = (doctorDocument, date, time, callback) => {
     var query = 'SELECT * FROM appointment WHERE doctor_document = ? AND date = ? AND time = ?';
-    con.query(query, [doctorDocument, date, time], callback);
+    con.query(query, [doctorDocument, date, time], (err, result) => {
+        if (err) {
+            console.error('Error executing query:', err);
+            return callback(err, null);
+        }
+        callback(null, result);
+    });
     console.log(query);
 };

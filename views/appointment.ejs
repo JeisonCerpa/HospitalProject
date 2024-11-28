@@ -12,6 +12,7 @@
     <link rel="stylesheet" type="text/css" href="/assets/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <!--[if lt IE 9]>
 		<script src="/assets/js/html5shiv.min.js"></script>
 		<script src="/assets/js/respond.min.js"></script>
@@ -233,6 +234,7 @@
 									<tr>
 										
 										<th>ID de Cita</th>
+                                        <th>Documento del Paciente</th>
 										<th>Nombre del Paciente</th>
 										<th>Departamento</th>
 										<th>Nombre del Doctor</th>
@@ -248,11 +250,11 @@
                                     <% for (var i = 0; i < list.length; i++){ %>
 									<tr>
 										<td><%= list[i].id %></td>
-										
+                                        <td><%= list[i].patient_document %></td>
 										<td><%= list[i].patient_name %></td>
 										<td><%= list[i].department %></td>
 										<td><%= list[i].doctor_name %></td>
-										<td><%= list[i].date %></td>
+										<td><%= moment(list[i].date).format('dddd, DD_MM_YYYY') %></td>
                                         <td><%= list[i].time %></td>
                                         <td><%= list[i].email %></td>
                                         <td><%= list[i].phone %></td>
