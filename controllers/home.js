@@ -1,19 +1,21 @@
-var express = require ('express');
+var express = require('express');
 var router = express.Router();
-var db = require.main.require ('./models/db_controller');
-var bodyPaser = require ('body-parser');
-
+var db = require.main.require('./models/db_controller');
+var bodyPaser = require('body-parser');
+const checkPermissions = require('../models/checkPermissions');
 
 router.get('*', function(req, res, next){
-	if(req.cookies['username'] == null){
-		res.redirect('/login');
-	}else{
-		next();
-	}
+    if(req.cookies['username'] == null){
+        res.redirect('/login');
+    } else {
+        next();
+    }
 });
 
+router.get('/', function(req, res){
+    const userId = req.cookies.userId; // Obtener el ID del usuario desde las cookies
+    const userRole = req.cookies.role; // Obtener el rol del usuario
 
-router.get('/',function(_,res){
     db.getAllDoc(function(err, result){
         if (err || !result) {
             console.error('Error retrieving doctors:', err);
@@ -26,12 +28,34 @@ router.get('/',function(_,res){
             }
             var total_doc = result.length;
             var appointment = result1.length;
-            res.render('home.ejs', {doc: total_doc, doclist: result, appointment: appointment, applist: result1});
+
+            // Obtener los permisos del usuario
+            const query = `
+                SELECT p.name 
+                FROM permissions p
+                JOIN role_permissions rp ON p.id = rp.permission_id
+                JOIN user_roles ur ON rp.role_id = ur.role_id
+                WHERE ur.user_id = ?
+            `;
+            db.con.query(query, [userId], (err, permissions) => {
+                if (err) {
+                    console.error('Error retrieving permissions:', err);
+                    return res.status(500).send('Error retrieving permissions');
+                }
+
+                const userPermissions = permissions.map(p => p.name);
+                res.render('home.ejs', {
+                    doc: total_doc,
+                    doclist: result,
+                    appointment: appointment,
+                    applist: result1,
+                    permissions: userPermissions,
+                    role: userRole // Pasar el rol del usuario a la vista
+                });
+            });
         });
-        console.log(result.length);
     });
 });
-
 
 router.get('/departments',function(req,res){
 
@@ -116,4 +140,4 @@ router.post('/profile',function(req,res){
     }) ;
 });
 
-module.exports =router;
+module.exports = router;

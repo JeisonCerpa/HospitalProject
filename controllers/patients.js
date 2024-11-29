@@ -7,20 +7,32 @@ router.get('*', (req, res, next) => {
     if (req.cookies['username'] == null) {
         res.redirect('/login');
     } else {
-        next()
+        next();
     }
-
 });
 
 router.get('/', (req, res) => {
-    db.getAllPatients((err, result) => {
+    const userId = req.cookies.userId;
+    const userRole = req.cookies.role;
+    db.getUserPermissions(userId, (err, userPermissions) => {
         if (err) throw err;
-        res.render('patients.ejs', { list: result });
+        db.getAllPatients((err, result) => {
+            if (err) throw err;
+            res.render('patients.ejs', { list: result, userId: userId, userRole: userRole, userPermissions: userPermissions });
+        });
     });
 });
 
 router.get('/add_patient', (req, res) => {
-    res.render('add_patient.ejs');
+    const userId = req.cookies.userId;
+    db.getUserPermissions(userId, (err, userPermissions) => {
+        if (err) throw err;
+        if (req.cookies.userRole === 'admin') {
+            res.render('add_patient.ejs', { userPermissions: userPermissions });
+        } else {
+            res.redirect('/patients');
+        }
+    });
 });
 
 router.post('/add_patient', (req, res) => {
@@ -41,8 +53,13 @@ router.post('/add_patient', (req, res) => {
 
 router.get('/edit_patient/:document', (req, res) => {
     var document = req.params.document;
-    db.getPatientByDoc(document, (err, result) => {
-        res.render('edit_patient.ejs', { list: result });
+    const userId = req.cookies.userId;
+    db.getUserPermissions(userId, (err, userPermissions) => {
+        if (err) throw err;
+        db.getPatientByDoc(document, (err, result) => {
+            if (err) throw err;
+            res.render('edit_patient.ejs', { list: result, userPermissions: userPermissions });
+        });
     });
 });
 
@@ -57,9 +74,17 @@ router.post('/edit_patient/:document', (req, res) => {
 
 router.get('/delete_patient/:document', (req, res) => {
     var document = req.params.document;
-    db.getPatientByDoc(document, (err, result) => {
-        console.log(result);
-        res.render('delete_patient.ejs', { list: result });
+    const userId = req.cookies.userId;
+    db.getUserPermissions(userId, (err, userPermissions) => {
+        if (err) throw err;
+        if (req.cookies.userRole === 'admin') {
+            db.getPatientByDoc(document, (err, result) => {
+                if (err) throw err;
+                res.render('delete_patient.ejs', { list: result, userPermissions: userPermissions });
+            });
+        } else {
+            res.redirect('/patients');
+        }
     });
 });
 
@@ -75,9 +100,13 @@ router.post('/delete_patient/:document', (req, res) => {
 router.post('/search', (req, res) => {
     var key = req.body.search;
     console.log(key);
-    db.searchPatient(key, (err, result) => {
+    const userId = req.cookies.userId;
+    db.getUserPermissions(userId, (err, userPermissions) => {
         if (err) throw err;
-        res.render('patients.ejs', { list: result });
+        db.searchPatient(key, (err, result) => {
+            if (err) throw err;
+            res.render('patients.ejs', { list: result, userPermissions: userPermissions });
+        });
     });
 });
 

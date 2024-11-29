@@ -160,51 +160,40 @@
                         <li>
                             <a href="/home"><i class="fa fa-dashboard"></i> <span>Tablero</span></a>
                         </li>
+                        <% if (userPermissions.includes('view_doctors')) { %>
                         <li>
                             <a href="/doctors"><i class="fa fa-user-md"></i> <span>Doctores</span></a>
                         </li>
+                        <% } %>
+                        <% if (userPermissions.includes('view_patients')) { %>
                         <li class="active">
                             <a href="/patients"><i class="fa fa-wheelchair"></i> <span>Pacientes</span></a>
                         </li>
+                        <% } %>
+                        <% if (userPermissions.includes('view_appointments')) { %>
                         <li>
                             <a href="/appointment"><i class="fa fa-calendar"></i> <span>Citas</span></a>
                         </li>
+                        <% } %>
+                        <% if (userPermissions.includes('view_departments')) { %>
                         <li>
                             <a href="/home/departments"><i class="fa fa-hospital-o"></i> <span>Departamentos</span></a>
                         </li>
+                        <% } %>
+                        <% if (userPermissions.includes('view_employees')) { %>
                         <li class="submenu">
-                            <a href="#"><i class="fa fa-user"></i> <span> Empleados </span> <span
-                                    class="menu-arrow"></span></a>
+                            <a href="#"><i class="fa fa-user"></i> <span> Empleados </span> <span class="menu-arrow"></span></a>
                             <ul style="display: none;">
                                 <li><a href="/employee">Lista de Empleados</a></li>
                                 <li><a href="/employee/leave">Permisos</a></li>
-
                             </ul>
                         </li>
-
-                        <li class="submenu">
-                            <a href="#"><i class="fa fa-book"></i> <span> Nómina </span> <span
-                                    class="menu-arrow"></span></a>
-                            <ul style="display: none;">
-                                <li><a href="/receipt"> Salario de Empleados </a></li>
-
-                            </ul>
-                        </li>
-
-
-                        <li class="submenu">
-                            <a href="#"><i class="fa fa-envelope"></i> <span> Correo</span> <span
-                                    class="menu-arrow"></span></a>
-                            <ul style="display: none;">
-                                <li><a href="/compose">Redactar Correo</a></li>
-                                <li><a href="/inbox">Bandeja de Entrada</a></li>
-
-                            </ul>
-                        </li>
-
+                        <% } %>
+                        <% if (userPermissions.includes('view_store')) { %>
                         <li>
                             <a href="/store"><i class="fa fa-cube"></i> <span>Almacén de Medicinas</span></a>
                         </li>
+                        <% } %>
                     </ul>
                 </div>
             </div>
@@ -217,8 +206,7 @@
                     <h4 class="page-title">Pacientes</h4>
                 </div>
                 <div class="col-sm-8 col-9 text-right m-b-20">
-                    <a href="http://localhost:3000/patients/add_patient"
-                        class="btn btn-primary btn-rounded float-right"><i class="fa fa-plus"></i> Añadir Paciente</a>
+                    <a href="http://localhost:3000/patients/add_patient" class="btn btn-primary btn-rounded float-right"><i class="fa fa-plus"></i> Añadir Paciente</a>
                 </div>
                 <form action="" method="POST">
                     <div class="col-sm-6 col-md-12">
@@ -272,28 +260,17 @@
                                         </td>
                                         <td class="text-right">
                                             <div class="dropdown dropdown-action">
-                                                <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown"
-                                                    aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
+                                                <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                                                 <div class="dropdown-menu dropdown-menu-right">
-                                                    <a class="dropdown-item"
-                                                        href="http://localhost:3000/patients/edit_patient/<%= list[i].document %>"><i
-                                                            class="fa fa-pencil m-r-5"></i> Editar</a>
-                                                    <a class="dropdown-item"
-                                                        href="http://localhost:3000/patients/delete_patient/<%= list[i].document %>"><i
-                                                            class="fa fa-trash-o m-r-5"></i> Eliminar</a>
+                                                    <a class="dropdown-item" href="http://localhost:3000/patients/edit_patient/<%= list[i].document %>"><i class="fa fa-pencil m-r-5"></i> Editar</a>
+                                                    <% if (userRole === 'admin') { %>
+                                                    <a class="dropdown-item" href="http://localhost:3000/patients/delete_patient/<%= list[i].document %>"><i class="fa fa-trash-o m-r-5"></i> Eliminar</a>
+                                                    <% } %>
                                                 </div>
                                             </div>
                                         </td>
-
-                                        <% } %>
-
-
-
                                     </tr>
-
-
-
-
+                                <% } %>
                             </tbody>
                         </table>
                     </div>

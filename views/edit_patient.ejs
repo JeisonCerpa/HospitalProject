@@ -156,18 +156,27 @@
                         <li>
                             <a href="/home"><i class="fa fa-dashboard"></i> <span>Tablero</span></a>
                         </li>
-                        <li class="active">
+                        <% if (userPermissions.includes('view_doctors')) { %>
+                        <li>
                             <a href="/doctors"><i class="fa fa-user-md"></i> <span>Doctores</span></a>
                         </li>
-                        <li>
+                        <% } %>
+                        <% if (userPermissions.includes('view_patients')) { %>
+                        <li class="active">
                             <a href="/patients"><i class="fa fa-wheelchair"></i> <span>Pacientes</span></a>
                         </li>
+                        <% } %>
+                        <% if (userPermissions.includes('view_appointments')) { %>
                         <li>
                             <a href="/appointment"><i class="fa fa-calendar"></i> <span>Citas</span></a>
                         </li>
+                        <% } %>
+                        <% if (userPermissions.includes('view_departments')) { %>
                         <li>
                             <a href="/home/departments"><i class="fa fa-hospital-o"></i> <span>Departamentos</span></a>
                         </li>
+                        <% } %>
+                        <% if (userPermissions.includes('view_employees')) { %>
                         <li class="submenu">
                             <a href="#"><i class="fa fa-user"></i> <span> Empleados </span> <span class="menu-arrow"></span></a>
                             <ul style="display: none;">
@@ -175,22 +184,12 @@
                                 <li><a href="/employee/leave">Permisos</a></li>
                             </ul>
                         </li>
-                        <li class="submenu">
-                            <a href="#"><i class="fa fa-book"></i> <span> Nómina </span> <span class="menu-arrow"></span></a>
-                            <ul style="display: none;">
-                                <li><a href="/receipt"> Salario de Empleados </a></li>
-                            </ul>
-                        </li>
-                        <li class="submenu">
-                            <a href="#"><i class="fa fa-envelope"></i> <span> Correo</span> <span class="menu-arrow"></span></a>
-                            <ul style="display: none;">
-                                <li><a href="/compose">Redactar Correo</a></li>
-                                <li><a href="/inbox">Bandeja de Entrada</a></li>
-                            </ul>
-                        </li>
+                        <% } %>
+                        <% if (userPermissions.includes('view_store')) { %>
                         <li>
                             <a href="/store"><i class="fa fa-cube"></i> <span>Almacén de Medicinas</span></a>
                         </li>
+                        <% } %>
                     </ul>
                 </div>
             </div>

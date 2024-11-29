@@ -8,7 +8,7 @@ var sweetalert = require('sweetalert2');
 const { check, validationResult } = require('express-validator');
 
 router.get('/', (req, res) => {
-    res.render('login.ejs');
+    res.render('login.ejs', { message: null });
 });
 
 const con = myslq.createConnection({
@@ -27,7 +27,10 @@ router.use(session({
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
 
-router.post('/', [check('username').notEmpty().withMessage('El nombre de usuario es requerido'), check('password').notEmpty().withMessage('La contraseña es requerida')], (req, res) => {
+router.post('/', [
+    check('username').notEmpty().withMessage('El nombre de usuario es requerido'),
+    check('password').notEmpty().withMessage('La contraseña es requerida')
+], (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(422).json({ errors: errors.array() });
@@ -45,24 +48,22 @@ router.post('/', [check('username').notEmpty().withMessage('El nombre de usuario
             if (result.length > 0) {
                 req.session.loggedin = true;
                 req.session.username = username;
+                var userId = result[0].id; // Obtener el ID del usuario
                 var role = result[0].role; // Obtener el rol del usuario
-                res.cookie('username', username);
-                res.cookie('role', role); // Agregar el rol a las cookies
+                res.cookie('userId', userId); // Guardar el ID del usuario en las cookies
+                res.cookie('role', role); // Guardar el rol en las cookies
                 var status = result[0].email_status;
                 if (status == "No verificado") {
-                    res.send('Por favor verifique su cuenta');
+                    res.render('login.ejs', { message: 'Por favor verifique su cuenta' });
                 } else {
-                    sweetalert.fire('Inicio de sesión exitoso');
-                    res.redirect('/home');
+                    res.render('login.ejs', { message: 'Inicio de sesión exitoso' });
                 }
             } else {
-                res.send('Usuario o contraseña incorrectos');
+                res.render('login.ejs', { message: 'Usuario o contraseña incorrectos' });
             }
-            res.end();
         });
-    }else{
-        res.send('Por favor ingrese usuario y contraseña');
-        res.end();
+    } else {
+        res.render('login.ejs', { message: 'Por favor ingrese usuario y contraseña' });
     }
 });
 

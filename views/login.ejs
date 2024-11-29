@@ -36,6 +36,7 @@
 			color: #ffffff;
 		}
 		</style>
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	</head>
 	<body>
 		<div class="login-form">
@@ -43,12 +44,7 @@
 			<form action="" method="POST">
 				<input type="text" name="username" placeholder="Username" >
 				<input type="password" name="password" placeholder="Password" >
-				<input type="submit" value="Log In" onclick="click()">
-				<script>
-					function click(){
-						swal ("You are logged in");
-					}
-				</script>
+				<input type="submit" value="Log In">
 				<br>
 				<div>
 					<a href="/signup">Sign Up</a>
@@ -56,13 +52,24 @@
 					<br>
 					<a href="http://localhost:3000/resetpassword">Forget Password</a>
 				</div>
-				
-				
 			</form>
 		</div>
 		<div>
 			
 		</div>
 		<script src="assets/js/jquery-3.2.1.min.js"></script>
+		<script>
+			<% if (message) { %>
+				Swal.fire({
+					title: '<%= message %>',
+					icon: '<%= message.includes("exitoso") ? "success" : "error" %>',
+					confirmButtonText: 'OK'
+				}).then(() => {
+					<% if (message.includes("exitoso")) { %>
+						window.location.href = '/home';
+					<% } %>
+				});
+			<% } %>
+		</script>
 	</body>
 </html>

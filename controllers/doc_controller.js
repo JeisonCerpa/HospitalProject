@@ -28,9 +28,25 @@ var storage = multer.diskStorage({
 var upload = multer({ storage: storage });
 
 router.get('/', (req, res) => {
-    db.getAllDoc((err, result) => {
-        if (err) throw err;
-        res.render('doctors.ejs', { list: result });
+    const userId = req.cookies.userId; // Obtener el ID del usuario desde las cookies
+    const userRole = req.cookies.role; // Obtener el rol del usuario desde las cookies
+    const query = `
+        SELECT p.name 
+        FROM permissions p
+        JOIN role_permissions rp ON p.id = rp.permission_id
+        JOIN user_roles ur ON rp.role_id = ur.role_id
+        WHERE ur.user_id = ?
+    `;
+    db.con.query(query, [userId], (err, permissions) => {
+        if (err) {
+            console.error('Error retrieving permissions:', err);
+            return res.status(500).send('Error retrieving permissions');
+        }
+        const userPermissions = permissions.map(p => p.name);
+        db.getAllDoc((err, result) => {
+            if (err) throw err;
+            res.render('doctors.ejs', { list: result, permissions: userPermissions, role: userRole });
+        });
     });
 });
 
@@ -91,6 +107,9 @@ router.post('/edit_doctor/:document', (req, res) => {
 });
 
 router.get('/delete_doctor/:document', (req, res) => {
+    if (!req.permissions.includes('delete_doctors')) {
+        return res.status(403).send('Forbidden');
+    }
     var document = req.params.document;
     db.getDocByDocument(document, (err, result) => {
         if (err) throw err;
@@ -103,6 +122,9 @@ router.get('/delete_doctor/:document', (req, res) => {
 });
 
 router.post('/delete_doctor/:document', (req, res) => {
+    if (!req.permissions.includes('delete_doctors')) {
+        return res.status(403).send('Forbidden');
+    }
     var document = req.params.document;
     db.getDocByDocument(document, (err, result) => {
         if (err) throw err;
@@ -118,14 +140,6 @@ router.post('/delete_doctor/:document', (req, res) => {
         } else {
             res.status(404).send('Doctor not found');
         }
-    });
-});
-
-router.get('/', (req, res) => {
-    db.getAllDoc((err, result) => {
-        if (err)
-            throw err;
-        res.render('doctors.ejs', { list: result });
     });
 });
 

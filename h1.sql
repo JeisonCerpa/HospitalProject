@@ -346,6 +346,125 @@ INSERT INTO `verify` (`id`, `username`, `email`, `token`) VALUES
 (6, 'Prueba', 'cerpajeison8@gmail.com', 'uxpvlw0c'),
 (7, 'jei', 'cerpajeison8@gmail.com', '980cayf9');
 
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `roles`
+--
+
+CREATE TABLE IF NOT EXISTS `roles` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Volcado de datos para la tabla `roles`
+--
+
+INSERT INTO `roles` (`id`, `name`) VALUES
+(1, 'admin'),
+(2, 'doctor'),
+(3, 'receptionist'),
+(4, 'pharmacist'),
+(5, 'patient'),
+(6, 'nurse');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `permissions`
+--
+
+CREATE TABLE IF NOT EXISTS `permissions` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Volcado de datos para la tabla `permissions`
+--
+
+INSERT INTO `permissions` (`id`, `name`) VALUES
+(1, 'view_appointments'),
+(2, 'edit_appointments'),
+(3, 'delete_appointments'),
+(4, 'view_patients'),
+(5, 'edit_patients'),
+(6, 'delete_patients'),
+(7, 'view_doctors'),
+(8, 'edit_doctors'),
+(9, 'delete_doctors'),
+(10, 'view_employees'),
+(11, 'edit_employees'),
+(12, 'delete_employees'),
+(13, 'view_leaves'),
+(14, 'edit_leaves'),
+(15, 'delete_leaves'),
+(16, 'view_departments'),
+(17, 'edit_departments'),
+(18, 'delete_departments'),
+(19, 'view_store'),
+(20, 'edit_store'),
+(21, 'delete_store'),
+(22, 'view_complaints'),
+(23, 'edit_complaints'),
+(24, 'delete_complaints');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `role_permissions`
+--
+
+CREATE TABLE IF NOT EXISTS `role_permissions` (
+  `role_id` int NOT NULL,
+  `permission_id` int NOT NULL,
+  PRIMARY KEY (`role_id`, `permission_id`),
+  FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`permission_id`) REFERENCES `permissions` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Volcado de datos para la tabla `role_permissions`
+--
+INSERT INTO `role_permissions` (`role_id`, `permission_id`) VALUES
+-- Permisos para admin (todos los permisos)
+(1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (1, 6), (1, 7), (1, 8), (1, 9), (1, 10), (1, 11), (1, 12), (1, 13), (1, 14), (1, 15), (1, 16), (1, 17), (1, 18), (1, 19), (1, 20), (1, 21), (1, 22), (1, 23), (1, 24),
+-- Permisos para doctor (ver/editar pacientes, gestionar citas)
+(2, 1), (2, 2), (2, 4), (2, 5), (2, 7), (2, 8),
+-- Permisos para receptionist (gestionar citas, ver pacientes)
+(3, 1), (3, 4), (3, 10), (3, 13), (3, 16), (3, 19), (3, 22),
+-- Permisos para pharmacist (inventario de medicamentos)
+(4, 19), (4, 20), (4, 21),
+-- Permisos para patient (ver citas)
+(5, 1), (5, 4), (5, 10), (5, 13), (5, 16), (5, 19), (5, 22),
+-- Permisos para nurse (ver pacientes, gestionar citas)
+(6, 1), (6, 4), (6, 7), (6, 10), (6, 13), (6, 16), (6, 19), (6, 22);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `user_roles`
+--
+
+CREATE TABLE IF NOT EXISTS `user_roles` (
+  `user_id` int NOT NULL,
+  `role_id` int NOT NULL,
+  PRIMARY KEY (`user_id`, `role_id`),
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Volcado de datos para la tabla `user_roles`
+--
+INSERT INTO `user_roles` (`user_id`, `role_id`) VALUES
+(1, 1), (2, 2), (3, 3), (4, 4), (5, 1), (23, 5), (112233, 5), (123123, 2), (25262441, 2);
+
+-- --------------------------------------------------------
+
 --
 -- Restricciones para tablas volcadas
 --

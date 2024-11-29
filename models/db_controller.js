@@ -18,6 +18,8 @@ con.connect((err) => {
     }
 });
 
+module.exports.con = con; // Exportar la conexión
+
 module.exports.signup = (username, email, password, status, callback) => {
     con.query('SELECT email FROM users WHERE email = ?', [email], (err, result) => {
         if (result[0] == undefined) {
@@ -472,4 +474,22 @@ module.exports.checkDoctorAvailability = (doctorDocument, date, time, callback) 
         callback(null, result);
     });
     console.log(query);
+};
+
+module.exports.getUserPermissions = (userId, callback) => {
+    const query = `
+        SELECT p.name 
+        FROM permissions p
+        JOIN role_permissions rp ON p.id = rp.permission_id
+        JOIN user_roles ur ON rp.role_id = ur.role_id
+        WHERE ur.user_id = ?
+    `;
+    con.query(query, [userId], (err, result) => {
+        if (err) {
+            console.error('Error executing query:', err);
+            return callback(err, null);
+        }
+        const permissions = result.map(row => row.name);
+        callback(null, permissions);
+    });
 };
