@@ -47,16 +47,19 @@ router.post('/', [
             }
             if (result.length > 0) {
                 req.session.loggedin = true;
-                req.session.username = username;
+                req.session.username = username; // Asegúrate de que el nombre de usuario se almacene en la sesión
                 var userId = result[0].id; // Obtener el ID del usuario
                 var role = result[0].role; // Obtener el rol del usuario
+                req.session.userRole = role; // Guardar el rol en la sesión
                 res.cookie('userId', userId); // Guardar el ID del usuario en las cookies
                 res.cookie('role', role); // Guardar el rol en las cookies
+                res.cookie('username', username); // Guardar el nombre de usuario en las cookies
+                res.cookie('userRole', role); // Guardar el rol en las cookies
                 var status = result[0].email_status;
                 if (status == "No verificado") {
                     res.render('login.ejs', { message: 'Por favor verifique su cuenta' });
                 } else {
-                    res.render('login.ejs', { message: 'Inicio de sesión exitoso' });
+                    res.redirect('/home'); // Redirigir a la página de inicio
                 }
             } else {
                 res.render('login.ejs', { message: 'Usuario o contraseña incorrectos' });

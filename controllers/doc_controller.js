@@ -7,12 +7,19 @@ var fs = require('fs');
 var path = require('path');
 
 router.get('*', (req, res, next) => {
-    if (req.cookies['username'] == null) {
+    if (req.cookies['userId'] == null) {
         res.redirect('/login');
     } else {
-        next()
+        const userId = req.cookies.userId; // Obtener el ID del usuario desde las cookies
+        db.getUserPermissions(userId, (err, permissions) => {
+            if (err) {
+                console.error('Error retrieving permissions:', err);
+                return res.status(500).send('Error retrieving permissions');
+            }
+            req.permissions = permissions; // Guardar los permisos en la solicitud
+            next();
+        });
     }
-
 });
 
 var storage = multer.diskStorage({
@@ -29,23 +36,15 @@ var upload = multer({ storage: storage });
 
 router.get('/', (req, res) => {
     const userId = req.cookies.userId; // Obtener el ID del usuario desde las cookies
-    const userRole = req.cookies.role; // Obtener el rol del usuario desde las cookies
-    const query = `
-        SELECT p.name 
-        FROM permissions p
-        JOIN role_permissions rp ON p.id = rp.permission_id
-        JOIN user_roles ur ON rp.role_id = ur.role_id
-        WHERE ur.user_id = ?
-    `;
-    db.con.query(query, [userId], (err, permissions) => {
+    db.getUserPermissions(userId, (err, permissions) => {
         if (err) {
             console.error('Error retrieving permissions:', err);
             return res.status(500).send('Error retrieving permissions');
         }
-        const userPermissions = permissions.map(p => p.name);
+        const userPermissions = permissions;
         db.getAllDoc((err, result) => {
             if (err) throw err;
-            res.render('doctors.ejs', { list: result, permissions: userPermissions, role: userRole });
+            res.render('doctors.ejs', { list: result, permissions: userPermissions });
         });
     });
 });
@@ -53,14 +52,23 @@ router.get('/', (req, res) => {
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
 
-
-router.get('/add_doctor', (req, res) => {
+router.get('/add_doctor', (req, res, next) => {
+    if (!req.permissions.includes('add_doctors')) {
+        return res.redirect('/doctors');
+    }
+    next();
+}, (req, res) => {
     db.getalldept((err, result) => {
         res.render('add_doctor.ejs', { list: result });
     });
 });
 
-router.post('/add_doctor', upload.single('image'), (req, res) => {
+router.post('/add_doctor', (req, res, next) => {
+    if (!req.permissions.includes('add_doctors')) {
+        return res.redirect('/doctors');
+    }
+    next();
+}, upload.single('image'), (req, res) => {
     console.log(req.body);
     if (!req.file) {
         console.log('No file uploaded');
@@ -86,7 +94,12 @@ router.post('/add_doctor', upload.single('image'), (req, res) => {
     });
 });
 
-router.get('/edit_doctor/:document', (req, res) => {
+router.get('/edit_doctor/:document', (req, res, next) => {
+    if (!req.permissions.includes('edit_doctors')) {
+        return res.redirect('/doctors');
+    }
+    next();
+}, (req, res) => {
     var document = req.params.document;
     db.getDocByDocument(document, (err, result) => {
         if (err) throw err;
@@ -98,7 +111,12 @@ router.get('/edit_doctor/:document', (req, res) => {
     });
 });
 
-router.post('/edit_doctor/:document', (req, res) => {
+router.post('/edit_doctor/:document', (req, res, next) => {
+    if (!req.permissions.includes('edit_doctors')) {
+        return res.redirect('/doctors');
+    }
+    next();
+}, (req, res) => {
     var document = req.params.document;
     db.editDoc(document, req.body.name, req.body.email, req.body.date_of_birth, req.body.gender, req.body.address, req.body.phone, req.body.department, req.body.biography, (err, result) => {
         if (err) throw err;
@@ -106,10 +124,12 @@ router.post('/edit_doctor/:document', (req, res) => {
     });
 });
 
-router.get('/delete_doctor/:document', (req, res) => {
+router.get('/delete_doctor/:document', (req, res, next) => {
     if (!req.permissions.includes('delete_doctors')) {
-        return res.status(403).send('Forbidden');
+        return res.redirect('/doctors');
     }
+    next();
+}, (req, res) => {
     var document = req.params.document;
     db.getDocByDocument(document, (err, result) => {
         if (err) throw err;
@@ -121,10 +141,12 @@ router.get('/delete_doctor/:document', (req, res) => {
     });
 });
 
-router.post('/delete_doctor/:document', (req, res) => {
+router.post('/delete_doctor/:document', (req, res, next) => {
     if (!req.permissions.includes('delete_doctors')) {
-        return res.status(403).send('Forbidden');
+        return res.redirect('/doctors');
     }
+    next();
+}, (req, res) => {
     var document = req.params.document;
     db.getDocByDocument(document, (err, result) => {
         if (err) throw err;

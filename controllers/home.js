@@ -2,10 +2,9 @@ var express = require('express');
 var router = express.Router();
 var db = require.main.require('./models/db_controller');
 var bodyParser = require('body-parser'); // Corregir el nombre del módulo
-const checkPermissions = require('../models/checkPermissions');
 
 router.get('*', function(req, res, next){
-    if(req.cookies['username'] == null){
+    if(req.cookies['userId'] == null){
         res.redirect('/login');
     } else {
         next();
@@ -14,7 +13,7 @@ router.get('*', function(req, res, next){
 
 router.get('/', function(req, res){
     const userId = req.cookies.userId; // Obtener el ID del usuario desde las cookies
-    const userRole = req.cookies.userRole; // Obtener el rol del usuario
+    const userRole = req.cookies.role; // Obtener el rol del usuario
 
     db.getAllDoc(function(err, result){
         if (err || !result) {
@@ -26,31 +25,38 @@ router.get('/', function(req, res){
                 console.error('Error retrieving appointments:', err1);
                 return res.status(500).send('Error retrieving appointments');
             }
-            var total_doc = result.length;
-            var appointment = result1.length;
-
-            // Obtener los permisos del usuario
-            const query = `
-                SELECT p.name 
-                FROM permissions p
-                JOIN role_permissions rp ON p.id = rp.permission_id
-                JOIN user_roles ur ON rp.role_id = ur.role_id
-                WHERE ur.user_id = ?
-            `;
-            db.con.query(query, [userId], (err, permissions) => {
-                if (err) {
-                    console.error('Error retrieving permissions:', err);
-                    return res.status(500).send('Error retrieving permissions');
+            db.getAllPatients(function(err2, result2){
+                if (err2 || !result2) {
+                    console.error('Error retrieving patients:', err2);
+                    return res.status(500).send('Error retrieving patients');
                 }
+                var total_doc = result.length;
+                var appointment = result1.length;
 
-                const userPermissions = permissions.map(p => p.name);
-                res.render('home.ejs', {
-                    doc: total_doc,
-                    doclist: result,
-                    appointment: appointment,
-                    applist: result1,
-                    permissions: userPermissions,
-                    role: userRole // Pasar el rol del usuario a la vista
+                // Obtener los permisos del usuario
+                const query = `
+                    SELECT p.name 
+                    FROM permissions p
+                    JOIN role_permissions rp ON p.id = rp.permission_id
+                    JOIN user_roles ur ON rp.role_id = ur.role_id
+                    WHERE ur.user_id = ?
+                `;
+                db.con.query(query, [userId], (err, permissions) => {
+                    if (err) {
+                        console.error('Error retrieving permissions:', err);
+                        return res.status(500).send('Error retrieving permissions');
+                    }
+
+                    const userPermissions = permissions.map(p => p.name);
+                    res.render('home.ejs', {
+                        doc: total_doc,
+                        doclist: result,
+                        appointment: appointment,
+                        applist: result1,
+                        newPatients: result2, // Pasar los nuevos pacientes a la vista
+                        permissions: userPermissions,
+                        role: userRole // Pasar el rol del usuario a la vista
+                    });
                 });
             });
         });
@@ -110,16 +116,16 @@ router.post('/edit_department/:id',function(req,res){
 });
 
 router.get('/profile',function(req,res){
-    var username = req.cookies['username'];
-    db.getuserdetails(username,function(err,result){
+    var userId = req.cookies['userId'];
+    db.getuserdetails(userId,function(err,result){
         //console.log(result);
         res.render('profile.ejs',{list:result});
     });
 });
 
 router.post('/profile',function(req,res){
-    var username = req.cookies['username'];
-    db.getuserdetails(username,function(err,result){
+    var userId = req.cookies['userId'];
+    db.getuserdetails(userId,function(err,result){
         var id = result[0].id;
         var password = result[0].password;
         var username = result[0].username; 

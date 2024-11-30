@@ -110,17 +110,24 @@
                 <li class="nav-item dropdown has-arrow">
                     <a href="#" class="dropdown-toggle nav-link user-link" data-toggle="dropdown">
                         <span class="user-img">
-							<img class="rounded-circle" src="/assets/img/user.jpg" width="24" alt="Admin">
-							<span class="status online"></span>
-						</span>
-						<span>Admin</span>
+                            <img class="rounded-circle" src="/assets/img/user.jpg" width="24" alt="<%= role %>">
+                            <span class="status online"></span>
+                        </span>
+                        <span>
+                            <%= role === 'doctor' ? 'Dr.' : 
+                                role === 'nurse' ? 'Enfermero' : 
+                                role === 'receptionist' ? 'Recepcionista' : 
+                                role === 'pharmacist' ? 'Farmacéutico' : 
+                                role === 'patient' ? 'Paciente' : 
+                                role === 'admin' ? 'Admin' : role %> 
+                            <%= username %>
+                        </span>
                     </a>
-					<div class="dropdown-menu">
-						<a class="dropdown-item" href="/home/profile">My Profile</a>
-						<a class="dropdown-item" href="/home/edit-profile">Edit Profile</a>
-						
-						<a class="dropdown-item" href="/logout">Logout</a>
-					</div>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="/home/profile">Mi Perfil</a>
+                        <a class="dropdown-item" href="/home/edit-profile">Editar Perfil</a>
+                        <a class="dropdown-item" href="/logout">Cerrar Sesión</a>
+                    </div>
                 </li>
             </ul>
             <div class="dropdown mobile-user-menu float-right">
@@ -138,40 +145,42 @@
                 <div id="sidebar-menu" class="sidebar-menu">
                     <ul>
                         <li class="menu-title">Main</li>
-                        <li >
+                        <li>
                             <a href="/home"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a>
                         </li>
-						<li class="active">
-                            <a href="/doctors"><i class="fa fa-user-md"></i> <span>Doctores</span></a>
-                        </li>
+                        <% if (permissions.includes('view_doctors')) { %>
+                            <li class="active">
+                                <a href="/doctors"><i class="fa fa-user-md"></i> <span>Doctores</span></a>
+                            </li>
+                        <% } %>
                         <% if (permissions.includes('view_patients')) { %>
-                        <li>
-                            <a href="/patients"><i class="fa fa-wheelchair"></i> <span>Pacientes</span></a>
-                        </li>
+                            <li>
+                                <a href="/patients"><i class="fa fa-wheelchair"></i> <span>Pacientes</span></a>
+                            </li>
                         <% } %>
                         <% if (permissions.includes('view_appointments')) { %>
-                        <li>
-                            <a href="/appointment"><i class="fa fa-calendar"></i> <span>Citas</span></a>
-                        </li>
+                            <li>
+                                <a href="/appointment"><i class="fa fa-calendar"></i> <span>Citas</span></a>
+                            </li>
                         <% } %>
                         <% if (permissions.includes('view_departments')) { %>
-                        <li>
-                            <a href="/home/departments"><i class="fa fa-hospital-o"></i> <span>Departamentos</span></a>
-                        </li>
+                            <li>
+                                <a href="/home/departments"><i class="fa fa-hospital-o"></i> <span>Departamentos</span></a>
+                            </li>
                         <% } %>
                         <% if (permissions.includes('view_employees')) { %>
-                        <li class="submenu">
-                            <a href="#"><i class="fa fa-user"></i> <span> Empleados </span> <span class="menu-arrow"></span></a>
-                            <ul style="display: none;">
-                                <li><a href="/employee">Lista de Empleados</a></li>
-                                <li><a href="/employee/leave">Permisos</a></li>
-                            </ul>
-                        </li>
+                            <li class="submenu">
+                                <a href="#"><i class="fa fa-user"></i> <span> Empleados </span> <span class="menu-arrow"></span></a>
+                                <ul style="display: none;">
+                                    <li><a href="/employee">Lista de Empleados</a></li>
+                                    <li><a href="/employee/leave">Permisos</a></li>
+                                </ul>
+                            </li>
                         <% } %>
                         <% if (permissions.includes('view_store')) { %>
-                        <li>
-                            <a href="/store"><i class="fa fa-cube"></i> <span>Almacen de Medicinas</span></a>
-                        </li>
+                            <li>
+                                <a href="/store"><i class="fa fa-cube"></i> <span>Almacen de Medicinas</span></a>
+                            </li>
                         <% } %>
                     </ul>
                 </div>
@@ -185,7 +194,7 @@
                         <h4 class="page-title">Doctores</h4>
                     </div>
                     <div class="col-sm-8 col-9 text-right m-b-20">
-                        <% if (permissions.includes('add_doctor')) { %>
+                        <% if (permissions.includes('add_doctors')) { %>
                             <a href="/doctors/add_doctor" class="btn btn-primary btn-rounded float-right"><i class="fa fa-plus"></i>Agregar Doctor</a>
                         <% } %>
                     </div>
@@ -242,26 +251,16 @@
                                             <div class="dropdown dropdown-action">
                                                 <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                                                 <div class="dropdown-menu dropdown-menu-right">
-                                                    <% if (permissions.includes('edit_doctor')) { %>
+                                                    <% if (permissions.includes('edit_doctors')) { %>
                                                         <a class="dropdown-item" href="/doctors/edit_doctor/<%= list[i].document %>"><i class="fa fa-pencil m-r-5"></i> Editar</a>
                                                     <% } %>
-                                                    <% if (role === 'admin' && permissions.includes('delete_doctor')) { %>
-                                                        <a class="dropdown-item" href="/doctors/delete_doctor/<%= list[i].document %>" ><i class="fa fa-trash-o m-r-5"></i> Eliminar</a>
+                                                    <% if (permissions.includes('delete_doctors')) { %>
+                                                        <a class="dropdown-item" href="/doctors/delete_doctor/<%= list[i].document %>"><i class="fa fa-trash-o m-r-5"></i> Eliminar</a>
                                                     <% } %>
                                                 </div>
                                             </div>
                                         </td>
-                                    </tr><td class="text-right">
-                                        <div class="dropdown dropdown-action">
-                                            <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-                                            <div class="dropdown-menu dropdown-menu-right">
-                                                <a class="dropdown-item" href="http://localhost:3000/patients/edit_patient/<%= list[i].document %>"><i class="fa fa-pencil m-r-5"></i> Editar</a>
-                                                <% if (userRole === 'admin') { %>
-                                                <a class="dropdown-item" href="http://localhost:3000/patients/delete_patient/<%= list[i].document %>"><i class="fa fa-trash-o m-r-5"></i> Eliminar</a>
-                                                <% } %>
-                                            </div>
-                                        </div>
-                                    </td>
+                                    </tr>
                                     <% } %>
                                 </tbody>
                             </table>

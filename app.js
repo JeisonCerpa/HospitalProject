@@ -24,7 +24,6 @@ var complain = require('./controllers/complain');
 var home = require('./controllers/home');
 var patients = require('./controllers/patients');
 var logout = require('./controllers/logout');
-const checkPermissions = require('./models/checkPermissions'); // Importar el middleware
 
 const app = express();
 
@@ -49,6 +48,25 @@ app.use(session({
   cookie: { secure: true }
 }));
 
+app.use((req, res, next) => {
+  const userId = req.cookies.userId;
+  if (userId) {
+    db.getUserPermissions(userId, (err, permissions) => {
+      if (err) {
+        console.error('Error retrieving user permissions:', err);
+        return res.status(500).send('Error retrieving user permissions');
+      }
+      req.permissions = permissions;
+      res.locals.permissions = permissions; // Añadir esto para que las vistas tengan acceso a los permisos
+      res.locals.role = req.cookies.role; // Añadir esto para que las vistas tengan acceso al rol
+      res.locals.username = req.cookies.username; // Añadir esto para que las vistas tengan acceso al nombre de usuario
+      next();
+    });
+  } else {
+    next();
+  }
+});
+
 // Aplicar el middleware a las rutas que requieren permisos
 app.use('/signup', signup);
 app.use('/login', (req, res, next) => {
@@ -64,18 +82,63 @@ app.use('/login', login);
 app.use('/home', home);
 app.use('/verify', verify);
 app.use('/reset', reset);
-app.use('/doctors', checkPermissions('view_doctors'), doctors);
-app.use('/employee', checkPermissions('view_employees'), employee);
-app.use('/appointment', checkPermissions('view_appointments'), appointment);
-app.use('/store', checkPermissions('view_store'), store);
-app.use('/receipt', receipt);
-app.use('/complain', checkPermissions('view_complaints'), complain);
-app.use('/patients', checkPermissions('view_patients'), patients);
-app.use('/delete_patient', checkPermissions('delete_patients'), (req, res, next) => {
-  if (req.cookies.role !== 'admin') {
-    res.redirect('/doctors');
-  } else {
+
+app.use('/doctors', (req, res, next) => {
+  if (req.permissions.includes('view_doctors')) {
     next();
+  } else {
+    res.redirect('/doctors');
+  }
+}, doctors);
+
+app.use('/employee', (req, res, next) => {
+  if (req.permissions.includes('view_employees')) {
+    next();
+  } else {
+    res.redirect('/doctors');
+  }
+}, employee);
+
+app.use('/appointment', (req, res, next) => {
+  if (req.permissions.includes('view_appointments')) {
+    next();
+  } else {
+    res.redirect('/doctors');
+  }
+}, appointment);
+
+app.use('/store', (req, res, next) => {
+  if (req.permissions.includes('view_store')) {
+    next();
+  } else {
+    res.redirect('/doctors');
+  }
+}, store);
+
+app.use('/receipt', receipt);
+
+app.use('/complain', (req, res, next) => {
+  if (req.permissions.includes('view_complaints')) {
+    next();
+  } else {
+    res.redirect('/doctors');
+  }
+}, complain);
+
+app.use('/patients', (req, res, next) => {
+  if (req.permissions.includes('view_patients')) {
+    next();
+  } else {
+    res.redirect('/doctors');
+  }
+}, patients);
+
+app.use('/delete_patient', (req, res, next) => {
+  if (req.permissions.includes('delete_patients') && req.cookies.role === 'admin') {
+    next();
+  } else {
+    res.redirect('/doctors');
   }
 });
+
 app.use('/logout', logout);
