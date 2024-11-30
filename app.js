@@ -54,9 +54,13 @@ app.use('/signup', signup);
 app.use('/login', (req, res, next) => {
   // ...existing login logic...
   // Después de una autenticación exitosa, almacena el rol del usuario en las cookies
-  res.cookie('userRole', userRole); // Asegúrate de que userRole esté definido
+  const userRole = req.session.userRole; // Asegúrate de que userRole esté definido
+  if (userRole) {
+    res.cookie('userRole', userRole); // Asegúrate de que userRole esté definido
+  }
   next();
 });
+app.use('/login', login);
 app.use('/home', home);
 app.use('/verify', verify);
 app.use('/reset', reset);

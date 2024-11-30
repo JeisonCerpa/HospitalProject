@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var db = require.main.require('./models/db_controller');
-var bodyPaser = require('body-parser');
+var bodyParser = require('body-parser'); // Corregir el nombre del módulo
 const checkPermissions = require('../models/checkPermissions');
 
 router.get('*', function(req, res, next){
@@ -14,7 +14,7 @@ router.get('*', function(req, res, next){
 
 router.get('/', function(req, res){
     const userId = req.cookies.userId; // Obtener el ID del usuario desde las cookies
-    const userRole = req.cookies.role; // Obtener el rol del usuario
+    const userRole = req.cookies.userRole; // Obtener el rol del usuario
 
     db.getAllDoc(function(err, result){
         if (err || !result) {
