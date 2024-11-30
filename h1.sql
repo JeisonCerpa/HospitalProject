@@ -352,6 +352,7 @@ INSERT INTO `verify` (`id`, `username`, `email`, `token`) VALUES
 -- Estructura de tabla para la tabla `roles`
 --
 
+DROP TABLE IF EXISTS `roles`;
 CREATE TABLE IF NOT EXISTS `roles` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
@@ -376,6 +377,7 @@ INSERT INTO `roles` (`id`, `name`) VALUES
 -- Estructura de tabla para la tabla `permissions`
 --
 
+DROP TABLE IF EXISTS `permissions`;
 CREATE TABLE IF NOT EXISTS `permissions` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
@@ -418,6 +420,7 @@ INSERT INTO `permissions` (`id`, `name`) VALUES
 -- Estructura de tabla para la tabla `role_permissions`
 --
 
+DROP TABLE IF EXISTS `role_permissions`;
 CREATE TABLE IF NOT EXISTS `role_permissions` (
   `role_id` int NOT NULL,
   `permission_id` int NOT NULL,
@@ -449,6 +452,7 @@ INSERT INTO `role_permissions` (`role_id`, `permission_id`) VALUES
 -- Estructura de tabla para la tabla `user_roles`
 --
 
+DROP TABLE IF EXISTS `user_roles`;
 CREATE TABLE IF NOT EXISTS `user_roles` (
   `user_id` int NOT NULL,
   `role_id` int NOT NULL,
