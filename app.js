@@ -87,7 +87,7 @@ app.use('/doctors', (req, res, next) => {
   if (req.permissions.includes('view_doctors')) {
     next();
   } else {
-    res.redirect('/doctors');
+    res.redirect('back');
   }
 }, doctors);
 
@@ -95,7 +95,7 @@ app.use('/employee', (req, res, next) => {
   if (req.permissions.includes('view_employees')) {
     next();
   } else {
-    res.redirect('/doctors');
+    res.redirect('back');
   }
 }, employee);
 
@@ -103,7 +103,7 @@ app.use('/appointment', (req, res, next) => {
   if (req.permissions.includes('view_appointments')) {
     next();
   } else {
-    res.redirect('/doctors');
+    res.redirect('back');
   }
 }, appointment);
 
@@ -111,7 +111,7 @@ app.use('/store', (req, res, next) => {
   if (req.permissions.includes('view_store')) {
     next();
   } else {
-    res.redirect('/doctors');
+    res.redirect('back');
   }
 }, store);
 
@@ -121,7 +121,7 @@ app.use('/complain', (req, res, next) => {
   if (req.permissions.includes('view_complaints')) {
     next();
   } else {
-    res.redirect('/doctors');
+    res.redirect('back');
   }
 }, complain);
 
@@ -129,7 +129,7 @@ app.use('/patients', (req, res, next) => {
   if (req.permissions.includes('view_patients')) {
     next();
   } else {
-    res.redirect('/doctors');
+    res.redirect('back');
   }
 }, patients);
 
@@ -137,7 +137,7 @@ app.use('/delete_patient', (req, res, next) => {
   if (req.permissions.includes('delete_patients') && req.cookies.role === 'admin') {
     next();
   } else {
-    res.redirect('/doctors');
+    res.redirect('back');
   }
 });
 
