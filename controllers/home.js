@@ -79,8 +79,7 @@ router.get('/add_departments',function(req,res){
 
 router.post('/add_departments',function(req,res){
     var name = req.body.dpt_name;
-    var desc = req.body.desc;
-    db.add_dept(name,desc,function(err,result){
+    db.add_dept(name,function(err,result){
         res.redirect('/home/departments');
     });
 });
@@ -107,10 +106,8 @@ router.get('/edit_department/:id',function(req,res){
     })
 });
 
-
 router.post('/edit_department/:id',function(req,res){
-
-    db.edit_dept(req.params.id,req.body.dpt_name,req.body.desc,function(err,result){
+    db.edit_dept(req.params.id,req.body.dpt_name,function(err,result){
         res.redirect('/home/departments');
     });
 });

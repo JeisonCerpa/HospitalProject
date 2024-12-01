@@ -13,6 +13,7 @@
     <link rel="stylesheet" type="text/css" href="/assets/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/style.css">
     <script src="/assets/js/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!--[if lt IE 9]>
 		<script src="/assets/js/html5shiv.min.js"></script>
 		<script src="/assets/js/respond.min.js"></script>
@@ -517,13 +518,38 @@
                         success: function(response) {
                             if (response.available) {
                                 $('input[name="time"]').val(formattedTime);
-                                $('form')[0].submit();
+                                Swal.fire({
+                                    title: '¿Estás seguro?',
+                                    text: "¿Deseas actualizar esta cita?",
+                                    icon: 'warning',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#3085d6',
+                                    cancelButtonColor: '#d33',
+                                    confirmButtonText: 'Sí, actualizar',
+                                    cancelButtonText: 'Cancelar'
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        $('form')[0].submit();
+                                    }
+                                });
                             } else {
-                                alert('El doctor ya tiene una cita a esta hora. Por favor, seleccione otra hora.');
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: 'El doctor ya tiene una cita a esta hora. Por favor, seleccione otra hora.'
+                                });
                             }
                         }
                     });
                 });
+
+                <% if (typeof alert !== 'undefined' && alert.type === 'success') { %>
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Éxito',
+                        text: '<%= alert.message %>'
+                    });
+                <% } %>
             });
 
             function submitForm() {

@@ -426,9 +426,9 @@ module.exports.getdeptbyId = (id, callback) => {
     console.log(query);
 };
 
-module.exports.edit_dept = (id, department_name, department_desc, callback) => {
-    var query = 'UPDATE departments SET department_name = ?, department_desc = ? WHERE id = ?';
-    con.query(query, [department_name, department_desc, id], callback);
+module.exports.edit_dept = (id, department_name, callback) => {
+    var query = 'UPDATE departments SET department_name = ? WHERE id = ?';
+    con.query(query, [department_name, id], callback);
     console.log(query);
 };
 
@@ -438,9 +438,9 @@ module.exports.delete_department = (id, callback) => {
     console.log(query);
 };
 
-module.exports.add_dept = (department_name, department_desc, callback) => {
-    var query = 'INSERT INTO departments (department_name, department_desc) VALUES (?, ?)';
-    con.query(query, [department_name, department_desc], callback);
+module.exports.add_dept = (department_name, callback) => {
+    var query = 'INSERT INTO departments (department_name) VALUES (?)';
+    con.query(query, [department_name], callback);
     console.log(query);
 };
 

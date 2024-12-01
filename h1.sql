@@ -85,7 +85,6 @@ DROP TABLE IF EXISTS `departments`;
 CREATE TABLE IF NOT EXISTS `departments` (
   `id` int NOT NULL AUTO_INCREMENT,
   `department_name` varchar(255) NOT NULL,
-  `department_desc` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -93,12 +92,12 @@ CREATE TABLE IF NOT EXISTS `departments` (
 -- Volcado de datos para la tabla `departments`
 --
 
-INSERT INTO `departments` (`id`, `department_name`, `department_desc`) VALUES
-(1, 'Intensive Care Unit (ICU)', 'What is an intensive care unit (ICU)? Intensive care refers to the specialised treatment given to patients who are acutely unwell and require critical medical care. An intensive care unit (ICU) provides the critical care and life support for acutely ill a'),
-(2, 'Neurology', 'Neurology is a branch of medicine dealing with disorders of the nervous system. Neurology deals with the diagnosis and treatment of all categories of conditions and disease involving the central and peripheral nervous systems, including their coverings'),
-(3, 'Opthalmology', 'Ojos'),
-(4, 'Orthopedics', 'dfyuyuo'),
-(5, 'Cancer Department', 'asyckuauhcioa');
+INSERT INTO `departments` (`id`, `department_name`) VALUES
+(1, 'Intensive Care Unit (ICU)'),
+(2, 'Neurology'),
+(3, 'Opthalmology'),
+(4, 'Orthopedics'),
+(5, 'Cancer Department');
 
 -- --------------------------------------------------------
 

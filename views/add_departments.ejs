@@ -112,7 +112,15 @@
 							<img class="rounded-circle" src="/assets/img/user.jpg" width="24" alt="Admin">
 							<span class="status online"></span>
 						</span>
-						<span>Admin</span>
+						 <span>
+                            <%= role === 'doctor' ? 'Dr.' : 
+                                role === 'nurse' ? 'Enfermero' : 
+                                role === 'receptionist' ? 'Recepcionista' : 
+                                role === 'pharmacist' ? 'Farmacéutico' : 
+                                role === 'patient' ? 'Paciente' : 
+                                role === 'admin' ? 'Admin' : role %> 
+                            <%= username %>
+                        </span>
                     </a>
 					<div class="dropdown-menu">
 						<a class="dropdown-item" href="/home/profile">My Profile</a>
@@ -136,62 +144,44 @@
             <div class="sidebar-inner slimscroll">
                 <div id="sidebar-menu" class="sidebar-menu">
                     <ul>
-                        <li class="menu-title">Main</li>
-                        <li >
-                            <a href="/home"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a>
-                        </li>
-						<li>
-                            <a href="/doctors"><i class="fa fa-user-md"></i> <span>Doctors</span></a>
-                        </li>
+                        <li class="menu-title">Principal</li>
                         <li>
-                            <a href="/patients"><i class="fa fa-wheelchair"></i> <span>Patients</span></a>
+                            <a href="/home"><i class="fa fa-dashboard"></i> <span>Tablero</span></a>
                         </li>
+                        <% if (permissions.includes('view_doctors')) { %>
                         <li>
-                            <a href="/appointment"><i class="fa fa-calendar"></i> <span>Appointments</span></a>
+                            <a href="/doctors"><i class="fa fa-user-md"></i> <span>Doctores</span></a>
                         </li>
-                       
+                        <% } %>
+                        <% if (permissions.includes('view_patients')) { %>
+                        <li>
+                            <a href="/patients"><i class="fa fa-wheelchair"></i> <span>Pacientes</span></a>
+                        </li>
+                        <% } %>
+                        <% if (permissions.includes('view_appointments')) { %>
+                        <li>
+                            <a href="/appointment"><i class="fa fa-calendar"></i> <span>Citas</span></a>
+                        </li>
+                        <% } %>
+                        <% if (permissions.includes('view_departments')) { %>
                         <li class="active">
-                            <a href="/home/departments"><i class="fa fa-hospital-o"></i> <span>Departments</span></a>
+                            <a href="/home/departments"><i class="fa fa-hospital-o"></i> <span>Departamentos</span></a>
                         </li>
-						<li class="submenu">
-							<a href="#"><i class="fa fa-user"></i> <span> Employees </span> <span class="menu-arrow"></span></a>
-							<ul style="display: none;">
-								<li><a href="/employee">Employees List</a></li>
-								<li><a href="/employee/leave">Leaves</a></li>
-								
-							</ul>
-						</li>
-						
-						<li class="submenu">
-							<a href="#"><i class="fa fa-book"></i> <span> Payroll </span> <span class="menu-arrow"></span></a>
-							<ul style="display: none;">
-								<li><a href="/receipt"> Employee Salary </a></li>
-								
-							</ul>
-						</li>
-                       
-                        
+                        <% } %>
+                        <% if (permissions.includes('view_employees')) { %>
                         <li class="submenu">
-                            <a href="#"><i class="fa fa-envelope"></i> <span> Email</span> <span class="menu-arrow"></span></a>
+                            <a href="#"><i class="fa fa-user"></i> <span> Empleados </span> <span class="menu-arrow"></span></a>
                             <ul style="display: none;">
-                                <li><a href="/compose">Compose Mail</a></li>
-                                <li><a href="/inbox">Inbox</a></li>
-                                
+                                <li><a href="/employee">Lista de Empleados</a></li>
+                                <li><a href="/employee/leave">Permisos</a></li>
                             </ul>
                         </li>
-                       
-						<li>
-							<a href="/store"><i class="fa fa-cube"></i> <span>Medicine Store</span></a>
-						</li>
-						
-					
-                       
-                        
-                       
-                        
-                      
-                     
-                       
+                        <% } %>
+                        <% if (permissions.includes('view_store')) { %>
+                        <li>
+                            <a href="/store"><i class="fa fa-cube"></i> <span>Almacén de Medicinas</span></a>
+                        </li>
+                        <% } %>
                     </ul>
                 </div>
             </div>
@@ -210,11 +200,6 @@
 								<label>Department Name</label>
 								<input class="form-control" type="text" name="dpt_name">
 							</div>
-                            <div class="form-group">
-                                <label>Description</label>
-                                <textarea cols="30" rows="4" class="form-control" name="desc"></textarea>
-                            </div>
-                            
                             <div class="m-t-20 text-center">
                                 <button class="btn btn-primary submit-btn">Add Department</button>
                             </div>
