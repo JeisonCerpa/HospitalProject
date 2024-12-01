@@ -14,21 +14,24 @@ router.get('*', (req, res, next) => {
 router.get('/', (req, res) => {
     const userId = req.cookies.userId;
     const userRole = req.cookies.role;
+    const username = req.cookies.username; // Asegúrate de que username esté definido
     db.getUserPermissions(userId, (err, userPermissions) => {
         if (err) throw err;
         db.getAllPatients((err, result) => {
             if (err) throw err;
-            res.render('patients.ejs', { list: result, userId: userId, userRole: userRole, userPermissions: userPermissions });
+            res.render('patients.ejs', { list: result, userId: userId, userRole: userRole, username: username, userPermissions: userPermissions });
         });
     });
 });
 
 router.get('/add_patient', (req, res) => {
     const userId = req.cookies.userId;
+    const userRole = req.cookies.role;
+    const username = req.cookies.username; // Asegúrate de que username esté definido
     db.getUserPermissions(userId, (err, userPermissions) => {
         if (err) throw err;
-        if (req.cookies.userRole === 'admin') {
-            res.render('add_patient.ejs', { userPermissions: userPermissions });
+        if (userRole === 'admin') {
+            res.render('add_patient.ejs', { userPermissions: userPermissions, username: username, userRole: userRole });
         } else {
             res.redirect('/patients');
         }
@@ -54,11 +57,13 @@ router.post('/add_patient', (req, res) => {
 router.get('/edit_patient/:document', (req, res) => {
     var document = req.params.document;
     const userId = req.cookies.userId;
+    const userRole = req.cookies.role;
+    const username = req.cookies.username; // Asegúrate de que username esté definido
     db.getUserPermissions(userId, (err, userPermissions) => {
         if (err) throw err;
         db.getPatientByDoc(document, (err, result) => {
             if (err) throw err;
-            res.render('edit_patient.ejs', { list: result, userPermissions: userPermissions });
+            res.render('edit_patient.ejs', { list: result, userPermissions: userPermissions, username: username, userRole: userRole });
         });
     });
 });
@@ -75,12 +80,14 @@ router.post('/edit_patient/:document', (req, res) => {
 router.get('/delete_patient/:document', (req, res) => {
     var document = req.params.document;
     const userId = req.cookies.userId;
+    const userRole = req.cookies.role;
+    const username = req.cookies.username; // Asegúrate de que username esté definido
     db.getUserPermissions(userId, (err, userPermissions) => {
         if (err) throw err;
-        if (req.cookies.userRole === 'admin') {
+        if (userRole === 'admin') {
             db.getPatientByDoc(document, (err, result) => {
                 if (err) throw err;
-                res.render('delete_patient.ejs', { list: result, userPermissions: userPermissions });
+                res.render('delete_patient.ejs', { list: result, userPermissions: userPermissions, username: username, userRole: userRole });
             });
         } else {
             res.redirect('/patients');

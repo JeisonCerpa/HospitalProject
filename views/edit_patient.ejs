@@ -127,7 +127,15 @@
                             <img class="rounded-circle" src="/assets/img/user.jpg" width="24" alt="Admin">
                             <span class="status online"></span>
                         </span>
-                        <span>Admin</span>
+                        <span>
+                            <%= userRole === 'doctor' ? 'Dr.' : 
+                                userRole === 'nurse' ? 'Enfermero' : 
+                                userRole === 'receptionist' ? 'Recepcionista' : 
+                                userRole === 'pharmacist' ? 'Farmacéutico' : 
+                                userRole === 'patient' ? 'Paciente' : 
+                                userRole === 'admin' ? 'Admin' : userRole %> 
+                            <%= username %>
+                        </span>
                     </a>
                     <div class="dropdown-menu">
                         <a class="dropdown-item" href="/home/profile">My Profile</a>
@@ -527,7 +535,14 @@
                 cancelButtonText: 'Cancelar'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    this.submit();
+                    Swal.fire({
+                        title: 'Guardado',
+                        text: 'Paciente editado correctamente.',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    }).then(() => {
+                        this.submit();
+                    });
                 }
             });
         });
