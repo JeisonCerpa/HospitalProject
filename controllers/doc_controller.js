@@ -86,9 +86,19 @@ router.post('/add_doctor', (req, res, next) => {
             });
         } else {
             db.add_doctor(req.body.document, req.body.name, req.body.email, req.body.date_of_birth, req.body.gender, req.body.address, req.body.phone, image, req.body.department, req.body.biography, (err) => {
-                if (err) throw err;
-                console.log('1 doctor inserted');
-                res.redirect('/doctors');
+                if (err) {
+                    if (err.code === 'ER_DUP_ENTRY') {
+                        db.getalldept((err, departments) => {
+                            if (err) throw err;
+                            res.render('add_doctor.ejs', { list: departments, alert: { type: 'error', message: 'El documento ya existe' } });
+                        });
+                    } else {
+                        throw err;
+                    }
+                } else {
+                    console.log('1 doctor inserted');
+                    res.render('doctors.ejs', { list: [], alert: { type: 'success', message: 'Doctor agregado correctamente' } });
+                }
             });
         }
     });
@@ -120,7 +130,7 @@ router.post('/edit_doctor/:document', (req, res, next) => {
     var document = req.params.document;
     db.editDoc(document, req.body.name, req.body.email, req.body.date_of_birth, req.body.gender, req.body.address, req.body.phone, req.body.department, req.body.biography, (err, result) => {
         if (err) throw err;
-        res.redirect('/doctors');
+        res.render('edit_doctor.ejs', { list: [{ ...req.body, document }], alert: { type: 'success', message: 'Doctor editado correctamente' } });
     });
 });
 
@@ -156,7 +166,7 @@ router.post('/delete_doctor/:document', (req, res, next) => {
                 if (err) throw err;
                 db.deleteUser(userId, (err, result) => {
                     if (err) throw err;
-                    res.redirect('/doctors');
+                    res.render('delete_doctor.ejs', { list: [], alert: { type: 'success', message: 'Doctor eliminado correctamente' } });
                 });
             });
         } else {

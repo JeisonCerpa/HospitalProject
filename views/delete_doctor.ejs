@@ -633,6 +633,16 @@
                 }
             });
         });
+
+        <% if (typeof alert !== 'undefined' && alert.type === 'success') { %>
+            Swal.fire({
+                icon: 'success',
+                title: 'Éxito',
+                text: '<%= alert.message %>'
+            }).then(() => {
+                window.location.href = '/doctors';
+            });
+        <% } %>
     </script>
 </body>
 

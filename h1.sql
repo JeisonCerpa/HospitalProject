@@ -412,7 +412,15 @@ INSERT INTO `permissions` (`id`, `name`) VALUES
 (21, 'delete_store'),
 (22, 'view_complaints'),
 (23, 'edit_complaints'),
-(24, 'delete_complaints');
+(24, 'delete_complaints'),
+(25, 'add_appointments'),
+(26, 'add_complaints'),
+(27, 'add_departments'),
+(28, 'add_doctors'),
+(29, 'add_employees'),
+(30, 'add_leaves'),
+(31, 'add_patients'),
+(32, 'add_store');
 
 -- --------------------------------------------------------
 
@@ -434,17 +442,17 @@ CREATE TABLE IF NOT EXISTS `role_permissions` (
 --
 INSERT INTO `role_permissions` (`role_id`, `permission_id`) VALUES
 -- Permisos para admin (todos los permisos)
-(1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (1, 6), (1, 7), (1, 8), (1, 9), (1, 10), (1, 11), (1, 12), (1, 13), (1, 14), (1, 15), (1, 16), (1, 17), (1, 18), (1, 19), (1, 20), (1, 21), (1, 22), (1, 23), (1, 24),
--- Permisos para doctor (ver/editar pacientes, gestionar citas)
-(2, 1), (2, 2), (2, 4), (2, 5), (2, 7), (2, 8),
--- Permisos para receptionist (gestionar citas, ver pacientes)
-(3, 1), (3, 4), (3, 10), (3, 13), (3, 16), (3, 19), (3, 22),
+(1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (1, 6), (1, 7), (1, 8), (1, 9), (1, 10), (1, 11), (1, 12), (1, 13), (1, 14), (1, 15), (1, 16), (1, 17), (1, 18), (1, 19), (1, 20), (1, 21), (1, 22), (1, 23), (1, 24), (1, 25), (1, 26), (1, 27), (1, 28), (1, 29), (1, 30), (1, 31), (1, 32),
+-- Permisos para doctor (ver/editar/agregar pacientes, gestionar citas)
+(2, 1), (2, 2), (2, 4), (2, 5), (2, 7), (2, 8), (2, 25), (2, 31),
+-- Permisos para receptionist (gestionar citas, ver/agregar pacientes)
+(3, 1), (3, 4), (3, 10), (3, 13), (3, 16), (3, 19), (3, 22), (3, 25), (3, 31),
 -- Permisos para pharmacist (inventario de medicamentos)
-(4, 19), (4, 20), (4, 21),
+(4, 19), (4, 20), (4, 21), (4, 32),
 -- Permisos para patient (ver citas)
 (5, 1), (5, 4), (5, 10), (5, 13), (5, 16), (5, 19), (5, 22),
--- Permisos para nurse (ver pacientes, gestionar citas)
-(6, 1), (6, 4), (6, 7), (6, 10), (6, 13), (6, 16), (6, 19), (6, 22);
+-- Permisos para nurse (ver/agregar pacientes, gestionar citas)
+(6, 1), (6, 4), (6, 7), (6, 10), (6, 13), (6, 16), (6, 19), (6, 22), (6, 25), (6, 31);
 
 -- --------------------------------------------------------
 

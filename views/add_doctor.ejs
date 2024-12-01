@@ -367,8 +367,7 @@
                 format: 'YYYY-MM-DD'
             });
         });
-    </script> 
-    <script>
+
         document.querySelector('form').addEventListener('submit', function(event) {
             event.preventDefault();
             Swal.fire({
@@ -386,6 +385,20 @@
                 }
             });
         });
+
+        <% if (typeof alert !== 'undefined' && alert.type === 'error') { %>
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: '<%= alert.message %>'
+            });
+        <% } else if (typeof alert !== 'undefined' && alert.type === 'success') { %>
+            Swal.fire({
+                icon: 'success',
+                title: 'Éxito',
+                text: '<%= alert.message %>'
+            });
+        <% } %>
     </script>
 </body>
 

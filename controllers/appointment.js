@@ -14,58 +14,32 @@ router.get('*', (req, res, next) => {
 });
 
 router.get('/', (req, res) => {
-    db.getallappointment((err, result) => {
-        console.log(result);
-        res.render('appointment.ejs', {list: result, moment: moment}); // Pasar moment a la plantilla
-    });
-});
-
-router.get('/add_appointment', (req, res) => {
-    db.getAllPatients((err, patients) => {
+    const userId = req.cookies['userId'];
+    db.getUserPermissions(userId, (err, permissions) => {
         if (err) {
-            console.error('Error fetching patients:', err);
+            console.error('Error fetching user permissions:', err);
             res.status(500).send('Internal Server Error');
         } else {
-            db.getalldept((err, departments) => {
+            db.getallappointment((err, result) => {
                 if (err) {
-                    console.error('Error fetching departments:', err);
+                    console.error('Error fetching appointments:', err);
                     res.status(500).send('Internal Server Error');
                 } else {
-                    db.getAllDoc((err, doctors) => {
-                        if (err) {
-                            console.error('Error fetching doctors:', err);
-                            res.status(500).send('Internal Server Error');
-                        } else {
-                            res.render('add_appointment.ejs', { patients: patients, departments: departments, doctors: doctors });
-                        }
-                    });
+                    res.render('appointment.ejs', { list: result, moment: moment, permissions: permissions });
                 }
             });
         }
     });
 });
 
-router.post('/add_appointment', (req, res) => {
-    console.log(req.body);
-    var date = moment(req.body.date, 'DD/MM/YYYY').format('YYYY-MM-DD'); // Formatear la fecha correctamente
-    var time = req.body.time; // Asegurarse de que el tiempo esté en formato HH:mm:ss
-    db.add_appointment(req.body.patient_document, req.body.department, req.body.doctor_document, date, time, (err, result) => {
+router.get('/add_appointment', (req, res) => {
+    const userId = req.cookies['userId'];
+    db.getUserPermissions(userId, (err, permissions) => {
         if (err) {
-            console.error('Error adding appointment:', err);
+            console.error('Error fetching user permissions:', err);
             res.status(500).send('Internal Server Error');
-        } else {
-            console.log('Cita agregada');
-            res.redirect('/appointment');
-        }
-    });
-});
-
-router.get('/edit_appointment/:id', (req, res) => {
-    var id = req.params.id;
-    db.getallappointmentbyid(id, (err, appointment) => {
-        if (err) {
-            console.error('Error fetching appointment:', err);
-            res.status(500).send('Internal Server Error');
+        } else if (!permissions.includes('edit_appointments')) {
+            res.status(403).send('Forbidden');
         } else {
             db.getAllPatients((err, patients) => {
                 if (err) {
@@ -82,7 +56,74 @@ router.get('/edit_appointment/:id', (req, res) => {
                                     console.error('Error fetching doctors:', err);
                                     res.status(500).send('Internal Server Error');
                                 } else {
-                                    res.render('edit_appointment.ejs', { appointment: appointment[0], patients: patients, departments: departments, doctors: doctors, moment: moment });
+                                    res.render('add_appointment.ejs', { patients: patients, departments: departments, doctors: doctors });
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    });
+});
+
+router.post('/add_appointment', (req, res) => {
+    const userId = req.cookies['userId'];
+    db.getUserPermissions(userId, (err, permissions) => {
+        if (err) {
+            console.error('Error fetching user permissions:', err);
+            res.status(500).send('Internal Server Error');
+        } else if (!permissions.includes('edit_appointments')) {
+            res.status(403).send('Forbidden');
+        } else {
+            var date = moment(req.body.date, 'DD/MM/YYYY').format('YYYY-MM-DD'); // Formatear la fecha correctamente
+            var time = req.body.time; // Asegurarse de que el tiempo esté en formato HH:mm:ss
+            db.add_appointment(req.body.patient_document, req.body.department, req.body.doctor_document, date, time, (err, result) => {
+                if (err) {
+                    console.error('Error adding appointment:', err);
+                    res.redirect('back');
+                } else {
+                    console.log('Cita agregada');
+                    res.redirect('/appointment');
+                }
+            });
+        }
+    });
+});
+
+router.get('/edit_appointment/:id', (req, res) => {
+    const userId = req.cookies['userId'];
+    db.getUserPermissions(userId, (err, permissions) => {
+        if (err) {
+            console.error('Error fetching user permissions:', err);
+            res.status(500).send('Internal Server Error');
+        } else if (!permissions.includes('edit_appointments')) {
+            res.status(403).send('Forbidden');
+        } else {
+            var id = req.params.id;
+            db.getallappointmentbyid(id, (err, appointment) => {
+                if (err) {
+                    console.error('Error fetching appointment:', err);
+                    res.redirect('back');
+                } else {
+                    db.getAllPatients((err, patients) => {
+                        if (err) {
+                            console.error('Error fetching patients:', err);
+                            res.redirect('back');
+                        } else {
+                            db.getalldept((err, departments) => {
+                                if (err) {
+                                    console.error('Error fetching departments:', err);
+                                    res.redirect('back');
+                                } else {
+                                    db.getAllDoc((err, doctors) => {
+                                        if (err) {
+                                            console.error('Error fetching doctors:', err);
+                                            res.redirect('back');
+                                        } else {
+                                            res.render('edit_appointment.ejs', { appointment: appointment[0], patients: patients, departments: departments, doctors: doctors, moment: moment });
+                                        }
+                                    });
                                 }
                             });
                         }
@@ -94,41 +135,71 @@ router.get('/edit_appointment/:id', (req, res) => {
 });
 
 router.post('/edit_appointment/:id', (req, res) => {
-    var id = req.params.id;
-    var date = moment(req.body.date, 'DD/MM/YYYY').format('YYYY-MM-DD'); // Formatear la fecha correctamente
-    var time = req.body.time; // Asegurarse de que el tiempo esté en formato HH:mm:ss
-    db.editappointment(id, req.body.patient_document, req.body.department, req.body.doctor_document, date, time, (err, result) => {
+    const userId = req.cookies['userId'];
+    db.getUserPermissions(userId, (err, permissions) => {
         if (err) {
-            console.error('Error updating appointment:', err);
+            console.error('Error fetching user permissions:', err);
             res.status(500).send('Internal Server Error');
+        } else if (!permissions.includes('edit_appointments')) {
+            res.status(403).send('Forbidden');
         } else {
-            console.log('Cita actualizada');
-            res.redirect('/appointment');
+            var id = req.params.id;
+            var date = moment(req.body.date, 'DD/MM/YYYY').format('YYYY-MM-DD'); // Formatear la fecha correctamente
+            var time = req.body.time; // Asegurarse de que el tiempo esté en formato HH:mm:ss
+            db.editappointment(id, req.body.patient_document, req.body.department, req.body.doctor_document, date, time, (err, result) => {
+                if (err) {
+                    console.error('Error updating appointment:', err);
+                    res.redirect('back');
+                } else {
+                    console.log('Cita actualizada');
+                    res.redirect('/appointment');
+                }
+            });
         }
     });
 });
 
 router.get('/delete_appointment/:id', (req, res) => {
-    var id = req.params.id;
-    db.getallappointmentbyid(id, (err, result) => {
+    const userId = req.cookies['userId'];
+    db.getUserPermissions(userId, (err, permissions) => {
         if (err) {
-            console.error('Error fetching appointment:', err);
+            console.error('Error fetching user permissions:', err);
             res.status(500).send('Internal Server Error');
+        } else if (!permissions.includes('delete_appointments')) {
+            res.status(403).send('Forbidden');
         } else {
-            res.render('delete_appointment.ejs', {list: result});    
+            var id = req.params.id;
+            db.getallappointmentbyid(id, (err, result) => {
+                if (err) {
+                    console.error('Error fetching appointment:', err);
+                    res.redirect('back');
+                } else {
+                    res.render('delete_appointment.ejs', { list: result });
+                }
+            });
         }
     });
 });
 
 router.post('/delete_appointment/:id', (req, res) => {
-    var id = req.params.id;
-    db.deleteappointment(id, (err, result) => {
+    const userId = req.cookies['userId'];
+    db.getUserPermissions(userId, (err, permissions) => {
         if (err) {
-            console.error('Error deleting appointment:', err);
+            console.error('Error fetching user permissions:', err);
             res.status(500).send('Internal Server Error');
+        } else if (!permissions.includes('delete_appointments')) {
+            res.status(403).send('Forbidden');
         } else {
-            console.log('Cita eliminada');
-            res.redirect('/appointment');
+            var id = req.params.id;
+            db.deleteappointment(id, (err, result) => {
+                if (err) {
+                    console.error('Error deleting appointment:', err);
+                    res.redirect('back');
+                } else {
+                    console.log('Cita eliminada');
+                    res.redirect('/appointment');
+                }
+            });
         }
     });
 });

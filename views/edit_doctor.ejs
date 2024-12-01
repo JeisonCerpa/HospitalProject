@@ -481,13 +481,13 @@
         </div>
     </div>
     <div class="sidebar-overlay" data-reff=""></div>
-    <script src="/ass/ets/js/jquery-3.2.1.min.js"></script>
-	<script src="/assets/js/popper.min.js"></script>
+    <script src="/assets/js/jquery-3.2.1.min.js"></script>
+    <script src="/assets/js/popper.min.js"></script>
     <script src="/assets/js/bootstrap.min.js"></script>
     <script src="/assets/js/jquery.slimscroll.js"></script>
     <script src="/assets/js/select2.min.js"></script>
-	<script src="/assets/js/moment.min.js"></script>
-	<script src="/assets/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="/assets/js/moment.min.js"></script>
+    <script src="/assets/js/bootstrap-datetimepicker.min.js"></script>
     <script src="/assets/js/app.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
@@ -508,6 +508,16 @@
                 }
             });
         });
+
+        <% if (typeof alert !== 'undefined' && alert.type === 'success') { %>
+            Swal.fire({
+                icon: 'success',
+                title: 'Éxito',
+                text: '<%= alert.message %>'
+            }).then(() => {
+                window.location.href = '/doctors';
+            });
+        <% } %>
     </script>
 </body>
 
