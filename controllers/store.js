@@ -21,6 +21,9 @@ router.use((req, res, next) => {
 });
 
 router.get('/', (req, res) => {
+    if (!res.locals.permissions.includes('view_store')) {
+        return res.redirect('back');
+    }
     db.getallmed((err, result) => {
         console.log(result);
         res.render('store.ejs', { list: result });
@@ -28,10 +31,16 @@ router.get('/', (req, res) => {
 });
 
 router.get('/add_med', (req, res) => {
+    if (!res.locals.permissions.includes('add_store')) {
+        return res.redirect('back');
+    }
     res.render('add_med.ejs');
 });
 
 router.post('/add_med', (req, res) => {
+    if (!res.locals.permissions.includes('add_store')) {
+        return res.redirect('back');
+    }
     const { name, p_date, e_date, price, quantity } = req.body;
     const formattedPDate = moment(p_date, 'DD/MM/YYYY').format('YYYY-MM-DD');
     const formattedEDate = moment(e_date, 'DD/MM/YYYY').format('YYYY-MM-DD');
@@ -50,6 +59,9 @@ router.post('/add_med', (req, res) => {
 });
 
 router.get('/edit_med/:id', (req, res) => {
+    if (!res.locals.permissions.includes('edit_store')) {
+        return res.redirect('back');
+    }
     var id = req.params.id;
     db.getMedbyId(id, (err, result) => {
         console.log(result);
@@ -58,6 +70,9 @@ router.get('/edit_med/:id', (req, res) => {
 });
 
 router.post('/edit_med/:id', (req, res) => {
+    if (!res.locals.permissions.includes('edit_store')) {
+        return res.redirect('back');
+    }
     var id = req.params.id;
     var name = req.body.name;
     var p_date = moment(req.body.p_date, 'DD/MM/YYYY').format('YYYY-MM-DD');
@@ -81,6 +96,9 @@ router.post('/edit_med/:id', (req, res) => {
 });
 
 router.get('/delete_med/:id', (req, res) => {
+    if (!res.locals.permissions.includes('delete_store')) {
+        return res.redirect('back');
+    }
     var id = req.params.id;
     db.getMedbyId(id, (err, result) => {
         console.log(result);
@@ -89,6 +107,9 @@ router.get('/delete_med/:id', (req, res) => {
 });
 
 router.post('/delete_med/:id', (req, res) => {
+    if (!res.locals.permissions.includes('delete_store')) {
+        return res.redirect('back');
+    }
     var id = req.params.id;
     db.deletemed(id, (err, result) => {
         if (err) {
@@ -113,6 +134,9 @@ router.post('/search', (req, res) => {
 });
 
 router.post('/use_med', (req, res) => {
+    if (!res.locals.permissions.includes('add_store')) {
+        return res.redirect('back');
+    }
     const cart = req.body.cart; // Obtener el carrito del cuerpo de la solicitud
     const updates = JSON.parse(cart); // Convertir el carrito a un objeto JSON
 
