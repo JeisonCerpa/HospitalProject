@@ -143,11 +143,9 @@
                 <div id="sidebar-menu" class="sidebar-menu">
                     <ul>
                         <li class="menu-title">Principal</li>
-                        <% if (permissions.includes('view_dashboard')) { %>
                         <li>
                             <a href="/home"><i class="fa fa-dashboard"></i> <span>Tablero</span></a>
                         </li>
-                        <% } %>
                         <% if (permissions.includes('view_doctors')) { %>
                         <li>
                             <a href="/doctors"><i class="fa fa-user-md"></i> <span>Doctores</span></a>
@@ -207,7 +205,7 @@
             <div class="content">
                 <div class="row">
                     <div class="col-lg-8 offset-lg-2">
-                        <h4 class="page-title">Delete Medicine</h4>
+                        <h4 class="page-title">Eliminar Medicina</h4>
                     </div>
                 </div>
                 <div class="row">
@@ -217,7 +215,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Medicine Name</label>
+                                        <label>Nombre de Medicina</label>
                                         <input class="form-control" type="text" name="name" value="<%= list[i].name %>">
                                     </div>
                                 </div>
@@ -225,7 +223,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Purchase Date</label>
+                                        <label>Fecha de Compra</label>
                                         <div class="cal-icon">
                                             <input class="form-control datetimepicker" type="text" name="p_date" value="<%= list[i].p_date %>">
                                         </div>
@@ -235,7 +233,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Expire date</label>
+                                        <label>Fecha de Expiración</label>
                                         <div class="cal-icon">
                                             <input class="form-control datetimepicker" type="text" name="e_date" value="<%= list[i].expire_end %>">
                                         </div>
@@ -245,19 +243,19 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Price</label>
+                                        <label>Precio</label>
                                         <input class="form-control" type="text" placeholder="$" name="price" value="<%= list[i].price %>">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Quantity</label>
+                                        <label>Cantidad</label>
                                         <input class="form-control" type="text" placeholder="" name="quantity" value="<%= list[i].quantity %>">
                                     </div>
                                 </div>
                             </div>
                             <div class="m-t-20 text-center">
-                                <button class="btn btn-primary submit-btn">Delete Medicine</button>
+                                <button class="btn btn-primary submit-btn">Eliminar Medicina</button>
                                 <% } %>
                             </div>
                         </form>

@@ -7,7 +7,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
     <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
-    <title>Preclinic - Medical & Hospital - Bootstrap 4 Admin Template</title>
+    <title>Preclinic - Médico y Hospital - Plantilla de Administración Bootstrap 4</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="/assets/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/font-awesome.min.css">
@@ -133,10 +133,10 @@
             <div class="dropdown mobile-user-menu float-right">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                 <div class="dropdown-menu dropdown-menu-right">
-                    <a class="dropdown-item" href="/home/profile">My Profile</a>
-                    <a class="dropdown-item" href="/home/edit-profile">Edit Profile</a>
+                    <a class="dropdown-item" href="/home/profile">Mi Perfil</a>
+                    <a class="dropdown-item" href="/home/edit-profile">Editar Perfil</a>
                     
-                    <a class="dropdown-item" href="/logout">Logout</a>
+                    <a class="dropdown-item" href="/logout">Cerrar Sesión</a>
                 </div>
             </div>
         </div>
@@ -145,11 +145,9 @@
                 <div id="sidebar-menu" class="sidebar-menu">
                     <ul>
                         <li class="menu-title">Principal</li>
-                        <% if (permissions.includes('view_dashboard')) { %>
                         <li>
                             <a href="/home"><i class="fa fa-dashboard"></i> <span>Tablero</span></a>
                         </li>
-                        <% } %>
                         <% if (permissions.includes('view_doctors')) { %>
                         <li>
                             <a href="/doctors"><i class="fa fa-user-md"></i> <span>Doctores</span></a>
@@ -209,7 +207,7 @@
             <div class="content">
                 <div class="row">
                     <div class="col-lg-8 offset-lg-2">
-                        <h4 class="page-title">Edit Medicine</h4>
+                        <h4 class="page-title">Editar Medicina</h4>
                     </div>
                 </div>
                 <div class="row">
@@ -219,7 +217,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Medicine Name</label>
+                                        <label>Nombre de Medicina</label>
                                         <input class="form-control" type="text" name="name" value="<%= list[i].name %>">
                                     </div>
                                 </div>
@@ -227,7 +225,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Purchase Date</label>
+                                        <label>Fecha de Compra</label>
                                         <div class="cal-icon">
                                             <input class="form-control datetimepicker" type="text" name="p_date" value="<%= list[i].p_date %>">
                                         </div>
@@ -237,7 +235,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Expire date</label>
+                                        <label>Fecha de Expiración</label>
                                         <div class="cal-icon">
                                             <input class="form-control datetimepicker" type="text" name="e_date" value="<%= list[i].expire_end %>">
                                         </div>
@@ -247,19 +245,19 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Price</label>
+                                        <label>Precio</label>
                                         <input class="form-control" type="text" placeholder="$" name="price" value="<%= list[i].price %>">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Quantity</label>
+                                        <label>Cantidad</label>
                                         <input class="form-control" type="text" placeholder="" name="quantity" value="<%= list[i].quantity %>">
                                     </div>
                                 </div>
                             </div>
                             <div class="m-t-20 text-center">
-                                <button class="btn btn-primary submit-btn">Edit Medicine</button>
+                                <button class="btn btn-primary submit-btn">Editar Medicina</button>
                                 <% } %>
                             </div>
                         </form>

@@ -7,7 +7,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
     <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon.ico">
-    <title>Preclinic - Medical & Hospital - Bootstrap 4 Admin Template</title>
+    <title>Preclinic - Médico y Hospital - Plantilla de Administración Bootstrap 4</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="/assets/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/font-awesome.min.css">
@@ -28,81 +28,6 @@
 			<a id="toggle_btn" href="javascript:void(0);"><i class="fa fa-bars"></i></a>
             <a id="mobile_btn" class="mobile_btn float-left" href="#sidebar"><i class="fa fa-bars"></i></a>
             <ul class="nav user-menu float-right">
-                <li class="nav-item dropdown d-none d-sm-block">
-                    <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown"><i class="fa fa-bell-o"></i> <span class="badge badge-pill bg-danger float-right">3</span></a>
-                    <div class="dropdown-menu notifications">
-                        <div class="topnav-dropdown-header">
-                            <span>Notifications</span>
-                        </div>
-                        <div class="drop-scroll">
-                            <ul class="notification-list">
-                                <li class="notification-message">
-                                    <a href="activities.html">
-                                        <div class="media">
-											<span class="avatar">
-												<img alt="John Doe" src="/assets/img/user.jpg" class="img-fluid">
-											</span>
-											<div class="media-body">
-												<p class="noti-details"><span class="noti-title">John Doe</span> added new task <span class="noti-title">Patient appointment booking</span></p>
-												<p class="noti-time"><span class="notification-time">4 mins ago</span></p>
-											</div>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li class="notification-message">
-                                    <a href="activities.html">
-                                        <div class="media">
-											<span class="avatar">V</span>
-											<div class="media-body">
-												<p class="noti-details"><span class="noti-title">Tarah Shropshire</span> changed the task name <span class="noti-title">Appointment booking with payment gateway</span></p>
-												<p class="noti-time"><span class="notification-time">6 mins ago</span></p>
-											</div>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li class="notification-message">
-                                    <a href="activities.html">
-                                        <div class="media">
-											<span class="avatar">L</span>
-											<div class="media-body">
-												<p class="noti-details"><span class="noti-title">Misty Tison</span> added <span class="noti-title">Domenic Houston</span> and <span class="noti-title">Claire Mapes</span> to project <span class="noti-title">Doctor available module</span></p>
-												<p class="noti-time"><span class="notification-time">8 mins ago</span></p>
-											</div>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li class="notification-message">
-                                    <a href="activities.html">
-                                        <div class="media">
-											<span class="avatar">G</span>
-											<div class="media-body">
-												<p class="noti-details"><span class="noti-title">Rolland Webber</span> completed task <span class="noti-title">Patient and Doctor video conferencing</span></p>
-												<p class="noti-time"><span class="notification-time">12 mins ago</span></p>
-											</div>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li class="notification-message">
-                                    <a href="activities.html">
-                                        <div class="media">
-											<span class="avatar">V</span>
-											<div class="media-body">
-												<p class="noti-details"><span class="noti-title">Bernardo Galaviz</span> added new task <span class="noti-title">Private chat module</span></p>
-												<p class="noti-time"><span class="notification-time">2 days ago</span></p>
-											</div>
-                                        </div>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="topnav-dropdown-footer">
-                            <a href="activities.html">View all Notifications</a>
-                        </div>
-                    </div>
-                </li>
-                <li class="nav-item dropdown d-none d-sm-block">
-                    <a href="javascript:void(0);" id="open_msg_box" class="hasnotifications nav-link"><i class="fa fa-comment-o"></i> <span class="badge badge-pill bg-danger float-right">8</span></a>
-                </li>
                 <li class="nav-item dropdown has-arrow">
                     <a href="#" class="dropdown-toggle nav-link user-link" data-toggle="dropdown">
                         <span class="user-img">
@@ -142,11 +67,9 @@
                 <div id="sidebar-menu" class="sidebar-menu">
                     <ul>
                         <li class="menu-title">Principal</li>
-                        <% if (permissions.includes('view_dashboard')) { %>
                         <li>
                             <a href="/home"><i class="fa fa-dashboard"></i> <span>Tablero</span></a>
                         </li>
-                        <% } %>
                         <% if (permissions.includes('view_doctors')) { %>
                         <li>
                             <a href="/doctors"><i class="fa fa-user-md"></i> <span>Doctores</span></a>
@@ -206,10 +129,10 @@
             <div class="content">
                 <div class="row">
                     <div class="col-sm-8 col-6">
-                        <h4 class="page-title">Assets</h4>
+                        <h4 class="page-title">Activos</h4>
                     </div>
                     <div class="col-sm-4 col-6 text-right m-b-30">
-                        <a href="/store/add_med" class="btn btn-primary btn-rounded float-right"><i class="fa fa-plus"></i> Add Medicine</a>
+                        <a href="/store/add_med" class="btn btn-primary btn-rounded float-right"><i class="fa fa-plus"></i> Agregar Medicina</a>
                     </div>
                 </div>
                 <div class="row">
@@ -218,14 +141,14 @@
                             <table class="table table-striped custom-table mb-0 text-center">
                                 <thead>
                                     <tr>
-                                        <th>Medicine id</th>
-                                        <th>Medicine name</th>
-                                        <th>Purchase Date</th>
-                                        <th>Expire End</th>
-                                        <th>Price</th>
-                                        <th>Quantity</th>
+                                        <th>ID de Medicina</th>
+                                        <th>Nombre de Medicina</th>
+                                        <th>Fecha de Compra</th>
+                                        <th>Fecha de Expiración</th>
+                                        <th>Precio</th>
+                                        <th>Cantidad</th>
                                         <th></th>
-                                        <th class="text-right">Actions</th>
+                                        <th class="text-right">Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody id="medicineTable">
@@ -236,16 +159,24 @@
                                         <td><%= new Date(list[i].p_date).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' }) %></td>
                                         <td><%= new Date(list[i].expire_end).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' }) %></td>
                                         <td><%= list[i].price %></td>
-                                        <td class="text-center"><%= list[i].quantity %></td>
                                         <td class="text-center">
-                                            <button class="btn btn-success btn-sm" onclick="addToCart('<%= list[i].id %>', '<%= list[i].name %>', '<%= list[i].price %>')">Agregar</button>
+                                            <% if (list[i].quantity === 0) { %>
+                                                <span style="color: red;">Agotado</span>
+                                            <% } else { %>
+                                                <%= list[i].quantity %>
+                                            <% } %>
+                                        </td>
+                                        <td class="text-center">
+                                            <% if (list[i].quantity > 0) { %>
+                                                <button class="btn btn-success btn-sm" onclick="addToCart('<%= list[i].id %>', '<%= list[i].name %>', '<%= list[i].price %>')">Agregar</button>
+                                            <% } %>
                                         </td>
                                         <td class="text-right">
                                             <div class="dropdown dropdown-action">
                                                 <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                                                 <div class="dropdown-menu dropdown-menu-right">
-                                                    <a class="dropdown-item" href="/store/edit_med/<%= list[i].id %>"><i class="fa fa-pencil m-r-5"></i> Edit</a>
-                                                    <a class="dropdown-item" href="/store/delete_med/<%= list[i].id %>"><i class="fa fa-trash-o m-r-5"></i> Delete</a>
+                                                    <a class="dropdown-item" href="/store/edit_med/<%= list[i].id %>"><i class="fa fa-pencil m-r-5"></i> Editar</a>
+                                                    <a class="dropdown-item" href="/store/delete_med/<%= list[i].id %>"><i class="fa fa-trash-o m-r-5"></i> Eliminar</a>
                                                 </div>
                                             </div>
                                         </td>
@@ -259,7 +190,7 @@
                 <div class="row filter-row" style="margin-top: 20px;">
                     <div class="col-sm-6 col-md-3">
                         <div class="form-group form-focus">
-                            <label class="focus-label">Medicine Name </label>
+                            <label class="focus-label">Nombre de Medicina</label>
                             <input type="text" class="form-control floating" id="search" placeholder="Buscar...">
                         </div>
                     </div>
@@ -267,7 +198,7 @@
                 <div class="row" style="margin-top: 20px;">
                     <div class="col-md-12">
                         <div class="d-flex justify-content-between align-items-center">
-                            <h4>Medicament</h4>
+                            <h4>Medicamento</h4>
                             <form id="useMedForm" method="POST" action="/store/use_med">
                                 <input type="hidden" name="cart" id="cartInput">
                                 <button type="button" class="btn btn-success btn-rounded" onclick="submitCart()"><i class="fa fa-check"></i> Usar</button>
@@ -277,16 +208,16 @@
                             <table class="table table-striped custom-table mb-0 text-center">
                                 <thead>
                                     <tr>
-                                        <th>Medicine id</th>
-                                        <th>Medicine name</th>
-                                        <th>Price</th>
-                                        <th>Quantity</th>
+                                        <th>ID de Medicina</th>
+                                        <th>Nombre de Medicina</th>
+                                        <th>Precio</th>
+                                        <th>Cantidad</th>
                                         <th>Total</th>
-                                        <th class="text-right">Actions</th>
+                                        <th class="text-right">Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody id="cartTable">
-                                    <!-- Cart items will be added here dynamically -->
+                                    <!-- Los elementos del carrito se agregarán aquí dinámicamente -->
                                 </tbody>
                             </table>
                         </div>
@@ -512,9 +443,9 @@
 				<div class="modal-content">
 					<div class="modal-body text-center">
 						<img src="assets/img/sent.png" alt="" width="50" height="46">
-						<h3>Are you sure want to delete this medicine?</h3>
-						<div class="m-t-20"> <a href="#" class="btn btn-white" data-dismiss="modal">Close</a>
-							<button type="submit" class="btn btn-danger">Delete</button>
+						<h3>¿Estás seguro de que deseas eliminar esta medicina?</h3>
+						<div class="m-t-20"> <a href="#" class="btn btn-white" data-dismiss="modal">Cerrar</a>
+							<button type="submit" class="btn btn-danger">Eliminar</button>
 						</div>
 					</div>
 				</div>
@@ -604,7 +535,7 @@
                     <td>${item.price}</td>
                     <td>${item.quantity}</td>
                     <td>${item.price * item.quantity}</td>
-                    <td class="text-right"><button class="btn btn-danger btn-sm" onclick="removeFromCart('${item.id}')">Remove</button></td>
+                    <td class="text-right"><button class="btn btn-danger btn-sm" onclick="removeFromCart('${item.id}')">Eliminar</button></td>
                 `;
                 cartTable.appendChild(row);
                 total += item.price * item.quantity;
