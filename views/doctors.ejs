@@ -144,43 +144,62 @@
             <div class="sidebar-inner slimscroll">
                 <div id="sidebar-menu" class="sidebar-menu">
                     <ul>
-                        <li class="menu-title">Main</li>
+                        <li class="menu-title">Principal</li>
+                        <% if (permissions.includes('view_dashboard')) { %>
                         <li>
-                            <a href="/home"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a>
+                            <a href="/home"><i class="fa fa-dashboard"></i> <span>Tablero</span></a>
                         </li>
+                        <% } %>
                         <% if (permissions.includes('view_doctors')) { %>
-                            <li class="active">
-                                <a href="/doctors"><i class="fa fa-user-md"></i> <span>Doctores</span></a>
-                            </li>
+                        <li>
+                            <a href="/doctors"><i class="fa fa-user-md"></i> <span>Doctores</span></a>
+                        </li>
                         <% } %>
                         <% if (permissions.includes('view_patients')) { %>
-                            <li>
-                                <a href="/patients"><i class="fa fa-wheelchair"></i> <span>Pacientes</span></a>
-                            </li>
+                        <li>
+                            <a href="/patients"><i class="fa fa-wheelchair"></i> <span>Pacientes</span></a>
+                        </li>
                         <% } %>
                         <% if (permissions.includes('view_appointments')) { %>
-                            <li>
-                                <a href="/appointment"><i class="fa fa-calendar"></i> <span>Citas</span></a>
-                            </li>
+                        <li>
+                            <a href="/appointment"><i class="fa fa-calendar"></i> <span>Citas</span></a>
+                        </li>
                         <% } %>
                         <% if (permissions.includes('view_departments')) { %>
-                            <li>
-                                <a href="/home/departments"><i class="fa fa-hospital-o"></i> <span>Departamentos</span></a>
-                            </li>
+                        <li>
+                            <a href="/home/departments"><i class="fa fa-hospital-o"></i> <span>Departamentos</span></a>
+                        </li>
                         <% } %>
                         <% if (permissions.includes('view_employees')) { %>
-                            <li class="submenu">
-                                <a href="#"><i class="fa fa-user"></i> <span> Empleados </span> <span class="menu-arrow"></span></a>
-                                <ul style="display: none;">
-                                    <li><a href="/employee">Lista de Empleados</a></li>
-                                    <li><a href="/employee/leave">Permisos</a></li>
-                                </ul>
-                            </li>
+                        <li class="submenu">
+                            <a href="#"><i class="fa fa-user"></i> <span> Empleados </span> <span class="menu-arrow"></span></a>
+                            <ul style="display: none;">
+                                <li><a href="/employee">Lista de Empleados</a></li>
+                                <li><a href="/employee/leave">Permisos</a></li>
+                            </ul>
+                        </li>
+                        <% } %>
+                        <% if (permissions.includes('view_payroll')) { %>
+                        <li class="submenu">
+                            <a href="#"><i class="fa fa-book"></i> <span> Nómina </span> <span class="menu-arrow"></span></a>
+                            <ul style="display: none;">
+                                <li><a href="/receipt"> Salario de Empleados </a></li>
+                            </ul>
+                        </li>
+                        <% } %>
+                        <% if (permissions.includes('view_email')) { %>
+                        <li class="submenu">
+                            <a href="#"><i class="fa fa-envelope"></i> <span> Correo</span> <span class="menu-arrow"></span></a>
+                            <ul style="display: none;">
+                                <li><a href="/compose">Redactar Correo</a></li>
+                                <li><a href="/inbox">Bandeja de Entrada</a></li>
+                            </ul>
+                        </li>
                         <% } %>
                         <% if (permissions.includes('view_store')) { %>
-                            <li>
-                                <a href="/store"><i class="fa fa-cube"></i> <span>Almacen de Medicinas</span></a>
-                            </li>
+                        <li class="active">
+                            <a href="/store"><i class="fa fa-cube"></i> <span>Almacén de Medicinas</span></a>
+                        </li>
                         <% } %>
                     </ul>
                 </div>

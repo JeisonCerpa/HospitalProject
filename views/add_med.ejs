@@ -1,8 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
-
-
-
+<html lang="es">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
@@ -109,17 +106,24 @@
                 <li class="nav-item dropdown has-arrow">
                     <a href="#" class="dropdown-toggle nav-link user-link" data-toggle="dropdown">
                         <span class="user-img">
-							<img class="rounded-circle" src="/assets/img/user.jpg" width="24" alt="Admin">
-							<span class="status online"></span>
-						</span>
-						<span>Admin</span>
+                            <img class="rounded-circle" src="/assets/img/user.jpg" width="24" alt="<%= role %>">
+                            <span class="status online"></span>
+                        </span>
+                        <span>
+                            <%= role === 'doctor' ? 'Dr.' : 
+                                role === 'nurse' ? 'Enfermero' : 
+                                role === 'receptionist' ? 'Recepcionista' : 
+                                role === 'pharmacist' ? 'Farmacéutico' : 
+                                role === 'patient' ? 'Paciente' : 
+                                role === 'admin' ? 'Admin' : role %> 
+                            <%= username %>
+                        </span>
                     </a>
-					<div class="dropdown-menu">
-						<a class="dropdown-item" href="/home/profile">My Profile</a>
-						<a class="dropdown-item" href="/home/edit-profile">Edit Profile</a>
-						
-						<a class="dropdown-item" href="/logout">Logout</a>
-					</div>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="/home/profile">Mi Perfil</a>
+                        <a class="dropdown-item" href="/home/edit-profile">Editar Perfil</a>
+                        <a class="dropdown-item" href="/logout">Cerrar Sesión</a>
+                    </div>
                 </li>
             </ul>
             <div class="dropdown mobile-user-menu float-right">
@@ -136,62 +140,63 @@
             <div class="sidebar-inner slimscroll">
                 <div id="sidebar-menu" class="sidebar-menu">
                     <ul>
-                        <li class="menu-title">Main</li>
+                        <li class="menu-title">Principal</li>
+                        <% if (permissions.includes('view_dashboard')) { %>
                         <li>
-                            <a href="/home"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a>
+                            <a href="/home"><i class="fa fa-dashboard"></i> <span>Tablero</span></a>
                         </li>
-						<li>
-                            <a href="/doctors"><i class="fa fa-user-md"></i> <span>Doctors</span></a>
-                        </li>
+                        <% } %>
+                        <% if (permissions.includes('view_doctors')) { %>
                         <li>
-                            <a href="/patients"><i class="fa fa-wheelchair"></i> <span>Patients</span></a>
+                            <a href="/doctors"><i class="fa fa-user-md"></i> <span>Doctores</span></a>
                         </li>
+                        <% } %>
+                        <% if (permissions.includes('view_patients')) { %>
                         <li>
-                            <a href="/appointment"><i class="fa fa-calendar"></i> <span>Appointments</span></a>
+                            <a href="/patients"><i class="fa fa-wheelchair"></i> <span>Pacientes</span></a>
                         </li>
-                       
+                        <% } %>
+                        <% if (permissions.includes('view_appointments')) { %>
                         <li>
-                            <a href="/home/departments"><i class="fa fa-hospital-o"></i> <span>Departments</span></a>
+                            <a href="/appointment"><i class="fa fa-calendar"></i> <span>Citas</span></a>
                         </li>
-						<li class="submenu">
-							<a href="#"><i class="fa fa-user"></i> <span> Employees </span> <span class="menu-arrow"></span></a>
-							<ul style="display: none;">
-								<li><a href="/employee">Employees List</a></li>
-								<li><a href="/employee/leave">Leaves</a></li>
-								
-							</ul>
-						</li>
-						
-						<li class="submenu">
-							<a href="#"><i class="fa fa-book"></i> <span> Payroll </span> <span class="menu-arrow"></span></a>
-							<ul style="display: none;">
-								<li><a href="/receipt"> Employee Salary </a></li>
-								
-							</ul>
-						</li>
-                       
-                        
+                        <% } %>
+                        <% if (permissions.includes('view_departments')) { %>
+                        <li>
+                            <a href="/home/departments"><i class="fa fa-hospital-o"></i> <span>Departamentos</span></a>
+                        </li>
+                        <% } %>
+                        <% if (permissions.includes('view_employees')) { %>
                         <li class="submenu">
-                            <a href="#"><i class="fa fa-envelope"></i> <span> Email</span> <span class="menu-arrow"></span></a>
+                            <a href="#"><i class="fa fa-user"></i> <span> Empleados </span> <span class="menu-arrow"></span></a>
                             <ul style="display: none;">
-                                <li><a href="/compose">Compose Mail</a></li>
-                                <li><a href="/inbox">Inbox</a></li>
-                                
+                                <li><a href="/employee">Lista de Empleados</a></li>
+                                <li><a href="/employee/leave">Permisos</a></li>
                             </ul>
                         </li>
-                       
-						<li  class="active">
-							<a href="/store"><i class="fa fa-cube"></i> <span>Medicine Store</span></a>
-						</li>
-						
-					
-                       
-                        
-                       
-                        
-                      
-                     
-                       
+                        <% } %>
+                        <% if (permissions.includes('view_payroll')) { %>
+                        <li class="submenu">
+                            <a href="#"><i class="fa fa-book"></i> <span> Nómina </span> <span class="menu-arrow"></span></a>
+                            <ul style="display: none;">
+                                <li><a href="/receipt"> Salario de Empleados </a></li>
+                            </ul>
+                        </li>
+                        <% } %>
+                        <% if (permissions.includes('view_email')) { %>
+                        <li class="submenu">
+                            <a href="#"><i class="fa fa-envelope"></i> <span> Correo</span> <span class="menu-arrow"></span></a>
+                            <ul style="display: none;">
+                                <li><a href="/compose">Redactar Correo</a></li>
+                                <li><a href="/inbox">Bandeja de Entrada</a></li>
+                            </ul>
+                        </li>
+                        <% } %>
+                        <% if (permissions.includes('view_store')) { %>
+                        <li class="active">
+                            <a href="/store"><i class="fa fa-cube"></i> <span>Almacén de Medicinas</span></a>
+                        </li>
+                        <% } %>
                     </ul>
                 </div>
             </div>
@@ -210,58 +215,43 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Medicine Name</label>
-                                        <input class="form-control" type="text" name="name">
+                                        <input class="form-control" type="text" name="name" required>
                                     </div>
                                 </div>
-                           
                             </div>
                             <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group ">
-                                        
-                                        <label>Purchase Date</label>
-                                        <div class="cal-icon">
-                                        <input class="form-control  datetimepicker" type="text" name="p_date">
-                                    </div>
-                                    </div>
-                                </div>
-                                
-                            </div>
-                            
-                            <div class="row">
-                               
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Expire</label>
-                                        <input class="form-control" type="text" name="expire">
+                                        <label>Purchase Date</label>
+                                        <div class="cal-icon">
+                                            <input class="form-control datetimepicker" type="text" name="p_date" required>
+                                        </div>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Expire date</label>
                                         <div class="cal-icon">
-                                        <input class="form-control datetimepicker" type="text" name="e_date"> </div>
+                                            <input class="form-control datetimepicker" type="text" name="e_date" required>
+                                        </div>
                                     </div>
                                 </div>
-                               
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Price</label>
-                                        <input class="form-control" type="text" placeholder="$" name="price">
+                                        <input class="form-control" type="text" placeholder="$" name="price" required>
                                     </div>
                                 </div>
-
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Quantity</label>
-                                        <input class="form-control" type="text" placeholder="" name="quantity">
+                                        <input class="form-control" type="text" placeholder="" name="quantity" required>
                                     </div>
                                 </div>
-                                
-                               
-                               
                             </div>
                             <div class="m-t-20 text-center">
                                 <button class="btn btn-primary submit-btn">Add Medicine</button>
@@ -346,7 +336,7 @@
                                         <div class="list-body">
                                             <span class="message-author"> Catherine Manseau </span>
                                             <span class="message-time">12:28 AM</span>
-                                            <div class="clearfix"></div>
+                                            <div la="clearfix"></div>
                                             <span class="message-content">Lorem ipsum dolor sit amet, consectetur adipiscing</span>
                                         </div>
                                     </div>

@@ -242,23 +242,38 @@ DROP TABLE IF EXISTS `store`;
 CREATE TABLE IF NOT EXISTS `store` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
-  `p_date` varchar(255) NOT NULL,
-  `expire` varchar(255) NOT NULL,
-  `expire_end` varchar(255) NOT NULL,
-  `price` varchar(255) NOT NULL,
-  `quantity` varchar(255) NOT NULL,
+  `p_date` date NOT NULL,
+  `expire_end` date NOT NULL,
+  `price` decimal(10,2) NOT NULL,
+  `quantity` int NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Volcado de datos para la tabla `store`
 --
 
-INSERT INTO `store` (`id`, `name`, `p_date`, `expire`, `expire_end`, `price`, `quantity`) VALUES
-(1, 'Napa', '20/03/2020', '2', '19/03/2020', '8', '100'),
-(2, 'Seclo', '24/03/2020', '2', '24/03/2020', '5', '200'),
-(3, 'Napa', '24/03/2020', '1 ', '19/03/2020', '10', '20'),
-(4, 'max', '11/03/2020', '1 ', '12/03/2020', '10', '100');
+INSERT INTO `store` (`id`, `name`, `p_date`, `expire_end`, `price`, `quantity`) VALUES
+(1, 'Acetaminofén', '2023-01-01', '2025-01-01', '5000.00', '100'),
+(2, 'Ibuprofeno', '2023-02-01', '2025-02-01', '8000.00', '200'),
+(3, 'Amoxicilina', '2023-03-01', '2025-03-01', '15000.00', '150'),
+(4, 'Loratadina', '2023-04-01', '2025-04-01', '7000.00', '120'),
+(5, 'Omeprazol', '2023-05-01', '2025-05-01', '9000.00', '180'),
+(6, 'Metformina', '2023-06-01', '2025-06-01', '12000.00', '160'),
+(7, 'Losartán', '2023-07-01', '2025-07-01', '11000.00', '140'),
+(8, 'Simvastatina', '2023-08-01', '2025-08-01', '13000.00', '130'),
+(9, 'Amlodipino', '2023-09-01', '2025-09-01', '10000.00', '170'),
+(10, 'Clonazepam', '2023-10-01', '2025-10-01', '14000.00', '90'),
+(11, 'Levotiroxina', '2023-11-01', '2025-11-01', '16000.00', '110'),
+(12, 'Enalapril', '2023-12-01', '2025-12-01', '15000.00', '100'),
+(13, 'Furosemida', '2023-01-15', '2025-01-15', '8000.00', '200'),
+(14, 'Prednisona', '2023-02-15', '2025-02-15', '9000.00', '150'),
+(15, 'Cetirizina', '2023-03-15', '2025-03-15', '7000.00', '120'),
+(16, 'Diclofenaco', '2023-04-15', '2025-04-15', '10000.00', '180'),
+(17, 'Tramadol', '2023-05-15', '2025-05-15', '12000.00', '160'),
+(18, 'Ciprofloxacina', '2023-06-15', '2025-06-15', '15000.00', '140'),
+(19, 'Azitromicina', '2023-07-15', '2025-07-15', '13000.00', '130'),
+(20, 'Paracetamol', '2023-08-15', '2025-08-15', '5000.00', '170');
 
 -- --------------------------------------------------------
 
