@@ -20,6 +20,7 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `h1`
 --
+DROP DATABASE IF EXISTS `h1`;
 CREATE DATABASE IF NOT EXISTS `h1` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
 USE `h1`;
 
@@ -47,7 +48,16 @@ CREATE TABLE IF NOT EXISTS `appointment` (
 --
 
 INSERT INTO `appointment` (`id`, `patient_document`, `department`, `doctor_document`, `date`, `time`) VALUES
-(1, '112233', 'Opthalmology', '25262441', '2002-12-24', '11:00:00');
+(1, '112233', 'Opthalmology', '25262441', '2002-12-24', '11:00:00'),
+(2, '111', 'Cardiología', '123123', '2023-01-01', '09:00:00'),
+(3, '112233', 'Neurología', '25262441', '2023-01-02', '10:00:00'),
+(4, '111', 'Pediatría', '123123', '2023-01-03', '11:00:00'),
+(5, '112233', 'Ginecología', '25262441', '2023-01-04', '12:00:00'),
+(6, '111', 'Dermatología', '123123', '2023-01-05', '13:00:00'),
+(7, '112233', 'Psiquiatría', '25262441', '2023-01-06', '14:00:00'),
+(8, '111', 'Ortopedia', '123123', '2023-01-07', '15:00:00'),
+(9, '112233', 'Oftalmología', '25262441', '2023-01-08', '16:00:00'),
+(10, '111', 'Departamento de Cáncer', '123123', '2023-01-09', '17:00:00');
 
 -- --------------------------------------------------------
 
@@ -93,11 +103,16 @@ CREATE TABLE IF NOT EXISTS `departments` (
 --
 
 INSERT INTO `departments` (`id`, `department_name`) VALUES
-(1, 'Intensive Care Unit (ICU)'),
-(2, 'Neurology'),
-(3, 'Opthalmology'),
-(4, 'Orthopedics'),
-(5, 'Cancer Department');
+(1, 'Unidad de Cuidados Intensivos (UCI)'),
+(2, 'Neurología'),
+(3, 'Oftalmología'),
+(4, 'Ortopedia'),
+(5, 'Departamento de Cáncer'),
+(6, 'Pediatría'),
+(7, 'Cardiología'),
+(8, 'Ginecología'),
+(9, 'Dermatología'),
+(10, 'Psiquiatría');
 
 -- --------------------------------------------------------
 
@@ -314,6 +329,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `password` varchar(255) NOT NULL,
   `email_status` varchar(20) NOT NULL,
   `role` enum('admin','doctor','receptionist','pharmacist','patient','nurse') NOT NULL,
+  `password_changed` boolean NOT NULL DEFAULT false,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=25262442 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -321,16 +337,16 @@ CREATE TABLE IF NOT EXISTS `users` (
 -- Volcado de datos para la tabla `users`
 --
 
-INSERT INTO `users` (`id`, `username`, `email`, `password`, `email_status`, `role`) VALUES
-(1, 'zihad', 'zihad.1d@yopmail.com', '123', 'verified', 'admin'),
-(2, 'test', 'test555@yopmail.com', '123', 'verified', 'doctor'),
-(3, 'abc', 'gmhs13@yopmail.com', '12345', 'not_verified', 'receptionist'),
-(4, 'alamin', 'te555@yopmail.com', 'abc', 'verified', 'pharmacist'),
-(5, 'jei', 'cerpajeison8@gmail.com', '123', 'Verificado', 'admin'),
-(23, 'Pedro', 'test@test.com', 'patient123', 'not_verified', 'patient'),
-(112233, 'Pedro', 'test@test.com', 'patient123', 'not_verified', 'patient'),
-(123123, 'Jei Test', 'test@test.com', 'doctor123', 'not_verified', 'doctor'),
-(25262441, 'Isabella Lerma', 'test@test.com', 'doctor123', 'not_verified', 'doctor');
+INSERT INTO `users` (`id`, `username`, `email`, `password`, `email_status`, `role`, `password_changed`) VALUES
+(1, 'zihad', 'zihad.1d@yopmail.com', '123', 'Verificado', 'admin', true),
+(2, 'test', 'test555@yopmail.com', '123', 'Verificado', 'doctor', true),
+(3, 'abc', 'gmhs13@yopmail.com', '12345', 'Verificado', 'receptionist', true),
+(4, 'alamin', 'te555@yopmail.com', 'abc', 'Verificado', 'pharmacist', true),
+(5, 'jei', 'cerpajeison8@gmail.com', '123', 'Verificado', 'admin', true),
+(23, 'Pedro', 'test@test.com', 'patient123', 'Verificado', 'patient', true),
+(112233, 'Pedro', 'test@test.com', 'patient123', 'Verificado', 'patient', true),
+(123123, 'Jei Test', 'test@test.com', 'doctor123', 'Verificado', 'doctor', true),
+(25262441, 'Isabella Lerma', 'test@test.com', 'doctor123', 'Verificado', 'doctor', true);
 
 -- --------------------------------------------------------
 
@@ -340,12 +356,12 @@ INSERT INTO `users` (`id`, `username`, `email`, `password`, `email_status`, `rol
 
 DROP TABLE IF EXISTS `verify`;
 CREATE TABLE IF NOT EXISTS `verify` (
-  `id` int NOT NULL AUTO_INCREMENT,
+  `id` int NOT NULL,
   `username` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `token` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Volcado de datos para la tabla `verify`
@@ -494,7 +510,6 @@ INSERT INTO `user_roles` (`user_id`, `role_id`) VALUES
 --
 -- Restricciones para tablas volcadas
 --
-
 --
 -- Filtros para la tabla `appointment`
 --

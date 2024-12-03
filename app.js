@@ -1,6 +1,8 @@
 const express = require('express');
+const bodyParser = require('body-parser'); // Importar body-parser
 const session = require('express-session');
 const cookie = require('cookie-parser');
+const cookieParser = require('cookie-parser'); // Importar cookie-parser
 const path = require('path');
 const ejs = require('ejs');
 const multer = require('multer');
@@ -35,8 +37,9 @@ app.use(express.static('./public'));
 app.use(express.json()); // Used to parse JSON bodies
 app.use(express.urlencoded({ extended: true })) // for form data
 app.use(cookie());
+app.use(cookieParser()); // Usar cookie-parser
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3000; // Cambiar el puerto de nuevo a 3000
 server.listen(port, () => {
   console.log(`El servidor está corriendo en el puerto: ${port}`);
 });
@@ -142,3 +145,13 @@ app.use('/delete_patient', (req, res, next) => {
 });
 
 app.use('/logout', logout);
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(cookieParser());
+
+app.set('views', path.join(__dirname, 'views'));
+
+app.listen(3001, () => {
+    console.log('Server is running on port 3001');
+});

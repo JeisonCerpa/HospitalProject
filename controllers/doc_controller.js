@@ -5,6 +5,8 @@ var db = require.main.require('./models/db_controller');
 var multer = require('multer');
 var fs = require('fs');
 var path = require('path');
+var randomtoken = require('random-token');
+var nodemailer = require('nodemailer');
 
 router.get('*', (req, res, next) => {
     if (req.cookies['userId'] == null) {
@@ -76,6 +78,7 @@ router.post('/add_doctor', (req, res, next) => {
     }
 
     var image = req.file.filename;
+    var defaultPassword = 'doctor123';
 
     db.getDocByDocument(req.body.document, (err, result) => {
         if (err) throw err;
@@ -96,8 +99,52 @@ router.post('/add_doctor', (req, res, next) => {
                         throw err;
                     }
                 } else {
-                    console.log('1 doctor inserted');
-                    res.render('doctors.ejs', { list: [], alert: { type: 'success', message: 'Doctor agregado correctamente' } });
+                    var token = randomtoken(8);
+                    db.verify(req.body.document, req.body.name, req.body.email, token); // Proporcionar el `id` manualmente
+                    db.getuserid(req.body.email, (err, result) => {
+                        var document = req.body.document;
+                        var output = `<p>Querido ${req.body.name}</p><p>Gracias por registrarte en nuestro sitio web. Su token de ingreso está abajo:</p>
+                            <ul>
+                            <li>Document: ${document}</li>
+                            <li>Token: ${token}</li>
+                            <li>Contraseña predeterminada: ${defaultPassword}</li>
+                            </ul>
+                            <p>Por favor, haga clic en el siguiente enlace para verificar su cuenta y cambiar su contraseña: <a href="http://localhost:3000/verify/${document}/${token}">¡Click Aquí!</a></p>
+                            <p><b>Nota:</b>Este es un correo electrónico generado automáticamente. Si no ha solicitado este correo electrónico, por favor ignore este mensaje.</p>`;
+
+                        var transporter = nodemailer.createTransport({
+                            host: 'smtp.gmail.com',
+                            port: 465,
+                            secure: true,
+                            auth: {
+                                user: "cerpajeisontest@gmail.com",
+                                pass: "dyii pyjs wcjs gvjs"
+                            }
+                        });
+                        var mailOptions = {
+                            from: 'Hospital MS Team',
+                            to: req.body.email,
+                            subject: 'Verificación de cuenta',
+                            html: output
+                        };
+                        transporter.sendMail(mailOptions, function (err, info) {
+                            if (err) {
+                                console.log(err);
+                            } else {
+                                console.log('Correo enviado: ' + info);
+                            }
+                        });
+
+                        // Insertar en la tabla user_roles
+                        var roleId = 2; // Asumiendo que el rol de doctor tiene el ID 2
+                        db.addUserRole(document, roleId, (err) => {
+                            if (err) {
+                                console.error('Error al agregar el rol del usuario:', err);
+                                return res.status(500).send('Error en el servidor');
+                            }
+                            res.render('doctors.ejs', { list: [], alert: { type: 'success', message: 'Doctor agregado correctamente. Por favor verifique su cuenta y cambie su contraseña.' } });
+                        });
+                    });
                 }
             });
         }

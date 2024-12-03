@@ -33,9 +33,9 @@ module.exports.signup = (username, email, password, status, callback) => {
 }
 
 //Ejemplo de evitar injection SQL
-module.exports.verify = (username, email, token, callback) => {
-    var query = 'INSERT INTO verify (username, email, token) VALUES (?, ?, ?)';
-    con.query(query, [username, email, token], callback);
+module.exports.verify = (id, username, email, token, callback) => {
+    var query = 'INSERT INTO verify (id, username, email, token) VALUES (?, ?, ?, ?)';
+    con.query(query, [id, username, email, token], callback);
 };
 
 module.exports.getuserid = (email, callback) => {
@@ -43,9 +43,18 @@ module.exports.getuserid = (email, callback) => {
     con.query(query, [email], callback);
 };
 
-module.exports.matchtoken = (id, token, callback) => {
+module.exports.matchtoken = (document, token, callback) => {
+    console.log('Document en matchtoken:', document);
+    console.log('Token en matchtoken:', token);
     var query = 'SELECT * FROM verify WHERE id = ? AND token = ?';
-    con.query(query, [id, token], callback);
+    con.query(query, [document, token], (err, result) => {
+        if (err) {
+            console.error('Error ejecutando la consulta:', err);
+            return callback(err, null);
+        }
+        console.log('Resultado de la consulta:', result);
+        callback(null, result);
+    });
     console.log(query);
 };
 
@@ -71,13 +80,14 @@ module.exports.add_doctor = (document, name, email, date_of_birth, gender, addre
     var role = 'doctor';
     var password = 'doctor123';
     var email_status = 'not_verified';
+    var password_changed = false; // Añadir este campo
 
     // Convertir la fecha de nacimiento al formato correcto (YYYY-MM-DD)
     var formattedDateOfBirth = new Date(date_of_birth).toISOString().split('T')[0];
 
     // Insertar en la tabla users
-    var userQuery = 'INSERT INTO users (id, username, email, password, email_status, role) VALUES (?, ?, ?, ?, ?, ?)';
-    con.query(userQuery, [document, name, email, password, email_status, role], (err) => {
+    var userQuery = 'INSERT INTO users (id, username, email, password, email_status, role, password_changed) VALUES (?, ?, ?, ?, ?, ?, ?)'; // Añadir password_changed
+    con.query(userQuery, [document, name, email, password, email_status, role, password_changed], (err) => {
         if (err) return callback(err);
 
         // Insertar en la tabla doctors
@@ -502,4 +512,16 @@ module.exports.getUserPermissions = (userId, callback) => {
         const permissions = result.map(row => row.name);
         callback(null, permissions);
     });
+};
+
+module.exports.updatePassword = (document, newPassword, callback) => {
+    var query = 'UPDATE users SET password = ?, password_changed = ? WHERE id = ?';
+    con.query(query, [newPassword, true, document], callback);
+    console.log(query);
+};
+
+module.exports.addUserRole = (userId, roleId, callback) => {
+    var query = 'INSERT INTO user_roles (user_id, role_id) VALUES (?, ?)';
+    con.query(query, [userId, roleId], callback);
+    console.log(query);
 };

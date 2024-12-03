@@ -96,9 +96,12 @@ router.post('/edit_employee/:id', (req, res) => {
     var role = req.body.role;
     var salary = req.body.salary;
     db.editEmp(id, name, email, contact, join_date, role, salary, (err, result) => {
-        console.log('Empleado editado');
+        if (err) {
+            console.error('Error al editar el empleado:', err);
+            return res.status(500).send('Error en el servidor');
+        }
         res.redirect('/employee');
-        });
+    });
 });
 
 router.get('/delete_employee/:id', (req, res) => {
@@ -111,6 +114,10 @@ router.get('/delete_employee/:id', (req, res) => {
 router.post('/delete_employee/:id', (req, res) => {
     var id = req.params.id;
     db.deleteEmp(id, (err, result) => {
+        if (err) {
+            console.error('Error al eliminar el empleado:', err);
+            return res.status(500).send('Error en el servidor');
+        }
         res.redirect('/employee');
     });
 });
