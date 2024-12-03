@@ -145,13 +145,11 @@
                 <div id="sidebar-menu" class="sidebar-menu">
                     <ul>
                         <li class="menu-title">Principal</li>
-                        <% if (permissions.includes('view_dashboard')) { %>
                         <li>
                             <a href="/home"><i class="fa fa-dashboard"></i> <span>Tablero</span></a>
                         </li>
-                        <% } %>
                         <% if (permissions.includes('view_doctors')) { %>
-                        <li>
+                        <li class="active">
                             <a href="/doctors"><i class="fa fa-user-md"></i> <span>Doctores</span></a>
                         </li>
                         <% } %>
@@ -197,7 +195,7 @@
                         </li>
                         <% } %>
                         <% if (permissions.includes('view_store')) { %>
-                        <li class="active">
+                        <li>
                             <a href="/store"><i class="fa fa-cube"></i> <span>Almacén de Medicinas</span></a>
                         </li>
                         <% } %>

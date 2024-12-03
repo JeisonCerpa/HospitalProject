@@ -297,9 +297,19 @@ module.exports.getMedbyId = (id, callback) => {
     console.log(query);
 };
 
-module.exports.editmed = (id, name, p_date, expire_date, e_date, price, quantity, callback) => {
+module.exports.editMed = (id, name, p_date, expire_end, price, quantity, callback) => {
     var query = 'UPDATE store SET name = ?, p_date = ?, expire_end = ?, price = ?, quantity = ? WHERE id = ?';
-    con.query(query, [name, p_date, expire_date, e_date, price, quantity, id], callback);
+    con.query(query, [name, p_date, expire_end, price, quantity, id], (err, result) => {
+        if (err) {
+            console.error('Error executing query:', err);
+            if (typeof callback === 'function') {
+                return callback(err);
+            }
+        }
+        if (typeof callback === 'function') {
+            callback(null, result);
+        }
+    });
     console.log(query);
 };
 

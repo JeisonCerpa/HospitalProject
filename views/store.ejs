@@ -224,7 +224,7 @@
                                         <th>Expire End</th>
                                         <th>Price</th>
                                         <th>Quantity</th>
-                                        <th>Usar</th>
+                                        <th></th>
                                         <th class="text-right">Actions</th>
                                     </tr>
                                 </thead>
@@ -238,7 +238,7 @@
                                         <td><%= list[i].price %></td>
                                         <td class="text-center"><%= list[i].quantity %></td>
                                         <td class="text-center">
-                                            <button class="btn btn-success btn-sm" onclick="addToCart('<%= list[i].id %>', '<%= list[i].name %>', '<%= list[i].price %>')">Usar</button>
+                                            <button class="btn btn-success btn-sm" onclick="addToCart('<%= list[i].id %>', '<%= list[i].name %>', '<%= list[i].price %>')">Agregar</button>
                                         </td>
                                         <td class="text-right">
                                             <div class="dropdown dropdown-action">
@@ -266,8 +266,14 @@
                 </div>
                 <div class="row" style="margin-top: 20px;">
                     <div class="col-md-12">
-                        <h4>Medicament</h4>
-                        <div class="table-responsive">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h4>Medicament</h4>
+                            <form id="useMedForm" method="POST" action="/store/use_med">
+                                <input type="hidden" name="cart" id="cartInput">
+                                <button type="button" class="btn btn-success btn-rounded" onclick="submitCart()"><i class="fa fa-check"></i> Usar</button>
+                            </form>
+                        </div>
+                        <div class="table-responsive" style="margin-top: 20px;">
                             <table class="table table-striped custom-table mb-0 text-center">
                                 <thead>
                                     <tr>
@@ -527,7 +533,22 @@
     <script src="assets/js/moment.min.js"></script>
     <script src="assets/js/bootstrap-datetimepicker.min.js"></script>
     <script src="assets/js/app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            <% if (typeof message !== 'undefined' && message) { %>
+                Swal.fire({
+                    icon: '<%= message.type %>',
+                    title: '<%= message.type === "success" ? "Éxito" : "Error" %>',
+                    text: '<%= message.text %>'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '/store';
+                    }
+                });
+            <% } %>
+        });
+
         document.getElementById('search').addEventListener('input', function() {
             var filter = this.value.toUpperCase();
             var rows = document.querySelectorAll("#medicineTable tr");
@@ -545,16 +566,30 @@
         var cart = [];
 
         function addToCart(id, name, price) {
-            var quantity = prompt("Enter quantity for " + name + ":");
-            if (quantity != null && quantity > 0) {
-                var item = cart.find(item => item.id === id);
-                if (item) {
-                    item.quantity += parseInt(quantity);
-                } else {
-                    cart.push({ id, name, price, quantity: parseInt(quantity) });
+            Swal.fire({
+                title: 'Ingrese la cantidad para ' + name,
+                input: 'number',
+                inputAttributes: {
+                    min: 1,
+                    step: 1
+                },
+                showCancelButton: true,
+                confirmButtonText: 'Aceptar',
+                cancelButtonText: 'Cancelar',
+                preConfirm: (quantity) => {
+                    if (!quantity || quantity <= 0) {
+                        Swal.showValidationMessage('Por favor ingrese una cantidad válida');
+                    } else {
+                        var item = cart.find(item => item.id === id);
+                        if (item) {
+                            item.quantity += parseInt(quantity);
+                        } else {
+                            cart.push({ id, name, price, quantity: parseInt(quantity) });
+                        }
+                        updateCartTable();
+                    }
                 }
-                updateCartTable();
-            }
+            });
         }
 
         function updateCartTable() {
@@ -586,6 +621,11 @@
         function removeFromCart(id) {
             cart = cart.filter(item => item.id !== id);
             updateCartTable();
+        }
+
+        function submitCart() {
+            document.getElementById('cartInput').value = JSON.stringify(cart);
+            document.getElementById('useMedForm').submit();
         }
     </script>
 </body>
