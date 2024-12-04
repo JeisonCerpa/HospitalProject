@@ -44,24 +44,19 @@ module.exports.getuserid = (email, callback) => {
 };
 
 module.exports.matchtoken = (document, token, callback) => {
-    console.log('Document en matchtoken:', document);
-    console.log('Token en matchtoken:', token);
     var query = 'SELECT * FROM verify WHERE id = ? AND token = ?';
     con.query(query, [document, token], (err, result) => {
         if (err) {
             console.error('Error ejecutando la consulta:', err);
             return callback(err, null);
         }
-        console.log('Resultado de la consulta:', result);
         callback(null, result);
     });
-    console.log(query);
 };
 
 module.exports.updateverify = (email, email_status, callback) => {
     var query = 'UPDATE users SET email_status = ? WHERE email = ?';
     con.query(query, [email_status, email], callback);
-    console.log(query);
 };
 
 module.exports.findOne = (email, callback) => {
@@ -188,9 +183,9 @@ module.exports.getAllemployee = (callback) => {
     console.log(query);
 };
 
-module.exports.add_employee = (name, email, contact, join_date, role, salary, callback) => {
-    var query = 'INSERT INTO employee (name, email, contact, join_date, role, salary) VALUES (?, ?, ?, ?, ?, ?)';
-    con.query(query, [name, email, contact, join_date, role, salary], callback);
+module.exports.add_employee = (document, name, email, contact, date_of_birth, role, user_id, callback) => {
+    var query = 'INSERT INTO employee (id, name, email, contact, date_of_birth, role, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)';
+    con.query(query, [document, name, email, contact, date_of_birth, role, user_id], callback);
     console.log(query);
 };
 
@@ -206,9 +201,9 @@ module.exports.deleteEmp = (id, callback) => {
     console.log(query);
 };
 
-module.exports.editEmp = (id, name, email, contact, join_date, role, salary, callback) => {
-    var query = 'UPDATE employee SET name = ?, email = ?, contact = ?, join_date = ?, role = ? WHERE id = ?';
-    con.query(query, [name, email, contact, join_date, role, id], callback);
+module.exports.editEmp = (id, name, email, contact, date_of_birth, role, callback) => {
+    var query = 'UPDATE employee SET name = ?, email = ?, contact = ?, date_of_birth = ?, role = ? WHERE id = ?';
+    con.query(query, [name, email, contact, date_of_birth, role, id], callback);
     console.log(query);
 };
 
@@ -524,4 +519,39 @@ module.exports.addUserRole = (userId, roleId, callback) => {
     var query = 'INSERT INTO user_roles (user_id, role_id) VALUES (?, ?)';
     con.query(query, [userId, roleId], callback);
     console.log(query);
+};
+
+module.exports.getAllRoles = (callback) => {
+    var query = 'SELECT * FROM roles';
+    con.query(query, (err, result) => {
+        if (err) {
+            console.error('Error executing query:', err);
+            return callback(err, null);
+        }
+        callback(null, result);
+    });
+    console.log(query);
+};
+
+module.exports.deleteUserRole = (userId, callback) => {
+    var query = 'DELETE FROM user_roles WHERE user_id = ?';
+    con.query(query, [userId], (err, result) => {
+        if (err) {
+            console.error('Error ejecutando la consulta:', err);
+            return callback(err, null);
+        }
+        callback(null, result);
+    });
+    console.log(query);
+};
+
+module.exports.deleteVerify = function (userId, callback) {
+    var sql = "DELETE FROM verify WHERE id = ?";
+    con.query(sql, [userId], function (err, result) {
+        if (err) {
+            console.error('Error al eliminar la verificación del usuario:', err);
+            return callback(err);
+        }
+        callback(null, result);
+    });
 };

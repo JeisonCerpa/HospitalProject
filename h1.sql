@@ -153,7 +153,7 @@ INSERT INTO `doctors` (`document`, `name`, `email`, `date_of_birth`, `gender`, `
 
 DROP TABLE IF EXISTS `employee`;
 CREATE TABLE IF NOT EXISTS `employee` (
-  `id` int NOT NULL AUTO_INCREMENT,
+  `id` int NOT NULL,
   `name` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `contact` varchar(255) NOT NULL,
@@ -162,7 +162,7 @@ CREATE TABLE IF NOT EXISTS `employee` (
   `user_id` int NOT NULL,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Volcado de datos para la tabla `employee`
@@ -540,4 +540,3 @@ COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

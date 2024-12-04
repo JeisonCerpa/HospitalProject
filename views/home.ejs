@@ -141,42 +141,59 @@
                 <div id="sidebar-menu" class="sidebar-menu">
                     <ul>
                         <li class="menu-title">Principal</li>
-                        <li class="active">
+                        <li>
                             <a href="/home"><i class="fa fa-dashboard"></i> <span>Tablero</span></a>
                         </li>
-                        <% if (permissions.includes('view_doctors')) { %>
-                        <li>
-                            <a href="/doctors"><i class="fa fa-user-md"></i> <span>Doctores</span></a>
-                        </li>
+                        <% if (userPermissions.includes('view_doctors')) { %>
+                            <li>
+                                <a href="/doctors"><i class="fa fa-user-md"></i> <span>Doctores</span></a>
+                            </li>
                         <% } %>
-                        <% if (permissions.includes('view_patients')) { %>
-                        <li>
-                            <a href="/patients"><i class="fa fa-wheelchair"></i> <span>Pacientes</span></a>
-                        </li>
+                        <% if (userPermissions.includes('view_patients')) { %>
+                            <li>
+                                <a href="/patients"><i class="fa fa-wheelchair"></i> <span>Pacientes</span></a>
+                            </li>
                         <% } %>
-                        <% if (permissions.includes('view_appointments')) { %>
-                        <li>
-                            <a href="/appointment"><i class="fa fa-calendar"></i> <span>Citas</span></a>
-                        </li>
+                        <% if (userPermissions.includes('view_appointments')) { %>
+                            <li>
+                                <a href="/appointment"><i class="fa fa-calendar"></i> <span>Citas</span></a>
+                            </li>
                         <% } %>
-                        <% if (permissions.includes('view_departments')) { %>
-                        <li>
-                            <a href="/home/departments"><i class="fa fa-hospital-o"></i> <span>Departamentos</span></a>
-                        </li>
+                        <% if (userPermissions.includes('view_departments')) { %>
+                            <li>
+                                <a href="/home/departments"><i class="fa fa-hospital-o"></i> <span>Departamentos</span></a>
+                            </li>
                         <% } %>
-                        <% if (permissions.includes('view_employees')) { %>
-                        <li class="submenu">
-                            <a href="#"><i class="fa fa-user"></i> <span> Empleados </span> <span class="menu-arrow"></span></a>
-                            <ul style="display: none;">
-                                <li><a href="/employee">Lista de Empleados</a></li>
-                                <li><a href="/employee/leave">Permisos</a></li>
-                            </ul>
-                        </li>
+                        <% if (userPermissions.includes('view_employees')) { %>
+                            <li class="submenu">
+                                <a href="#"><i class="fa fa-user"></i> <span> Empleados </span> <span class="menu-arrow"></span></a>
+                                <ul style="display: none;">
+                                    <li><a href="/employee">Lista de Empleados</a></li>
+                                    <li><a href="/employee/leave">Permisos</a></li>
+                                </ul>
+                            </li>
                         <% } %>
-                        <% if (permissions.includes('view_store')) { %>
-                        <li>
-                            <a href="/store"><i class="fa fa-cube"></i> <span>Almacén de Medicinas</span></a>
-                        </li>
+                        <% if (userPermissions.includes('view_payroll')) { %>
+                            <li class="submenu">
+                                <a href="#"><i class="fa fa-book"></i> <span> Nómina </span> <span class="menu-arrow"></span></a>
+                                <ul style="display: none;">
+                                    <li><a href="/receipt"> Salario de Empleados </a></li>
+                                </ul>
+                            </li>
+                        <% } %>
+                        <% if (userPermissions.includes('view_email')) { %>
+                            <li class="submenu">
+                                <a href="#"><i class="fa fa-envelope"></i> <span> Correo</span> <span class="menu-arrow"></span></a>
+                                <ul style="display: none;">
+                                    <li><a href="/compose">Redactar Correo</a></li>
+                                    <li><a href="/inbox">Bandeja de Entrada</a></li>
+                                </ul>
+                            </li>
+                        <% } %>
+                        <% if (userPermissions.includes('view_store')) { %>
+                            <li>
+                                <a href="/store"><i class="fa fa-cube"></i> <span>Almacén de Medicinas</span></a>
+                            </li>
                         <% } %>
                     </ul>
                 </div>
@@ -199,7 +216,7 @@
                         <div class="dash-widget">
                             <span class="dash-widget-bg2"><i class="fa fa-user-o"></i></span>
                             <div class="dash-widget-info text-right">
-                                <h3><%=appointment%></h3>
+                                <h3><%= appointment %></h3>
                                 <span class="widget-title2">Citas <i class="fa fa-check" aria-hidden="true"></i></span>
                             </div>
                         </div>
@@ -256,7 +273,7 @@
 					<div class="col-12 col-md-6 col-lg-8 col-xl-8">
 						<div class="card">
 							<div class="card-header">
-								<h4 class="card-title d-inline-block">Próximas citas <%= appointment%></h4> <a href="/appointment" class="btn btn-primary float-right">Ver todas</a>
+								<h4 class="card-title d-inline-block">Próximas citas <%= appointment %></h4> <a href="/appointment" class="btn btn-primary float-right">Ver todas</a>
 							</div>
 							<div class="card-body p-0">
 								<div class="table-responsive">

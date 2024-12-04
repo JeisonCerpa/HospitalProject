@@ -11,51 +11,46 @@ router.get('*', function(req, res, next){
     }
 });
 
-router.get('/', function(req, res){
-    const userId = req.cookies.userId; // Obtener el ID del usuario desde las cookies
-    const userRole = req.cookies.role; // Obtener el rol del usuario
-
-    db.getAllDoc(function(err, result){
-        if (err || !result) {
-            console.error('Error retrieving doctors:', err);
-            return res.status(500).send('Error retrieving doctors');
+router.get('/', (req, res) => {
+    const userId = req.cookies.userId;
+    const userRole = req.cookies.role;
+    const username = req.cookies.username;
+    db.getUserPermissions(userId, (err, userPermissions) => {
+        if (err) {
+            console.error('Error retrieving permissions:', err);
+            return res.status(500).send('Error retrieving permissions');
         }
-        db.getallappointment(function(err1, result1){
-            if (err1 || !result1) {
-                console.error('Error retrieving appointments:', err1);
-                return res.status(500).send('Error retrieving appointments');
+        db.getAllDoc((err, doctors) => {
+            if (err) {
+                console.error('Error retrieving doctors:', err);
+                return res.status(500).send('Error retrieving doctors');
             }
-            db.getAllPatients(function(err2, result2){
-                if (err2 || !result2) {
-                    console.error('Error retrieving patients:', err2);
-                    return res.status(500).send('Error retrieving patients');
+            db.getAllleave((err, leaves) => {
+                if (err) {
+                    console.error('Error retrieving leaves:', err);
+                    return res.status(500).send('Error retrieving leaves');
                 }
-                var total_doc = result.length;
-                var appointment = result1.length;
-
-                // Obtener los permisos del usuario
-                const query = `
-                    SELECT p.name 
-                    FROM permissions p
-                    JOIN role_permissions rp ON p.id = rp.permission_id
-                    JOIN user_roles ur ON rp.role_id = ur.role_id
-                    WHERE ur.user_id = ?
-                `;
-                db.con.query(query, [userId], (err, permissions) => {
+                db.getAllPatients((err, patients) => {
                     if (err) {
-                        console.error('Error retrieving permissions:', err);
-                        return res.status(500).send('Error retrieving permissions');
+                        console.error('Error retrieving patients:', err);
+                        return res.status(500).send('Error retrieving patients');
                     }
-
-                    const userPermissions = permissions.map(p => p.name);
-                    res.render('home.ejs', {
-                        doc: total_doc,
-                        doclist: result,
-                        appointment: appointment,
-                        applist: result1,
-                        newPatients: result2, // Pasar los nuevos pacientes a la vista
-                        permissions: userPermissions,
-                        role: userRole // Pasar el rol del usuario a la vista
+                    db.getallappointment((err, appointments) => {
+                        if (err) {
+                            console.error('Error retrieving appointments:', err);
+                            return res.status(500).send('Error retrieving appointments');
+                        }
+                        res.render('home.ejs', {
+                            userId: userId,
+                            userRole: userRole,
+                            username: username,
+                            userPermissions: userPermissions,
+                            doc: doctors.length,
+                            appointment: appointments.length,
+                            applist: appointments,
+                            doclist: doctors,
+                            newPatients: patients
+                        });
                     });
                 });
             });

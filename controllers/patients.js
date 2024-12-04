@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 var multer = require('multer');
 var db = require.main.require('./models/db_controller'); 
+var randomtoken = require('random-token');
+var nodemailer = require('nodemailer');
 
 router.get('*', (req, res, next) => {
     if (req.cookies['username'] == null) {
@@ -48,7 +50,52 @@ router.post('/add_patient', (req, res) => {
             db.add_patient(req.body.document, req.body.name, req.body.email, req.body.date_of_birth, req.body.phone, req.body.gender, req.body.address, (err) => {
                 if (err) throw err;
                 console.log('1 patient inserted');
-                res.redirect('/patients');
+                
+                var token = randomtoken(8);
+                db.verify(req.body.document, req.body.name, req.body.email, token);
+                db.getuserid(req.body.email, (err, result) => {
+                    var document = req.body.document;
+                    var output = `<p>Querido ${req.body.name}</p><p>Gracias por registrarte en nuestro sitio web. Su token de ingreso está abajo:</p>
+                        <ul>
+                        <li>Document: ${document}</li>
+                        <li>Token: ${token}</li>
+                        <li>Contraseña predeterminada: patient123</li>
+                        </ul>
+                        <p>Por favor, haga clic en el siguiente enlace para verificar su cuenta y cambiar su contraseña: <a href="http://localhost:3000/verify/${document}/${token}">¡Click Aquí!</a></p>
+                        <p><b>Nota:</b>Este es un correo electrónico generado automáticamente. Si no ha solicitado este correo electrónico, por favor ignore este mensaje.</p>`;
+
+                    var transporter = nodemailer.createTransport({
+                        host: 'smtp.gmail.com',
+                        port: 465,
+                        secure: true,
+                        auth: {
+                            user: "cerpajeisontest@gmail.com",
+                            pass: "dyii pyjs wcjs gvjs"
+                        }
+                    });
+                    var mailOptions = {
+                        from: 'Hospital MS Team',
+                        to: req.body.email,
+                        subject: 'Verificación de cuenta',
+                        html: output
+                    };
+                    transporter.sendMail(mailOptions, function (err, info) {
+                        if (err) {
+                            console.log(err);
+                        } else {
+                            console.log('Correo enviado: ' + info);
+                        }
+                    });
+
+                    var roleId = 5; // Asumiendo que el rol de paciente tiene el ID 5
+                    db.addUserRole(document, roleId, (err) => {
+                        if (err) {
+                            console.error('Error al agregar el rol del usuario:', err);
+                            return res.status(500).send('Error en el servidor');
+                        }
+                        res.redirect('/patients');
+                    });
+                });
             });
         }
     });

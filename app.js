@@ -70,6 +70,21 @@ app.use((req, res, next) => {
   }
 });
 
+app.use((req, res, next) => {
+    if (req.cookies.userId) {
+        db.getUserPermissions(req.cookies.userId, (err, permissions) => {
+            if (err) {
+                console.error('Error retrieving permissions:', err);
+                return res.status(500).send('Error retrieving permissions');
+            }
+            res.locals.userPermissions = permissions;
+            next();
+        });
+    } else {
+        next();
+    }
+});
+
 // Aplicar el middleware a las rutas que requieren permisos
 app.use('/signup', signup);
 app.use('/login', (req, res, next) => {
