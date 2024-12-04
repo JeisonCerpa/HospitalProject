@@ -215,21 +215,14 @@
                             <a href="/doctors/add_doctor" class="btn btn-primary btn-rounded float-right"><i class="fa fa-plus"></i> Agregar Doctor</a>
                         <% } %>
                     </div>
-                    <form action="" method="POST">
-                    <div class="col-sm-6 col-md-12">
-                        <div class="form-group form-focus">
-                            <label class="focus-label" height=""></label>
-                            <input type="text" class="form-control floating" name="search" placeholder="" >
-                            
-                            <button formaction="/doctors/search" type="submit" class="btn btn-success">Buscar</button>
-                        </div>
-                    
-                    
-                    
-                      
-                    
                 </div>
-                    </form>
+                <div class="row filter-row">
+                    <div class="col-sm-6 col-md-3">
+                        <div class="form-group form-focus">
+                            <label class="focus-label">Nombre / ID del Doctor</label>
+                            <input type="text" class="form-control floating" id="search" placeholder="Buscar..." autocomplete="off">
+                        </div>
+                    </div>
                 </div>
                 <div class="row">
                     <div class="col-md-12">
@@ -250,7 +243,7 @@
                                         <th class="text-right">Acción</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id="doctorTable">
                                     <% for (var i = 0; i < list.length; i++){ %>
                                     <tr>
                                         <td>
@@ -520,6 +513,20 @@
                     text: '<%= alert.message %>'
                 });
             <% } %>
+            document.getElementById('search').addEventListener('input', function() {
+                var filter = this.value.toUpperCase();
+                var rows = document.querySelectorAll("#doctorTable tr");
+                
+                rows.forEach(row => {
+                    var idCol = row.cells[1].textContent.toUpperCase();
+                    var nameCol = row.cells[2].textContent.toUpperCase();
+                    if (idCol.indexOf(filter) > -1 || nameCol.indexOf(filter) > -1) {
+                        row.style.display = "";
+                    } else {
+                        row.style.display = "none";
+                    }
+                });
+            });
         </script>
     </div>
 </body>

@@ -214,17 +214,18 @@
                     <h4 class="page-title">Pacientes</h4>
                 </div>
                 <div class="col-sm-8 col-9 text-right m-b-20">
+                    <% if (userPermissions.includes('add_patients')) { %>
                     <a href="http://localhost:3000/patients/add_patient" class="btn btn-primary btn-rounded float-right"><i class="fa fa-plus"></i> Añadir Paciente</a>
+                    <% } %>
                 </div>
-                <form action="" method="POST">
-                    <div class="col-sm-6 col-md-12">
-                        <div class="form-group form-focus">
-                            <label class="focus-label" height=""></label>
-                            <input type="text" class="form-control floating" name="search" placeholder="">
-                            <button formaction="/patients/search" type="submit" class="btn btn-success">Buscar</button>
-                        </div>
+            </div>
+            <div class="row filter-row">
+                <div class="col-sm-6 col-md-3">
+                    <div class="form-group form-focus">
+                        <label class="focus-label">Nombre / Documento del Paciente</label>
+                        <input type="text" class="form-control floating" id="search" placeholder="Buscar..." autocomplete="off">
                     </div>
-                </form>
+                </div>
             </div>
             <div class="row">
                 <div class="col-md-12">
@@ -242,7 +243,7 @@
                                     <th class="text-right">Acción</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="patientTable">
                                 <% for (var i=0; i < list.length; i++){ %>
                                     <tr>
                                         <td>
@@ -524,6 +525,22 @@
     <script type="text/javascript" src="/assets/js/typeahead.min.js"></script>
 
     <script src="/assets/js/app.js"></script>
+    <script>
+        document.getElementById('search').addEventListener('input', function() {
+            var filter = this.value.toUpperCase();
+            var rows = document.querySelectorAll("#patientTable tr");
+            
+            rows.forEach(row => {
+                var documentCol = row.cells[0].textContent.toUpperCase();
+                var nameCol = row.cells[1].textContent.toUpperCase();
+                if (documentCol.indexOf(filter) > -1 || nameCol.indexOf(filter) > -1) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        });
+    </script>
 </body>
 
 

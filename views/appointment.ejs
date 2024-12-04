@@ -200,21 +200,11 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-12">
-                        <form action="/appointment/department" method="get">
-                            <div class="form-group">
-                                <label for="department">Filtrar por Departamento:</label>
-                                <select name="department" id="department" class="form-control">
-                                    <option value="">Seleccionar</option>
-                                    <% if (typeof departments !== 'undefined') { %>
-                                        <% for (var i = 0; i < departments.length; i++) { %>
-                                            <option value="<%= departments[i].department_name %>"><%= departments[i].department_name %></option>
-                                        <% } %>
-                                    <% } %>
-                                </select>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Filtrar</button>
-                        </form>
+                    <div class="col-sm-6 col-md-3">
+                        <div class="form-group form-focus">
+                            <label class="focus-label">Documento del Paciente / Nombre del Médico</label>
+                            <input type="text" class="form-control floating" id="search" placeholder="Buscar..." autocomplete="off">
+                        </div>
                     </div>
                 </div>
 				<div class="row">
@@ -236,7 +226,8 @@
 										<th class="text-right">Acción</th>
 									</tr>
 								</thead>
-								<tbody>
+								
+								<tbody id="appointmentTable">
                                     <% for (var i = 0; i < list.length; i++){ %>
 									<tr>
 										<td><%= list[i].id %></td>
@@ -516,6 +507,22 @@
                 });
             });
      </script>
+     <script>
+        document.getElementById('search').addEventListener('input', function() {
+            var filter = this.value.toUpperCase();
+            var rows = document.querySelectorAll("#appointmentTable tr");
+            
+            rows.forEach(row => {
+                var docCol = row.cells[1].textContent.toUpperCase();
+                var docNameCol = row.cells[4].textContent.toUpperCase();
+                if (docCol.indexOf(filter) > -1 || docNameCol.indexOf(filter) > -1) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        });
+    </script>
 </body>
 
 

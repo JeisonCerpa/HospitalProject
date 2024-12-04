@@ -245,10 +245,9 @@
                                         <label for="role">Rol:</label>
                                         <select id="role" name="role" class="form-control" required>
                                             <% roles.forEach(function(role) { %>
-                                                <% if (role.name !== 'patient') { %>
+                                                <% if (role.name !== 'patient' && role.name !== 'doctor') { %>
                                                     <option value="<%= role.name %>">
                                                         <% if (role.name === 'admin') { %>Administrador<% } %>
-                                                        <% if (role.name === 'doctor') { %>Doctor<% } %>
                                                         <% if (role.name === 'receptionist') { %>Recepcionista<% } %>
                                                         <% if (role.name === 'pharmacist') { %>Farmacéutico<% } %>
                                                         <% if (role.name === 'nurse') { %>Enfermero/a<% } %>
