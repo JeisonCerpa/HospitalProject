@@ -352,6 +352,7 @@ module.exports.add_patient = (document, name, email, date_of_birth, phone, gende
     var role = 'patient';
     var password = 'patient123';
     var email_status = 'not_verified';
+    var password_changed = false;
 
     // Verificar si date_of_birth es una fecha válida
     var formattedDateOfBirth = new Date(date_of_birth);
@@ -364,8 +365,8 @@ module.exports.add_patient = (document, name, email, date_of_birth, phone, gende
     formattedDateOfBirth = formattedDateOfBirth.toISOString().split('T')[0];
 
     // Insertar en la tabla users
-    var userQuery = 'INSERT INTO users (id, username, email, password, email_status, role) VALUES (?, ?, ?, ?, ?, ?)';
-    con.query(userQuery, [document, name, email, password, email_status, role], (err) => {
+    var userQuery = 'INSERT INTO users (id, username, email, password, email_status, role, password_changed) VALUES (?, ?, ?, ?, ?, ?, ?)';
+    con.query(userQuery, [document, name, email, password, email_status, role, password_changed], (err) => {
         if (err) {
             if (typeof callback === 'function') {
                 return callback(err);

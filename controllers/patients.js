@@ -144,10 +144,41 @@ router.get('/delete_patient/:document', (req, res) => {
 
 router.post('/delete_patient/:document', (req, res) => {
     var document = req.params.document;
-    db.deletePatient(document, (err, result) => {
-        if (err) throw err;
-        console.log('1 patient and corresponding user deleted');
-        res.redirect('/patients');
+    db.getPatientByDoc(document, (err, patient) => {
+        if (err) {
+            console.error('Error al obtener el paciente:', err);
+            return res.status(500).send('Error en el servidor');
+        }
+        if (patient.length > 0) {
+            var userId = patient[0].user_id;
+            db.deletePatient(document, (err) => {
+                if (err) {
+                    console.error('Error al eliminar el paciente:', err);
+                    return res.status(500).send('Error en el servidor');
+                }
+                db.deleteUser(userId, (err) => {
+                    if (err) {
+                        console.error('Error al eliminar el usuario:', err);
+                        return res.status(500).send('Error en el servidor');
+                    }
+                    db.deleteUserRole(userId, (err) => {
+                        if (err) {
+                            console.error('Error al eliminar el rol del usuario:', err);
+                            return res.status(500).send('Error en el servidor');
+                        }
+                        db.deleteVerify(userId, (err) => {
+                            if (err) {
+                                console.error('Error al eliminar la verificación del usuario:', err);
+                                return res.status(500).send('Error en el servidor');
+                            }
+                            res.redirect('/patients');
+                        });
+                    });
+                });
+            });
+        } else {
+            res.status(404).send('Paciente no encontrado');
+        }
     });
 });
 

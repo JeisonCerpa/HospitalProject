@@ -25,17 +25,6 @@ router.get('*', (req, res, next) => {
     }
 });
 
-// Middleware para verificar permisos
-function checkPermission(permission) {
-    return (req, res, next) => {
-        if (req.permissions.includes(permission)) {
-            next();
-        } else {
-            res.status(403).send('No tienes permiso para acceder a esta ruta');
-        }
-    };
-}
-
 router.get('/', (req, res) => {
     if (!req.permissions.includes('view_employees')) {
         return res.redirect('back');
