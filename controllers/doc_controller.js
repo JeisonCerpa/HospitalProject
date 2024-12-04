@@ -85,7 +85,7 @@ router.post('/add_doctor', (req, res, next) => {
         if (result.length > 0) {
             db.getalldept((err, departments) => {
                 if (err) throw err;
-                res.render('add_doctor.ejs', { list: departments, alert: { type: 'error', message: 'El médico ya existe' } });
+                res.render('add_doctor.ejs', { list: departments, alert: { type: 'duplicate', message: 'El médico ya existe' } });
             });
         } else {
             db.add_doctor(req.body.document, req.body.name, req.body.email, req.body.date_of_birth, req.body.gender, req.body.address, req.body.phone, image, req.body.department, req.body.biography, (err) => {
@@ -93,7 +93,7 @@ router.post('/add_doctor', (req, res, next) => {
                     if (err.code === 'ER_DUP_ENTRY') {
                         db.getalldept((err, departments) => {
                             if (err) throw err;
-                            res.render('add_doctor.ejs', { list: departments, alert: { type: 'error', message: 'El documento ya existe' } });
+                            res.render('add_doctor.ejs', { list: departments, alert: { type: 'duplicate', message: 'El documento ya existe' } });
                         });
                     } else {
                         throw err;
@@ -206,7 +206,10 @@ router.post('/delete_doctor/:document', (req, res, next) => {
 }, (req, res) => {
     var document = req.params.document;
     db.getDocByDocument(document, (err, result) => {
-        if (err) throw err;
+        if (err) {
+            console.error('Error retrieving doctor:', err);
+            return res.status(500).send('Error retrieving doctor');
+        }
         if (result.length > 0) {
             var userId = result[0].user_id;
             db.deleteDoc(document, (err, result) => {

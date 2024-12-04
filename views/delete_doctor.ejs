@@ -311,7 +311,11 @@
                 </div>
                 <div class="row">
                     <div class="col-lg-8 offset-lg-2">
-                        <form method="post" action="/doctors/delete_doctor/<%= list[0].document %>">
+                        <% if (list && list.length > 0) { %>
+                            <form method="post" action="/doctors/delete_doctor/<%= list[0].document %>">
+                        <% } else { %>
+                            <form method="post" action="#">
+                        <% } %>
                             <div class="row">
                                 <% if (list && list.length > 0) { %>
                                     <% for (var i = 0; i < list.length; i++) { %>

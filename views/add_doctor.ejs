@@ -398,6 +398,12 @@
                 title: 'Éxito',
                 text: '<%= alert.message %>'
             });
+        <% } else if (typeof alert !== 'undefined' && alert.type === 'duplicate') { %>
+            Swal.fire({
+                icon: 'warning',
+                title: 'Duplicado',
+                text: '<%= alert.message %>'
+            });
         <% } %>
     </script>
 </body>
