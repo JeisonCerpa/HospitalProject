@@ -101,7 +101,6 @@ module.exports.getAllDoc = (callback) => {
         }
         callback(null, result);
     });
-    console.log(query);
 };
 
 module.exports.getDocByDocument = (document, callback) => {
@@ -113,7 +112,6 @@ module.exports.getDocByDocument = (document, callback) => {
         }
         callback(null, result);
     });
-    console.log(query);
 }
 
 module.exports.editDoc = (document, name, email, date_of_birth, gender, address, phone, department, biography, callback) => {
@@ -126,105 +124,99 @@ module.exports.editDoc = (document, name, email, date_of_birth, gender, address,
         }
         callback(null, result);
     });
-    console.log(query);
 };
 
 module.exports.deleteDoc = (document, callback) => {
-    var query = 'DELETE FROM doctors WHERE document = ?';
-    con.query(query, [document], (err, result) => {
+    // Eliminar todas las citas asociadas con el doctor
+    var deleteAppointmentsQuery = 'DELETE FROM appointment WHERE doctor_document = ?';
+    con.query(deleteAppointmentsQuery, [document], (err, result) => {
         if (err) {
             console.error('Error executing query:', err);
             return callback(err, null);
         }
-        // Eliminar de la tabla verify
-        var deleteVerifyQuery = 'DELETE FROM verify WHERE id = ?';
-        con.query(deleteVerifyQuery, [document], (err, result) => {
+        // Después de eliminar las citas, eliminar el doctor
+        var deleteDoctorQuery = 'DELETE FROM doctors WHERE document = ?';
+        con.query(deleteDoctorQuery, [document], (err, result) => {
             if (err) {
                 console.error('Error executing query:', err);
                 return callback(err, null);
             }
-            callback(null, result);
+            // Eliminar de la tabla verify
+            var deleteVerifyQuery = 'DELETE FROM verify WHERE id = ?';
+            con.query(deleteVerifyQuery, [document], (err, result) => {
+                if (err) {
+                    console.error('Error executing query:', err);
+                    return callback(err, null);
+                }
+                callback(null, result);
+            });
         });
     });
-    console.log(query);
 };
 
 module.exports.searchDoc = (key, callback) => {
     var query = 'SELECT * FROM doctors WHERE name LIKE ? or document LIKE ?';
     con.query(query, ['%' + key + '%', '%' + key + '%'], callback);
-    console.log(query);
 };
 
 module.exports.getalldept = (callback) => {
     var query = 'SELECT * FROM departments';
     con.query(query, callback);
-    console.log(query);
 };
 
 module.exports.getleavebyid = (id, callback) => {
     var query = 'SELECT * FROM leaves WHERE id = ?';
     con.query(query, [id], callback);
-    console.log(query);
 };
 
 module.exports.getAllleave = (callback) => {
     var query = 'SELECT * FROM leaves';
     con.query(query, callback);
-    console.log(query);
 };
 
 module.exports.add_leave = (id, name, type, from, to, reason, callback) => {
     var query = 'INSERT INTO leaves (emp_id, employee, leave_type, date_from, date_to, reason) VALUES (?, ?, ?, ?, ?, ?)';
     con.query(query, [id, name, type, from, to, reason], callback);
-    console.log(query);
 };
 
 module.exports.deleteleave = (id, callback) => {
     var query = 'DELETE FROM leaves WHERE id = ?';
     con.query(query, [id], callback);
-    console.log(query);
 };
 
 module.exports.getAllemployee = (callback) => {
     var query = 'SELECT * FROM employee';
     con.query(query, callback);
-    console.log(query);
 };
 
 module.exports.add_employee = (document, name, email, contact, date_of_birth, role, user_id, callback) => {
     var query = 'INSERT INTO employee (id, name, email, contact, date_of_birth, role, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)';
     con.query(query, [document, name, email, contact, date_of_birth, role, user_id], callback);
-    console.log(query);
 };
 
 module.exports.searchEmp = (key, callback) => {
     var query = 'SELECT * FROM employees WHERE name LIKE ?';
     con.query(query, ['%' + key + '%'], callback);
-    console.log(query);
 };
 
 module.exports.deleteEmp = (id, callback) => {
     var query = 'DELETE FROM employee WHERE id = ?';
     con.query(query, [id], callback);
-    console.log(query);
 };
 
 module.exports.editEmp = (id, name, email, contact, date_of_birth, role, callback) => {
     var query = 'UPDATE employee SET name = ?, email = ?, contact = ?, date_of_birth = ?, role = ? WHERE id = ?';
     con.query(query, [name, email, contact, date_of_birth, role, id], callback);
-    console.log(query);
 };
 
 module.exports.getEmpbyId = (id, callback) => {
     var query = 'SELECT * FROM employee WHERE id = ?';
     con.query(query, [id], callback);
-    console.log(query);
 };
 
 module.exports.edit_leave = (id, name, type, from, to, reason, callback) => {
     var query = 'UPDATE leaves SET employee = ?, leave_type = ?, date_from = ?, date_to = ?, reason = ? WHERE id = ?';
     con.query(query, [name, type, from, to, reason, id], callback);
-    console.log(query);
 };
 
 module.exports.add_appointment = (patient_document, department, doctor_document, date, time, callback) => {
@@ -236,7 +228,6 @@ module.exports.add_appointment = (patient_document, department, doctor_document,
         }
         callback(null, result);
     });
-    console.log(query);
 };
 
 module.exports.getallappointment = (callback) => {
@@ -253,7 +244,6 @@ module.exports.getallappointment = (callback) => {
         }
         callback(null, result);
     });
-    console.log(query);
 };
 
 module.exports.getallappointmentbyid = (id, callback) => {
@@ -265,7 +255,6 @@ module.exports.getallappointmentbyid = (id, callback) => {
         }
         callback(null, result);
     });
-    console.log(query);
 };
 
 module.exports.editappointment = (id, patient_document, department, doctor_document, date, time, callback) => {
@@ -277,7 +266,6 @@ module.exports.editappointment = (id, patient_document, department, doctor_docum
         }
         callback(null, result);
     });
-    console.log(query);
 };
 
 module.exports.deleteappointment = (id, callback) => {
@@ -289,25 +277,21 @@ module.exports.deleteappointment = (id, callback) => {
         }
         callback(null, result);
     });
-    console.log(query);
 };
 
 module.exports.getallmed = (callback) => {
     var query = 'SELECT * FROM store order by id desc';
     con.query(query, callback);
-    console.log(query);
 };
 
 module.exports.addMed = (name, p_date, e_date, price, quantity, callback) => {
     var query = 'INSERT INTO store (name, p_date, expire_end, price, quantity) VALUES (?, ?, ?, ?, ?)';
     con.query(query, [name, p_date, e_date, price, quantity], callback);
-    console.log(query);
 };
 
 module.exports.getMedbyId = (id, callback) => {
     var query = 'SELECT * FROM store WHERE id = ?';
     con.query(query, [id], callback);
-    console.log(query);
 };
 
 module.exports.editMed = (id, name, p_date, expire_end, price, quantity, callback) => {
@@ -323,37 +307,31 @@ module.exports.editMed = (id, name, p_date, expire_end, price, quantity, callbac
             callback(null, result);
         }
     });
-    console.log(query);
 };
 
 module.exports.deletemed = (id, callback) => {
     var query = 'DELETE FROM store WHERE id = ?';
     con.query(query, [id], callback);
-    console.log(query);
 };
 
 module.exports.searchmed = (key, callback) => {
     var query = 'SELECT * FROM store WHERE name LIKE ?';
     con.query(query, ['%' + key + '%'], callback);
-    console.log(query);
 };
 
 module.exports.postcomplain = (message, name, email, subject, callback) => {
     var query = 'INSERT INTO complain (message, name, email, subject) VALUES (?, ?, ?, ?)';
     con.query(query, [message, name, email, subject], callback);
-    console.log(query);
 };
 
 module.exports.getcomplain = (callback) => {
     var query = 'SELECT * FROM complain';
     con.query(query, callback);
-    console.log(query);
 };
 
 module.exports.getAllPatients = (callback) => {
     var query = 'SELECT * FROM patients';
     con.query(query, callback);
-    console.log(query);
 }
 
 module.exports.add_patient = (document, name, email, date_of_birth, phone, gender, address, callback) => {
@@ -395,13 +373,11 @@ module.exports.add_patient = (document, name, email, date_of_birth, phone, gende
 module.exports.getPatientByDoc = (document, callback) => {
     var query = 'SELECT * FROM patients WHERE document = ?';
     con.query(query, [document], callback);
-    console.log(query);
 }
 
 module.exports.editPatient = (document, name, email, phone, gender, address, callback) => {
     var query = 'UPDATE patients SET name = ?, email = ?, phone = ?, gender = ?, address = ? WHERE document = ?';
     con.query(query, [name, email, phone, gender, address, document], callback);
-    console.log(query);
 }
 
 module.exports.deletePatient = (document, callback) => {
@@ -435,37 +411,31 @@ module.exports.deletePatient = (document, callback) => {
             callback(new Error('Patient not found'), null);
         }
     });
-    console.log(getUserIdQuery);
 }
 
 module.exports.searchPatient = (key, callback) => {
     var query = 'SELECT * FROM patients WHERE name LIKE ? or document LIKE ? or email LIKE ? or phone LIKE ?';
     con.query(query, ['%' + key + '%', '%' + key + '%', '%' + key + '%', '%' + key + '%'], callback);
-    console.log(query);
 }
 
 module.exports.getdeptbyId = (id, callback) => {
     var query = 'SELECT * FROM departments WHERE id = ?';
     con.query(query, [id], callback);
-    console.log(query);
 };
 
 module.exports.edit_dept = (id, department_name, callback) => {
     var query = 'UPDATE departments SET department_name = ? WHERE id = ?';
     con.query(query, [department_name, id], callback);
-    console.log(query);
 };
 
 module.exports.delete_department = (id, callback) => {
     var query = 'DELETE FROM departments WHERE id = ?';
     con.query(query, [id], callback);
-    console.log(query);
 };
 
 module.exports.add_dept = (department_name, callback) => {
     var query = 'INSERT INTO departments (department_name) VALUES (?)';
     con.query(query, [department_name], callback);
-    console.log(query);
 };
 
 module.exports.deleteUser = (userId, callback) => {
@@ -485,7 +455,6 @@ module.exports.getAppointmentsByDepartment = (department, callback) => {
         }
         callback(null, result);
     });
-    console.log(query);
 };
 
 module.exports.checkDoctorAvailability = (doctorDocument, date, time, callback) => {
@@ -497,7 +466,6 @@ module.exports.checkDoctorAvailability = (doctorDocument, date, time, callback) 
         }
         callback(null, result);
     });
-    console.log(query);
 };
 
 module.exports.getUserPermissions = (userId, callback) => {
@@ -521,13 +489,11 @@ module.exports.getUserPermissions = (userId, callback) => {
 module.exports.updatePassword = (document, newPassword, callback) => {
     var query = 'UPDATE users SET password = ?, password_changed = ? WHERE id = ?';
     con.query(query, [newPassword, true, document], callback);
-    console.log(query);
 };
 
 module.exports.addUserRole = (userId, roleId, callback) => {
-    var query = 'INSERT INTO user_roles (user_id, role_id) VALUES (?, ?)';
+    var query = 'INSERT INTO user_roles (user_id, role_id) VALUES (?, ?, ?)';
     con.query(query, [userId, roleId], callback);
-    console.log(query);
 };
 
 module.exports.getAllRoles = (callback) => {
@@ -539,7 +505,6 @@ module.exports.getAllRoles = (callback) => {
         }
         callback(null, result);
     });
-    console.log(query);
 };
 
 module.exports.deleteUserRole = (userId, callback) => {
@@ -551,7 +516,6 @@ module.exports.deleteUserRole = (userId, callback) => {
         }
         callback(null, result);
     });
-    console.log(query);
 };
 
 module.exports.deleteVerify = function (userId, callback) {
