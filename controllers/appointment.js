@@ -184,9 +184,50 @@ router.post('/edit_appointment/:id', (req, res) => {
             res.status(403).send('Forbidden');
         } else {
             var id = req.params.id;
-            var date = moment(req.body.date, 'DD/MM/YYYY').format('YYYY-MM-DD'); // Formatear la fecha correctamente
+            var date = moment(req.body.date, 'YYYY-MM-DD', true); // Asegurarse de que la fecha esté en el formato correcto
+            if (!date.isValid()) {
+                console.error('Fecha inválida:', req.body.date);
+                db.getallappointmentbyid(id, (err, appointment) => {
+                    if (err) {
+                        console.error('Error fetching appointment:', err);
+                        res.redirect('back');
+                    } else {
+                        db.getAllPatients((err, patients) => {
+                            if (err) {
+                                console.error('Error fetching patients:', err);
+                                res.redirect('back');
+                            } else {
+                                db.getalldept((err, departments) => {
+                                    if (err) {
+                                        console.error('Error fetching departments:', err);
+                                        res.redirect('back');
+                                    } else {
+                                        db.getAllDoc((err, doctors) => {
+                                            if (err) {
+                                                console.error('Error fetching doctors:', err);
+                                                res.redirect('back');
+                                            } else {
+                                                res.render('edit_appointment.ejs', {
+                                                    appointment: appointment[0],
+                                                    patients: patients,
+                                                    departments: departments,
+                                                    doctors: doctors,
+                                                    moment: moment,
+                                                    alert: { type: 'error', message: 'Fecha inválida' }
+                                                });
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+                return;
+            }
+            var formattedDate = date.format('YYYY-MM-DD');
             var time = req.body.time; // Asegurarse de que el tiempo esté en formato HH:mm:ss
-            db.editappointment(id, req.body.patient_document, req.body.department, req.body.doctor_document, date, time, (err, result) => {
+            db.editappointment(id, req.body.patient_document, req.body.department, req.body.doctor_document, formattedDate, time, (err, result) => {
                 if (err) {
                     console.error('Error updating appointment:', err);
                     res.redirect('back');
@@ -258,10 +299,15 @@ router.get('/department', (req, res) => {
 
 router.post('/check_availability', (req, res) => {
     var doctorDocument = req.body.doctor_document;
-    var date = moment(req.body.date, 'DD/MM/YYYY').format('YYYY-MM-DD'); // Formatear la fecha correctamente
+    var date = moment(req.body.date, 'YYYY-MM-DD', true); // Asegurarse de que la fecha esté en el formato correcto
+    if (!date.isValid()) {
+        console.error('Fecha inválida:', req.body.date);
+        return res.json({ available: false });
+    }
+    var formattedDate = date.format('YYYY-MM-DD');
     var time = req.body.time; // Asegurarse de que el tiempo esté en formato HH:mm:ss
 
-    db.checkDoctorAvailability(doctorDocument, date, time, (err, result) => {
+    db.checkDoctorAvailability(doctorDocument, formattedDate, time, (err, result) => {
         if (err) {
             console.error('Error checking doctor availability:', err);
             res.status(500).send('Internal Server Error');

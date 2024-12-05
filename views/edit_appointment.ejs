@@ -12,8 +12,10 @@
     <link rel="stylesheet" type="text/css" href="/assets/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="/assets/js/moment.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <!--[if lt IE 9]>
 		<script src="/assets/js/html5shiv.min.js"></script>
 		<script src="/assets/js/respond.min.js"></script>
@@ -240,7 +242,7 @@
                                     <div class="form-group">
                                         <label>Fecha</label>
                                         <div class="cal-icon">
-                                            <input type="text" class="form-control datetimepicker" name="date" value="<%= moment(appointment.date).format('DD/MM/YYYY') %>">
+                                            <input type="text" class="form-control datetimepicker" name="date" value="<%= moment(appointment.date).format('YYYY-MM-DD') %>">
                                         </div>
                                     </div>
                                 </div>
@@ -248,7 +250,7 @@
                                     <div class="form-group">
                                         <label>Hora</label>
                                         <div class="time-icon">
-                                            <input type="text" class="form-control" id="datetimepicker3" name="time" value="<%= appointment.time %>">
+                                            <input type="text" class="form-control timepicker" name="time" value="<%= appointment.time %>">
                                         </div>
                                     </div>
                                 </div>
@@ -479,15 +481,20 @@
     <script src="/assets/js/jquery.slimscroll.js"></script>
     <script src="/assets/js/select2.min.js"></script>
 	<script src="/assets/js/moment.min.js"></script>
-	<script src="/assets/js/bootstrap-datetimepicker.min.js"></script>
     <script src="/assets/js/app.js"></script>
 	<script>
             $(function () {
-                $('#datetimepicker3').datetimepicker({
-                    format: 'hh:mm A',
-                    stepping: 30,
-                    minDate: moment().set({ hour: 7, minute: 0 }),
-                    maxDate: moment().set({ hour: 19, minute: 0 })
+                flatpickr('.datetimepicker', {
+                    dateFormat: 'Y-m-d',
+                    minDate: 'today'
+                });
+
+                flatpickr('.timepicker', {
+                    enableTime: true,
+                    noCalendar: true,
+                    dateFormat: 'H:i',
+                    time_24hr: true,
+                    minuteIncrement: 30
                 });
 
                 $('#department').on('input', function() {
@@ -509,15 +516,27 @@
                     var doctorDocument = $('#doctor').val();
                     var date = $('input[name="date"]').val();
                     var time = $('input[name="time"]').val();
-                    var formattedTime = moment(time, 'hh:mm A').format('HH:mm:ss');
+
+                    // Validar formato de fecha y hora
+                    if (!moment(date, 'YYYY-MM-DD', true).isValid() || !moment(time, 'HH:mm', true).isValid()) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Formato de fecha u hora inválido. Por favor, verifica los campos.'
+                        });
+                        return;
+                    }
+
+                    // Formatear fecha y hora
+                    var formattedDate = moment(date).format('YYYY-MM-DD');
+                    var formattedTime = moment(time, 'HH:mm').format('HH:mm');
 
                     $.ajax({
                         url: '/appointment/check_availability',
                         method: 'POST',
-                        data: { doctor_document: doctorDocument, date: date, time: formattedTime },
+                        data: { doctor_document: doctorDocument, date: formattedDate, time: formattedTime },
                         success: function(response) {
                             if (response.available) {
-                                $('input[name="time"]').val(formattedTime);
                                 Swal.fire({
                                     title: '¿Estás seguro?',
                                     text: "¿Deseas actualizar esta cita?",

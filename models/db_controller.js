@@ -136,7 +136,15 @@ module.exports.deleteDoc = (document, callback) => {
             console.error('Error executing query:', err);
             return callback(err, null);
         }
-        callback(null, result);
+        // Eliminar de la tabla verify
+        var deleteVerifyQuery = 'DELETE FROM verify WHERE id = ?';
+        con.query(deleteVerifyQuery, [document], (err, result) => {
+            if (err) {
+                console.error('Error executing query:', err);
+                return callback(err, null);
+            }
+            callback(null, result);
+        });
     });
     console.log(query);
 };

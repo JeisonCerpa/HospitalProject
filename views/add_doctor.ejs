@@ -170,52 +170,40 @@
                         <li>
                             <a href="/home"><i class="fa fa-dashboard"></i> <span>Tablero</span></a>
                         </li>
+                        <% if (permissions.includes('view_doctors')) { %>
                         <li class="active">
                             <a href="/doctors"><i class="fa fa-user-md"></i> <span>Doctores</span></a>
                         </li>
+                        <% } %>
+                        <% if (permissions.includes('view_patients')) { %>
                         <li>
                             <a href="/patients"><i class="fa fa-wheelchair"></i> <span>Pacientes</span></a>
                         </li>
+                        <% } %>
+                        <% if (permissions.includes('view_appointments')) { %>
                         <li>
                             <a href="/appointment"><i class="fa fa-calendar"></i> <span>Citas</span></a>
                         </li>
-
+                        <% } %>
+                        <% if (permissions.includes('view_departments')) { %>
                         <li>
                             <a href="/home/departments"><i class="fa fa-hospital-o"></i> <span>Departamentos</span></a>
                         </li>
+                        <% } %>
+                        <% if (permissions.includes('view_employees')) { %>
                         <li class="submenu">
-                            <a href="#"><i class="fa fa-user"></i> <span> Empleados </span> <span
-                                    class="menu-arrow"></span></a>
+                            <a href="#"><i class="fa fa-user"></i> <span> Empleados </span> <span class="menu-arrow"></span></a>
                             <ul style="display: none;">
                                 <li><a href="/employee">Lista de Empleados</a></li>
                                 <li><a href="/employee/leave">Permisos</a></li>
-
                             </ul>
                         </li>
-
-                        <li class="submenu">
-                            <a href="#"><i class="fa fa-book"></i> <span> Nómina </span> <span
-                                    class="menu-arrow"></span></a>
-                            <ul style="display: none;">
-                                <li><a href="/receipt"> Salario de Empleados </a></li>
-
-                            </ul>
-                        </li>
-
-
-                        <li class="submenu">
-                            <a href="#"><i class="fa fa-envelope"></i> <span> Correo</span> <span
-                                    class="menu-arrow"></span></a>
-                            <ul style="display: none;">
-                                <li><a href="/compose">Redactar Correo</a></li>
-                                <li><a href="/inbox">Bandeja de Entrada</a></li>
-
-                            </ul>
-                        </li>
-
+                        <% } %>
+                        <% if (permissions.includes('view_store')) { %>
                         <li>
                             <a href="/store"><i class="fa fa-cube"></i> <span>Almacén de Medicinas</span></a>
                         </li>
+                        <% } %>
                     </ul>
                 </div>
             </div>
@@ -366,6 +354,28 @@
             $('.datetimepicker').datetimepicker({
                 format: 'YYYY-MM-DD'
             });
+
+            <% if (typeof alert !== 'undefined' && alert.type === 'error') { %>
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: '<%= alert.message %>'
+                });
+            <% } else if (typeof alert !== 'undefined' && alert.type === 'success') { %>
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Éxito',
+                    text: '<%= alert.message %>'
+                }).then(() => {
+                    window.location.href = '/doctors';
+                });
+            <% } else if (typeof alert !== 'undefined' && alert.type === 'duplicate') { %>
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Duplicado',
+                    text: '<%= alert.message %>'
+                });
+            <% } %>
         });
 
         document.querySelector('form').addEventListener('submit', function(event) {
@@ -385,26 +395,6 @@
                 }
             });
         });
-
-        <% if (typeof alert !== 'undefined' && alert.type === 'error') { %>
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: '<%= alert.message %>'
-            });
-        <% } else if (typeof alert !== 'undefined' && alert.type === 'success') { %>
-            Swal.fire({
-                icon: 'success',
-                title: 'Éxito',
-                text: '<%= alert.message %>'
-            });
-        <% } else if (typeof alert !== 'undefined' && alert.type === 'duplicate') { %>
-            Swal.fire({
-                icon: 'warning',
-                title: 'Duplicado',
-                text: '<%= alert.message %>'
-            });
-        <% } %>
     </script>
 </body>
 

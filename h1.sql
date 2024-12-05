@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS `appointment` (
 --
 
 INSERT INTO `appointment` (`id`, `patient_document`, `department`, `doctor_document`, `date`, `time`) VALUES
-(1, '112233', 'Opthalmology', '25262441', '2002-12-24', '11:00:00'),
+(1, '112233', 'Oftalmología', '25262441', '2002-12-24', '11:00:00'),
 (2, '111', 'Cardiología', '123123', '2023-01-01', '09:00:00'),
 (3, '112233', 'Neurología', '25262441', '2023-01-02', '10:00:00'),
 (4, '111', 'Pediatría', '123123', '2023-01-03', '11:00:00'),
@@ -142,8 +142,8 @@ CREATE TABLE IF NOT EXISTS `doctors` (
 --
 
 INSERT INTO `doctors` (`document`, `name`, `email`, `date_of_birth`, `gender`, `address`, `phone`, `image`, `department`, `biography`, `user_id`) VALUES
-('123123', 'Jei Test', 'test@test.com', '1998-09-08', 'male', 'Calle Test # Test', '300000000', 'OIP.jpg', 'Intensive Care Unit (ICU)', 'Hola1', 123123),
-('25262441', 'Isabella Lerma', 'test@test.com', '2012-11-11', 'male', 'calle 23#23-56', '3001112233', 'OIP (1).jfif', 'Opthalmology', '123', 25262441);
+('123123', 'Jei Test', 'test@test.com', '1998-09-08', 'male', 'Calle Test # Test', '300000000', 'OIP.jpg', 'Unidad de Cuidados Intensivos (UCI)', 'Hola1', 123123),
+('25262441', 'Isabella Lerma', 'test@test.com', '2012-11-11', 'male', 'calle 23#23-56', '3001112233', 'OIP (1).jfif', 'Oftalmología', '123', 25262441);
 
 -- --------------------------------------------------------
 

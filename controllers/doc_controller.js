@@ -142,7 +142,7 @@ router.post('/add_doctor', (req, res, next) => {
                                 console.error('Error al agregar el rol del usuario:', err);
                                 return res.status(500).send('Error en el servidor');
                             }
-                            res.render('doctors.ejs', { list: [], alert: { type: 'success', message: 'Doctor agregado correctamente. Por favor verifique su cuenta y cambie su contraseña.' } });
+                            res.render('add_doctor.ejs', { list: [], alert: { type: 'success', message: 'Doctor agregado correctamente. Por favor verifique su cuenta y cambie su contraseña.' } });
                         });
                     });
                 }
@@ -191,7 +191,7 @@ router.get('/delete_doctor/:document', (req, res, next) => {
     db.getDocByDocument(document, (err, result) => {
         if (err) throw err;
         if (result.length > 0) {
-            res.render('delete_doctor.ejs', { list: result });
+            res.render('delete_doctor.ejs', { list: result, permissions: req.permissions });
         } else {
             res.status(404).send('Doctor not found');
         }
@@ -216,7 +216,10 @@ router.post('/delete_doctor/:document', (req, res, next) => {
                 if (err) throw err;
                 db.deleteUser(userId, (err, result) => {
                     if (err) throw err;
-                    res.render('delete_doctor.ejs', { list: [], alert: { type: 'success', message: 'Doctor eliminado correctamente' } });
+                    db.deleteVerify(userId, (err, result) => {
+                        if (err) throw err;
+                        res.render('delete_doctor.ejs', { list: [], alert: { type: 'success', message: 'Doctor eliminado correctamente' } });
+                    });
                 });
             });
         } else {
