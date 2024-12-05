@@ -492,7 +492,7 @@ module.exports.updatePassword = (document, newPassword, callback) => {
 };
 
 module.exports.addUserRole = (userId, roleId, callback) => {
-    var query = 'INSERT INTO user_roles (user_id, role_id) VALUES (?, ?, ?)';
+    var query = 'INSERT INTO user_roles (user_id, role_id) VALUES (?, ?)';
     con.query(query, [userId, roleId], callback);
 };
 

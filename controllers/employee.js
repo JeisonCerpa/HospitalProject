@@ -68,93 +68,75 @@ router.post('/add', (req, res) => {
     var email_status = 'not_verified';
     var password_changed = false;
 
-    // Verificar duplicados en la tabla users
-    var checkDuplicateQuery = 'SELECT * FROM users WHERE id = ? OR email = ?';
-    db.con.query(checkDuplicateQuery, [document, email], (err, results) => {
+    // Insertar en la tabla users
+    var userQuery = 'INSERT INTO users (id, username, email, password, email_status, role, password_changed) VALUES (?, ?, ?, ?, ?, ?, ?)';
+    db.con.query(userQuery, [document, name, email, password, email_status, role, password_changed], (err) => {
         if (err) {
-            console.error('Error al verificar duplicados:', err);
+            console.error('Error al insertar en la tabla users:', err);
             return res.status(500).send('Error en el servidor');
         }
-        if (results.length > 0) {
-            return db.getAllRoles((err, roles) => {
-                if (err) throw err;
-                res.render('add_employee.ejs', { 
-                    roles: roles, 
-                    message: { type: 'error', title: 'Error', text: 'El documento o correo electrónico ya existe' }
-                });
-            });
-        }
 
-        // Insertar en la tabla users
-        var userQuery = 'INSERT INTO users (id, username, email, password, email_status, role, password_changed) VALUES (?, ?, ?, ?, ?, ?, ?)';
-        db.con.query(userQuery, [document, name, email, password, email_status, role, password_changed], (err) => {
+        // Insertar en la tabla employee
+        db.add_employee(document, name, email, contact, date_of_birth, role, document, (err, result) => {
             if (err) {
-                console.error('Error al insertar en la tabla users:', err);
-                return res.status(500).send('Error en el servidor');
+                console.error('Error al insertar en la tabla employee:', err);
+                return db.getAllemployee((err, employees) => {
+                    if (err) throw err;
+                    res.render('employee.ejs', { message: { type: 'error', title: 'Error', text: 'Error en el servidor' }, employee: employees });
+                });
             }
+            console.log('Empleado agregado');
 
-            // Insertar en la tabla employee
-            db.add_employee(document, name, email, contact, date_of_birth, role, document, (err, result) => {
-                if (err) {
-                    console.error('Error al insertar en la tabla employee:', err);
-                    return db.getAllemployee((err, employees) => {
-                        if (err) throw err;
-                        res.render('employee.ejs', { message: { type: 'error', title: 'Error', text: 'Error en el servidor' }, employee: employees });
-                    });
-                }
-                console.log('Empleado agregado');
+            var token = randomtoken(8);
+            db.verify(document, name, email, token);
+            db.getuserid(email, (err, result) => {
+                var output = `<p>Querido ${name}</p><p>Gracias por registrarte en nuestro sitio web. Su token de ingreso está abajo:</p>
+                    <ul>
+                    <li>Document: ${document}</li>
+                    <li>Token: ${token}</li>
+                    <li>Contraseña predeterminada: employee123</li>
+                    </ul>
+                    <p>Por favor, haga clic en el siguiente enlace para verificar su cuenta y cambiar su contraseña: <a href="http://localhost:3000/verify/${document}/${token}">¡Click Aquí!</a></p>
+                    <p><b>Nota:</b>Este es un correo electrónico generado automáticamente. Si no ha solicitado este correo electrónico, por favor ignore este mensaje.</p>`;
 
-                var token = randomtoken(8);
-                db.verify(document, name, email, token);
-                db.getuserid(email, (err, result) => {
-                    var output = `<p>Querido ${name}</p><p>Gracias por registrarte en nuestro sitio web. Su token de ingreso está abajo:</p>
-                        <ul>
-                        <li>Document: ${document}</li>
-                        <li>Token: ${token}</li>
-                        <li>Contraseña predeterminada: employee123</li>
-                        </ul>
-                        <p>Por favor, haga clic en el siguiente enlace para verificar su cuenta y cambiar su contraseña: <a href="http://localhost:3000/verify/${document}/${token}">¡Click Aquí!</a></p>
-                        <p><b>Nota:</b>Este es un correo electrónico generado automáticamente. Si no ha solicitado este correo electrónico, por favor ignore este mensaje.</p>`;
+                var transporter = nodemailer.createTransport({
+                    host: 'smtp.gmail.com',
+                    port: 465,
+                    secure: true,
+                    auth: {
+                        user: "cerpajeisontest@gmail.com",
+                        pass: "dyii pyjs wcjs gvjs"
+                    }
+                });
+                var mailOptions = {
+                    from: 'Hospital MS Team',
+                    to: email,
+                    subject: 'Verificación de cuenta',
+                    html: output
+                };
+                transporter.sendMail(mailOptions, function (err, info) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        console.log('Correo enviado: ' + info);
+                    }
+                });
 
-                    var transporter = nodemailer.createTransport({
-                        host: 'smtp.gmail.com',
-                        port: 465,
-                        secure: true,
-                        auth: {
-                            user: "cerpajeisontest@gmail.com",
-                            pass: "dyii pyjs wcjs gvjs"
-                        }
-                    });
-                    var mailOptions = {
-                        from: 'Hospital MS Team',
-                        to: email,
-                        subject: 'Verificación de cuenta',
-                        html: output
-                    };
-                    transporter.sendMail(mailOptions, function (err, info) {
+                // Obtener el roleId basado en el rol seleccionado
+                db.getAllRoles((err, roles) => {
+                    if (err) {
+                        console.error('Error al obtener los roles:', err);
+                        return res.status(500).send('Error en el servidor');
+                    }
+                    const roleId = roles.find(r => r.name === role).id;
+                    db.addUserRole(document, roleId, (err) => {
                         if (err) {
-                            console.log(err);
-                        } else {
-                            console.log('Correo enviado: ' + info);
-                        }
-                    });
-
-                    // Obtener el roleId basado en el rol seleccionado
-                    db.getAllRoles((err, roles) => {
-                        if (err) {
-                            console.error('Error al obtener los roles:', err);
+                            console.error('Error al agregar el rol del usuario:', err);
                             return res.status(500).send('Error en el servidor');
                         }
-                        const roleId = roles.find(r => r.name === role).id;
-                        db.addUserRole(document, roleId, (err) => {
-                            if (err) {
-                                console.error('Error al agregar el rol del usuario:', err);
-                                return res.status(500).send('Error en el servidor');
-                            }
-                            db.getAllemployee((err, employees) => {
-                                if (err) throw err;
-                                res.render('employee.ejs', { message: { type: 'success', title: 'Éxito', text: 'Empleado agregado exitosamente' }, employee: employees });
-                            });
+                        db.getAllemployee((err, employees) => {
+                            if (err) throw err;
+                            res.render('employee.ejs', { message: { type: 'success', title: 'Éxito', text: 'Empleado agregado exitosamente' }, employee: employees });
                         });
                     });
                 });
