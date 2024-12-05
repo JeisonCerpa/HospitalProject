@@ -9,7 +9,7 @@
     <link rel="stylesheet" type="text/css" href="/assets/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/style.css">
-    <!-- ...existing code... -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!--[if lt IE 9]>
 		<script src="/assets/js/html5shiv.min.js"></script>
@@ -224,17 +224,15 @@
                                     <div class="form-group">
                                         <label>Fecha de Compra</label>
                                         <div class="cal-icon">
-                                            <input class="form-control datetimepicker" type="text" name="p_date" required>
+                                            <input type="text" id="p_date" name="p_date" class="form-control" placeholder="Fecha de compra">
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Fecha de Expiración</label>
                                         <div class="cal-icon">
-                                            <input class="form-control datetimepicker" type="text" name="e_date" required>
+                                            <input type="text" id="e_date" name="e_date" class="form-control" placeholder="Fecha de expiración">
                                         </div>
                                     </div>
                                 </div>
@@ -478,8 +476,18 @@
     <script src="/assets/js/jquery.slimscroll.js"></script>
     <script src="/assets/js/select2.min.js"></script>
 	<script src="/assets/js/moment.min.js"></script>
-	<script src="/assets/js/bootstrap-datetimepicker.min.js"></script>
     <script src="/assets/js/app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        $(function () {
+            flatpickr("#p_date", {
+                dateFormat: "d/m/Y"
+            });
+            flatpickr("#e_date", {
+                dateFormat: "d/m/Y"
+            });
+        });
+    </script>
 </body>
 
 

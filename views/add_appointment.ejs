@@ -477,15 +477,13 @@
     <script src="/assets/js/bootstrap.min.js"></script>
     <script src="/assets/js/jquery.slimscroll.js"></script>
     <script src="/assets/js/select2.min.js"></script>
-	<script src="/assets/js/moment.min.js"></script>
-	<script src="/assets/js/bootstrap-datetimepicker.min.js"></script>
     <script src="/assets/js/app.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         $(function () {
             flatpickr('.datetimepicker', {
-                dateFormat: 'Y-m-d',
+                dateFormat: 'd/m/Y',
                 minDate: 'today'
             });
 
@@ -529,7 +527,7 @@
                         var time = $('input[name="time"]').val();
 
                         // Validar formato de fecha y hora
-                        if (!moment(date, 'YYYY-MM-DD', true).isValid() || !moment(time, 'HH:mm', true).isValid()) {
+                        if (!moment(date, 'DD/MM/YYYY', true).isValid() || !moment(time, 'HH:mm', true).isValid()) {
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Error',
@@ -539,7 +537,7 @@
                         }
 
                         // Formatear fecha y hora
-                        var formattedDate = moment(date).format('YYYY-MM-DD');
+                        var formattedDate = moment(date, 'DD/MM/YYYY').format('YYYY-MM-DD');
                         var formattedTime = moment(time, 'HH:mm').format('HH:mm');
 
                         $.ajax({

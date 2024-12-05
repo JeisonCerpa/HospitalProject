@@ -77,7 +77,7 @@ router.post('/add_appointment', (req, res) => {
             res.status(403).send('Forbidden');
         } else {
             console.log('Datos recibidos:', req.body); // Agregar este console.log para verificar los datos recibidos
-            var date = moment(req.body.date, 'YYYY-MM-DD', true); // Asegurarse de que la fecha esté en el formato correcto
+            var date = moment(req.body.date, 'DD/MM/YYYY', true); // Cambiar el formato de fecha
             if (!date.isValid()) {
                 console.error('Fecha inválida:', req.body.date);
                 db.getAllPatients((err, patients) => {
@@ -184,7 +184,7 @@ router.post('/edit_appointment/:id', (req, res) => {
             res.status(403).send('Forbidden');
         } else {
             var id = req.params.id;
-            var date = moment(req.body.date, 'YYYY-MM-DD', true); // Asegurarse de que la fecha esté en el formato correcto
+            var date = moment(req.body.date, 'DD/MM/YYYY', true); // Cambiar el formato de fecha
             if (!date.isValid()) {
                 console.error('Fecha inválida:', req.body.date);
                 db.getallappointmentbyid(id, (err, appointment) => {
@@ -317,4 +317,4 @@ router.post('/check_availability', (req, res) => {
     });
 });
 
-module.exports = router;
+module.exports = router; // Exportar solo el router

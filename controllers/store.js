@@ -1,8 +1,9 @@
 var express = require('express');
 var router = express.Router();
 var bodyParser = require('body-parser');
-var db = require.main.require('./models/db_controller'); 
+var db = require.main.require('./models/db_controller');
 var moment = require('moment'); // Añadir esta línea
+var { getCurrentTimeInColombia } = require('./appointment'); // Importar la función
 
 router.use((req, res, next) => {
     if (req.cookies['username'] == null) {
@@ -34,6 +35,13 @@ router.get('/add_med', (req, res) => {
     if (!res.locals.permissions.includes('add_store')) {
         return res.redirect('back');
     }
+    res.render('add_med.ejs', { flatpickr: true }); // Añadir flatpickr: true
+});
+
+router.get('/add', (req, res) => {
+    if (!res.locals.permissions.includes('add_store')) {
+        return res.redirect('back');
+    }
     res.render('add_med.ejs');
 });
 
@@ -41,18 +49,30 @@ router.post('/add_med', (req, res) => {
     if (!res.locals.permissions.includes('add_store')) {
         return res.redirect('back');
     }
-    const { name, p_date, e_date, price, quantity } = req.body;
-    const formattedPDate = moment(p_date, 'DD/MM/YYYY').format('YYYY-MM-DD');
-    const formattedEDate = moment(e_date, 'DD/MM/YYYY').format('YYYY-MM-DD');
-    db.addMed(name, formattedPDate, formattedEDate, price, quantity, (err, result) => {
+    const userId = req.cookies['userId'];
+    db.getUserPermissions(userId, (err, permissions) => {
         if (err) {
-            console.error(err);
-            db.getallmed((err, result) => {
-                res.render('store.ejs', { message: { type: 'error', text: 'Error al agregar la medicina' }, list: result });
-            });
+            console.error('Error fetching user permissions:', err);
+            res.status(500).send('Internal Server Error');
+        } else if (!permissions.includes('edit_store')) {
+            res.status(403).send('Forbidden');
         } else {
-            db.getallmed((err, result) => {
-                res.render('store.ejs', { message: { type: 'success', text: 'Medicina agregada correctamente' }, list: result });
+            var currentTime = getCurrentTimeInColombia();
+            console.log("Hora actual en Colombia:", currentTime.format('YYYY-MM-DD HH:mm:ss'));
+            const { name, p_date, e_date, price, quantity } = req.body;
+            const formattedPDate = moment(p_date, 'DD/MM/YYYY').format('YYYY-MM-DD');
+            const formattedEDate = moment(e_date, 'DD/MM/YYYY').format('YYYY-MM-DD');
+            db.addMed(name, formattedPDate, formattedEDate, price, quantity, (err, result) => {
+                if (err) {
+                    console.error(err);
+                    db.getallmed((err, result) => {
+                        res.render('store.ejs', { message: { type: 'error', text: 'Error al agregar la medicina' }, list: result });
+                    });
+                } else {
+                    db.getallmed((err, result) => {
+                        res.render('store.ejs', { message: { type: 'success', text: 'Medicina agregada correctamente' }, list: result });
+                    });
+                }
             });
         }
     });
@@ -65,7 +85,7 @@ router.get('/edit_med/:id', (req, res) => {
     var id = req.params.id;
     db.getMedbyId(id, (err, result) => {
         console.log(result);
-        res.render('edit_med.ejs', { list: result });
+        res.render('edit_med.ejs', { list: result, flatpickr: true }); // Añadir flatpickr: true
     });
 });
 
@@ -76,12 +96,11 @@ router.post('/edit_med/:id', (req, res) => {
     var id = req.params.id;
     var name = req.body.name;
     var p_date = moment(req.body.p_date, 'DD/MM/YYYY').format('YYYY-MM-DD');
-    var expire_date = moment(req.body.expire_date, 'DD/MM/YYYY').format('YYYY-MM-DD');
     var e_date = moment(req.body.e_date, 'DD/MM/YYYY').format('YYYY-MM-DD');
     var price = req.body.price;
     var quantity = req.body.quantity;
 
-    db.editMed(id, name, p_date, expire_date, e_date, price, quantity, (err, result) => {
+    db.editMed(id, name, p_date, e_date, price, quantity, (err, result) => {
         if (err) {
             console.error(err);
             db.getallmed((err, result) => {
